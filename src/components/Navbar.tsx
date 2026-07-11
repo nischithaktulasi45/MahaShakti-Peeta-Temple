@@ -95,12 +95,11 @@ export default function Navbar() {
       </div>
 
       {/* Main Navbar */}
-      <nav className="bg-[#0A4D9B] text-white px-6 py-4">
-        <div className="flex justify-between items-center max-w-7xl mx-auto">
-
+      <nav className="bg-[#0A4D9B] px-3 py-3 text-white sm:px-6 sm:py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
           {/* Logo + Title */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/10 p-1 shadow-lg shadow-black/25 ring-2 ring-[#D4AF37]/70 backdrop-blur-sm lg:h-16 lg:w-16">
+          <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 p-1 shadow-lg shadow-black/25 ring-2 ring-[#D4AF37]/70 backdrop-blur-sm sm:h-14 sm:w-14 lg:h-16 lg:w-16">
               <img
                 src="/image/logo.png"
                 alt="Mahashakti Peeta Logo"
@@ -108,13 +107,13 @@ export default function Navbar() {
               />
             </div>
 
-            <h1 className="font-serif text-xl font-bold tracking-wider text-[#D4AF37] lg:text-2xl">
+            <h1 className="truncate font-serif text-base font-bold tracking-wider text-[#D4AF37] sm:text-lg md:text-xl lg:text-2xl">
               Mahashakti Peeta
             </h1>
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden items-center gap-4 lg:flex xl:gap-6">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.path}
@@ -173,8 +172,9 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden text-2xl text-[#D4AF37]"
+            className="flex h-11 w-11 items-center justify-center rounded-md border border-white/15 text-2xl text-[#D4AF37] transition-colors hover:bg-white/10 lg:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <FaTimes /> : <FaBars />}
           </button>
@@ -188,9 +188,9 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden bg-[#0A4D9B] border-t border-[#083C78] overflow-hidden"
+            className="overflow-hidden border-t border-[#083C78] bg-[#0A4D9B] lg:hidden"
           >
-            <div className="flex flex-col px-6 py-4">
+            <div className="mx-auto flex max-w-7xl flex-col gap-1 px-3 py-4 sm:px-6">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.path}
@@ -201,8 +201,8 @@ export default function Navbar() {
                   }}
                   className={
                     link.name === "Donate"
-                      ? "flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-500 via-orange-400 to-yellow-500 text-white font-bold py-3 rounded-lg my-2 shadow-lg animate-pulse"
-                      : `font-sans py-3 text-lg border-b border-[#083C78] ${
+                      ? "my-2 flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-yellow-500 via-orange-400 to-yellow-500 px-4 py-3 font-bold text-white shadow-lg animate-pulse"
+                      : `min-h-[44px] border-b border-[#083C78] py-3 font-sans text-base sm:text-lg ${
                           location === link.path
                             ? "text-[#D4AF37]"
                             : "text-white"
@@ -221,7 +221,7 @@ export default function Navbar() {
                     setMobileMenuOpen(false);
                     scrollToTop();
                   }}
-                  className="block text-center bg-[#D4AF37] text-[#083C78] font-bold px-6 py-3 rounded-lg hover:bg-white transition-colors"
+                  className="block min-h-[44px] rounded-lg bg-[#D4AF37] px-6 py-3 text-center font-bold text-[#083C78] transition-colors hover:bg-white"
                 >
                   Donate Now
                 </Link>

@@ -62,12 +62,12 @@ export default function GalleryGrid() {
   return (
     <div>
       {/* Filters */}
-      <div className="flex flex-wrap justify-center gap-4 mb-12">
+      <div className="mb-8 flex flex-wrap justify-center gap-3 sm:mb-12 sm:gap-4">
         {CATEGORIES.map(category => (
           <button
             key={category}
             onClick={() => setActiveCategory(category)}
-            className={`px-6 py-2 rounded-full font-mono text-sm uppercase tracking-wider transition-all duration-300 ${
+            className={`rounded-full px-4 py-2 font-mono text-sm uppercase tracking-wider transition-all duration-300 sm:px-6 ${
               activeCategory === category 
                 ? 'bg-[#0A4D9B] text-white shadow-md' 
                 : 'bg-white text-[#0A4D9B] border border-[#0A4D9B] hover:bg-[#EAF4FF]'
@@ -79,7 +79,7 @@ export default function GalleryGrid() {
       </div>
 
       {/* 4‑column grid with smaller images */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <AnimatePresence>
           {filteredImages.map((img, idx) => (
             <motion.div

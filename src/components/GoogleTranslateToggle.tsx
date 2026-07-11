@@ -78,11 +78,11 @@ export default function GoogleTranslateToggle() {
   return (
     <>
       <div id="google_translate_element" className="sr-only" />
-      <div className="fixed right-6 top-36 z-[50] flex rounded-full border border-[#D4AF37]/40 bg-white/95 p-1 shadow-lg backdrop-blur">
+      <div className="fixed right-2 top-24 z-[50] flex max-w-[calc(100vw-1rem)] flex-wrap items-center justify-end rounded-full border border-[#D4AF37]/40 bg-white/95 p-1 shadow-lg backdrop-blur sm:right-6 sm:top-36">
         <button
           type="button"
           onClick={() => setLanguage("en")}
-          className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
+          className={`rounded-full px-3 py-2 text-[10px] font-bold uppercase tracking-widest transition sm:px-4 sm:py-2 sm:text-xs ${
             language === "en" ? "bg-[#0A4D9B] text-white" : "text-[#0A4D9B] hover:bg-[#EAF4FF]"
           }`}
         >
@@ -91,7 +91,7 @@ export default function GoogleTranslateToggle() {
         <button
           type="button"
           onClick={() => setLanguage("kn")}
-          className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-widest transition ${
+          className={`rounded-full px-3 py-2 text-[10px] font-bold uppercase tracking-widest transition sm:px-4 sm:py-2 sm:text-xs ${
             language === "kn" ? "bg-[#0A4D9B] text-white" : "text-[#0A4D9B] hover:bg-[#EAF4FF]"
           }`}
         >

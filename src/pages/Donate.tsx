@@ -39,18 +39,18 @@ export default function Donate() {
 
   return (
     <div className="w-full bg-transparent py-12 min-h-[100dvh]">
-      <div className="mx-auto max-w-5xl px-4">
-        <div className="mx-auto max-w-4xl rounded-3xl border border-[#d9e6f7] bg-white/95 p-5 shadow-[0_24px_80px_rgba(10,77,155,0.12)] backdrop-blur md:p-6">
+      <div className="mx-auto max-w-5xl px-3 sm:px-4 lg:px-6">
+        <div className="mx-auto max-w-4xl rounded-3xl border border-[#d9e6f7] bg-white/95 p-4 shadow-[0_24px_80px_rgba(10,77,155,0.12)] backdrop-blur sm:p-5 md:p-6">
           <div className="text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#D4AF37]">Donate</p>
-            <h1 className="mt-3 font-serif text-3xl text-[#083C78] md:text-4xl">Donation Form</h1>
+            <h1 className="mt-3 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">Donation Form</h1>
             <p className="mt-4 text-sm leading-6 text-slate-600">
               Fill in your details and choose the donation purpose.
             </p>
           </div>
 
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-700" htmlFor="name">
                   Full Name
@@ -140,13 +140,13 @@ export default function Donate() {
               <button
                 type="button"
                 onClick={() => navigate("/contact")}
-                className="inline-flex min-w-[120px] items-center justify-center rounded-xl border border-slate-300 px-8 py-4 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+                className="inline-flex min-h-[44px] min-w-[120px] items-center justify-center rounded-xl border border-slate-300 px-6 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-100 sm:px-8 sm:py-4"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="inline-flex min-w-[180px] items-center justify-center rounded-xl bg-[#0A4D9B] px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-[#0A4D9B]/20 transition hover:bg-[#083C78]"
+                className="inline-flex min-h-[44px] min-w-[180px] items-center justify-center rounded-xl bg-[#0A4D9B] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0A4D9B]/20 transition hover:bg-[#083C78] sm:px-8 sm:py-4"
               >
                 Submit &amp; Continue
               </button>

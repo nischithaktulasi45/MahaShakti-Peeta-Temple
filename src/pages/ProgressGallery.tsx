@@ -49,32 +49,32 @@ export default function ProgressGallery() {
 
   return (
     <div className="min-h-[100dvh] bg-transparent py-12">
-      <section className="mx-auto max-w-7xl px-6">
-        <div className="text-center mb-10">
-          <h1 className="font-serif text-3xl md:text-4xl text-[#083C78] mb-4">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 text-center">
+          <h1 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">
             Progress Gallery
           </h1>
           <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
-          <p className="mt-5 text-base md:text-lg text-gray-600 max-w-3xl mx-auto font-sans">
+          <p className="mx-auto mt-5 max-w-3xl font-sans text-sm text-gray-600 sm:text-base md:text-lg">
             A visual journey through the sacred moments, construction updates,
             and milestones of Mahashakti Peeta Temple.
           </p>
         </div>
 
-        <div className="flex justify-center mb-10">
-          <span className="rounded-full bg-[#0A4D9B] px-8 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-lg shadow-[#0A4D9B]/30">
+        <div className="mb-10 flex justify-center">
+          <span className="rounded-full bg-[#0A4D9B] px-6 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-lg shadow-[#0A4D9B]/30 sm:px-8">
             All
           </span>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {PROGRESS_VIDEOS.map((video) => (
             <article
               key={video.id}
               className="overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(8,60,120,0.12)] ring-1 ring-slate-200/70 transition-transform duration-300 hover:-translate-y-1"
             >
               <video
-                className="h-56 w-full cursor-pointer object-cover md:h-60"
+                className="h-56 w-full cursor-pointer object-cover sm:h-60"
                 autoPlay
                 loop
                 muted

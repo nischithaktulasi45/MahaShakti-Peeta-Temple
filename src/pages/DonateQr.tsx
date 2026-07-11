@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
+import { submitDonation } from "../services/donationService";
 
 type DonationFormState = {
   name: string;
@@ -11,7 +12,6 @@ type DonationFormState = {
 
 const qrSources = ["/image/QR.png"];
 const DONATION_STORAGE_KEY = "temple_donation_form";
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
 
 export default function DonateQr() {
   const [, navigate] = useLocation();
@@ -59,24 +59,12 @@ export default function DonateQr() {
     setStatusType(null);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/donations`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...donationData,
-          amount: Number(donationData.amount),
-          utrNumber: normalizedUtrNumber,
-          paymentStatus: "completed",
-        }),
+      await submitDonation({
+        ...donationData,
+        amount: Number(donationData.amount),
+        utrNumber: normalizedUtrNumber,
+        paymentStatus: "completed",
       });
-
-      const payload = await response.json();
-
-      if (!response.ok) {
-        throw new Error(payload?.message || "Failed to save donation");
-      }
 
       window.localStorage.removeItem(DONATION_STORAGE_KEY);
       setStatusType("success");

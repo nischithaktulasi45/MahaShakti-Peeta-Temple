@@ -26,7 +26,7 @@ export default function HeroSlider() {
   const wordDelay = 0.25;
 
   return (
-    <section className="relative min-h-[calc(100dvh-160px)] overflow-hidden flex items-center">
+    <section className="relative flex min-h-[calc(100dvh-120px)] items-center overflow-hidden sm:min-h-[calc(100dvh-140px)]">
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
@@ -36,13 +36,13 @@ export default function HeroSlider() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/45" />
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-8 text-center">
-        <p className="mb-3 mx-auto max-w-5xl text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-white md:text-sm">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-8 text-center sm:px-6 lg:px-8">
+        <p className="mx-auto mb-3 max-w-5xl text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-white sm:text-xs md:text-sm">
           Sacred Abode of the Divine Grace and Spiritual Enlightenment
         </p>
 
         <h1
-          className="mx-auto max-w-6xl font-serif text-4xl font-black uppercase leading-[1.05] tracking-[0.04em] md:text-6xl lg:text-7xl"
+          className="mx-auto max-w-6xl font-serif text-3xl font-black uppercase leading-[1.05] tracking-[0.04em] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
           translate="no"
         >
           {titleLines.map((line, index) => (
@@ -59,20 +59,20 @@ export default function HeroSlider() {
           ))}
         </h1>
 
-        <p className="mt-4 mx-auto max-w-4xl text-lg font-semibold leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)] md:text-xl">
+        <p className="mx-auto mt-4 max-w-4xl text-base font-semibold leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)] sm:text-lg md:text-xl">
           Sacred Abode of the Divine Grace and Spiritual Enlightenment
         </p>
 
         <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
             href="/about"
-            className="inline-flex items-center justify-center bg-[#D4AF37] px-8 py-3 text-base font-bold text-[#083C78] shadow-[0_18px_35px_rgba(212,175,55,0.28)] transition-transform duration-300 hover:scale-105"
+            className="inline-flex min-h-[44px] items-center justify-center bg-[#D4AF37] px-6 py-3 text-base font-bold text-[#083C78] shadow-[0_18px_35px_rgba(212,175,55,0.28)] transition-transform duration-300 hover:scale-105 sm:px-8"
           >
             Visit Temple
           </Link>
           <Link
             href="/donate/qr"
-            className="inline-flex items-center justify-center border-2 border-white px-8 py-3 text-base font-bold text-white transition-colors duration-300 hover:bg-white hover:text-[#083C78]"
+            className="inline-flex min-h-[44px] items-center justify-center border-2 border-white px-6 py-3 text-base font-bold text-white transition-colors duration-300 hover:bg-white hover:text-[#083C78] sm:px-8"
           >
             Donate Now
           </Link>

@@ -18,8 +18,8 @@ export default function Home() {
       <HeroSlider />
 
       {/* Mission Cards */}
-      <section className="bg-[#EAF4FF] py-14 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="bg-[#EAF4FF] px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {[
             {
               image: "/image/icons/Spirituality.png",
@@ -48,35 +48,35 @@ export default function Home() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="bg-white p-6 rounded-lg shadow-md text-center hover:scale-105 transition-transform duration-300 hover:shadow-xl border-b-4 border-[#0A4D9B]"
+              className="rounded-lg border-b-4 border-[#0A4D9B] bg-white p-5 text-center shadow-md transition-transform duration-300 hover:scale-[1.01] hover:shadow-xl sm:p-6"
             >
               <div className="flex justify-center mb-4">
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-20 h-20 rounded-full object-cover shadow-md border-2 border-[#D4AF37]"
+                  className="h-16 w-16 rounded-full border-2 border-[#D4AF37] object-cover shadow-md sm:h-20 sm:w-20"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src =
                       "https://placehold.co/80x80/e2e8f0/1e293b?text=No+Image";
                   }}
                 />
               </div>
-              <h3 className="font-serif text-xl text-[#083C78] font-bold mb-2">
+              <h3 className="mb-2 font-serif text-lg font-bold text-[#083C78] sm:text-xl">
                 {item.title}
               </h3>
-              <p className="text-gray-500 font-sans text-sm">{item.desc}</p>
+              <p className="font-sans text-sm text-gray-500">{item.desc}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* Services Preview */}
-      <section className="py-14 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-10">
-          <h2 className="font-serif text-3xl md:text-4xl text-[#083C78] mb-4">Temple Services</h2>
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <div className="mb-10 text-center">
+          <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">Temple Services</h2>
           <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           <ServiceCard
             image="/image/services/dailypooja.jpg"
             title="🪔 Daily Pooja"
@@ -114,23 +114,23 @@ export default function Home() {
             delay={0.5}
           />
         </div>
-        <div className="text-center mt-10">
-          <Link href="/services" className="inline-block bg-[#0A4D9B] text-white px-8 py-3 rounded font-bold uppercase tracking-wider hover:bg-[#D4AF37] hover:text-[#083C78] transition-colors">
+        <div className="mt-10 text-center">
+          <Link href="/services" className="inline-flex min-h-[44px] items-center justify-center rounded bg-[#0A4D9B] px-6 py-3 font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#D4AF37] hover:text-[#083C78] sm:px-8">
             View All Services
           </Link>
         </div>
       </section>
 
       {/* Donation Banner */}
-      <section className="bg-gradient-to-r from-[#083C78] to-[#0A4D9B] py-12 px-6 text-center text-white">
+      <section className="bg-gradient-to-r from-[#083C78] to-[#0A4D9B] px-4 py-12 text-center text-white sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto space-y-4">
-          <h2 className="font-serif text-2xl md:text-4xl text-[#D4AF37]">Support Temple Development</h2>
-          <p className="font-sans text-lg md:text-xl text-gray-200">Your Contribution Makes a Difference</p>
+          <h2 className="font-serif text-2xl text-[#D4AF37] sm:text-3xl md:text-4xl">Support Temple Development</h2>
+          <p className="font-sans text-base text-gray-200 sm:text-lg md:text-xl">Your Contribution Makes a Difference</p>
           <div className="w-24 h-1 bg-[#D4AF37] mx-auto my-4" />
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
             <Link
               href="/donate"
-              className="bg-[#D4AF37] text-[#083C78] px-8 py-4 rounded font-bold uppercase tracking-widest hover:bg-white transition-colors shadow-lg"
+              className="min-h-[44px] rounded bg-[#D4AF37] px-6 py-3 font-bold uppercase tracking-widest text-[#083C78] shadow-lg transition-colors hover:bg-white sm:px-8 sm:py-4"
               onClick={() => window.scrollTo(0, 0)}   // 👈 scrolls to top when clicked
             >
               Donate Now
@@ -140,25 +140,25 @@ export default function Home() {
       </section>
 
       {/* Gallery Preview */}
-      <section className="bg-gray-50 py-14 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="font-serif text-3xl md:text-4xl text-[#083C78] mb-4">Temple Gallery</h2>
+      <section className="bg-gray-50 px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-10 text-center">
+            <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">Temple Gallery</h2>
             <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
           </div>
-          <div className="columns-1 sm:columns-2 md:columns-3 gap-6 space-y-6">
+          <div className="columns-1 gap-4 space-y-4 sm:columns-2 sm:gap-6 sm:space-y-6 md:columns-3">
             {GALLERY_IMAGES.map((image) => (
               <img
                 key={image.id}
                 src={image.src}
                 alt={`Gallery ${image.id}`}
-                className="w-full rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
+                className="mb-4 w-full rounded-lg shadow-md transition-transform duration-300 hover:scale-105 sm:mb-0"
                 loading="lazy"
               />
             ))}
           </div>
-          <div className="text-center mt-10">
-            <Link href="/gallery" className="inline-block border-2 border-[#0A4D9B] text-[#0A4D9B] px-8 py-3 rounded font-bold uppercase tracking-wider hover:bg-[#0A4D9B] hover:text-white transition-colors">
+          <div className="mt-10 text-center">
+            <Link href="/gallery" className="inline-flex min-h-[44px] items-center justify-center rounded border-2 border-[#0A4D9B] px-6 py-3 font-bold uppercase tracking-wider text-[#0A4D9B] transition-colors hover:bg-[#0A4D9B] hover:text-white sm:px-8">
               View Complete Gallery
             </Link>
           </div>

@@ -68,17 +68,17 @@ export default function Trust() {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        className="h-[calc(100dvh-160px)] w-full"
+        className="min-h-[78dvh] w-full sm:min-h-[80dvh] md:h-[calc(100dvh-160px)]"
       >
         {trustItems.map((item, idx) => (
           <SwiperSlide key={idx}>
             <div className="flex h-full flex-col md:flex-row">
-              <div className="flex w-full items-center justify-center border-r-4 border-[#D4AF37] bg-[#FFF8E7] p-3 md:w-1/2 md:p-5">
+              <div className="flex w-full items-center justify-center border-b-4 border-[#D4AF37] bg-[#FFF8E7] p-3 md:w-1/2 md:border-b-0 md:border-r-4 md:p-5">
                 {item.image ? (
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="max-h-[68vh] max-w-full rounded-lg object-contain shadow-xl"
+                    className="max-h-[50vh] w-full max-w-full rounded-lg object-contain shadow-xl sm:max-h-[60vh] md:max-h-[68vh]"
                   />
                 ) : (
                   <div className="h-[60vh] w-full rounded-lg border border-dashed border-[#E8D8A3] bg-white/40" />
@@ -93,13 +93,13 @@ export default function Trust() {
                   transition={{ duration: 0.6 }}
                   className="max-w-xl"
                 >
-                  <h2 className="font-serif text-2xl md:text-3xl lg:text-[2.65rem] text-[#0A4D9B] leading-tight mb-3">
+                  <h2 className="mb-3 font-serif text-2xl leading-tight text-[#0A4D9B] sm:text-3xl md:text-3xl lg:text-[2.65rem]">
                     {item.name}
                   </h2>
 
                   <div className="w-24 h-1 bg-[#D4AF37] mb-4" />
 
-                  <p className="text-sm md:text-base text-gray-700 leading-6 md:leading-7 mb-3">
+                  <p className="mb-3 text-sm leading-6 text-gray-700 sm:text-base md:text-base md:leading-7">
                     {item.description}
                   </p>
 
@@ -108,7 +108,7 @@ export default function Trust() {
                       Trust Significance
                     </h3>
 
-                    <p className="text-gray-700 text-sm md:text-base leading-6 md:leading-7">
+                    <p className="text-sm leading-6 text-gray-700 sm:text-base md:text-base md:leading-7">
                       {item.significance}
                     </p>
                   </div>

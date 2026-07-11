@@ -56,6 +56,39 @@
   --font-mono: 'Montserrat', sans-serif;
 }
 
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img,
+video,
+iframe,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  max-width: 100%;
+}
+
 :root {
   --background: 210 80% 96%;
   --foreground: 0 0% 13%;
@@ -222,6 +255,18 @@ body {
   display: none !important;
   background-color: transparent !important;
   box-shadow: none !important;
+}
+
+.goog-te-banner-frame,
+.goog-te-menu-frame,
+.goog-te-tooltip-frame,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-aZ2wEe-OiiCO {
+  display: none !important;
+}
+
+.goog-te-combo {
+  max-width: 100%;
 }
 
 /* ===== GLOW TEXT – sequential line‑by‑line ===== */

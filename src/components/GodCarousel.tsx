@@ -55,16 +55,16 @@ export default function GodCarousel() {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        className="h-[calc(100dvh-160px)] w-full"
+        className="min-h-[78dvh] w-full sm:min-h-[80dvh] md:h-[calc(100dvh-160px)]"
       >
         {gods.map((god, idx) => (
           <SwiperSlide key={idx}>
             <div className="flex h-full flex-col md:flex-row">
-              <div className="flex w-full items-center justify-center border-r-4 border-[#D4AF37] bg-[#FFF8E7] p-3 md:w-1/2 md:p-5">
+              <div className="flex w-full items-center justify-center border-b-4 border-[#D4AF37] bg-[#FFF8E7] p-3 md:w-1/2 md:border-b-0 md:border-r-4 md:p-5">
                 <img
                   src={god.image}
                   alt={god.name}
-                  className="max-h-[68vh] max-w-full rounded-lg object-contain shadow-xl"
+                  className="max-h-[50vh] w-full max-w-full rounded-lg object-contain shadow-xl sm:max-h-[60vh] md:max-h-[68vh]"
                 />
               </div>
               <div className="flex w-full items-center bg-white p-4 md:w-1/2 md:p-6 lg:p-8">
@@ -73,20 +73,20 @@ export default function GodCarousel() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
-                  className="max-w-xl"
+                  className="w-full max-w-xl"
                 >
-                  <h2 className="font-serif text-2xl md:text-3xl lg:text-[2.65rem] text-[#0A4D9B] leading-tight mb-3">
+                  <h2 className="mb-3 font-serif text-2xl leading-tight text-[#0A4D9B] sm:text-3xl md:text-3xl lg:text-[2.65rem]">
                     {god.name}
                   </h2>
                   <div className="w-24 h-1 bg-[#D4AF37] mb-4" />
-                  <p className="text-sm md:text-base text-gray-700 leading-6 md:leading-7 mb-3">
+                  <p className="mb-3 text-sm leading-6 text-gray-700 sm:text-base md:text-base md:leading-7">
                     {god.description}
                   </p>
                   <div className="bg-[#EEF6FF] border-l-4 border-[#0A4D9B] p-4 md:p-5 rounded-md mb-3 shadow">
                     <h3 className="font-serif text-lg md:text-xl text-[#0A4D9B] mb-1">
                       Temple Significance
                     </h3>
-                    <p className="text-gray-700 text-sm md:text-base leading-6 md:leading-7">
+                    <p className="text-sm leading-6 text-gray-700 sm:text-base md:text-base md:leading-7">
                       {god.significance}
                     </p>
                   </div>

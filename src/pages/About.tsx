@@ -15,18 +15,18 @@ export default function About() {
     <div className="w-full bg-transparent">
 
       {/* ===== PART 1: HERO — Fits EXACTLY to screen height ===== */}
-      <section className="h-screen w-full px-4 md:px-6 flex items-center justify-center overflow-hidden">
+      <section className="flex min-h-[80dvh] w-full items-center justify-center overflow-hidden px-4 py-12 sm:min-h-[90dvh] sm:px-6 md:px-8 lg:h-screen lg:py-0">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={fadeUp}
           className="max-w-4xl mx-auto text-center px-2"
         >
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-[#083C78] leading-tight">
+          <h1 className="font-serif text-3xl leading-tight text-[#083C78] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
             ABOUT <br/>MAHASHAKTI PEETA <br className="hidden sm:block" /> TEMPLE
           </h1>
           <div className="w-20 md:w-24 h-1 bg-[#D4AF37] mx-auto mt-4 mb-6" />
-          <p className="font-sans text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto px-2 leading-relaxed">
+          <p className="mx-auto max-w-3xl px-2 font-sans text-base leading-relaxed text-gray-600 sm:text-lg md:text-xl lg:text-2xl">
             A divine sanctuary where ancient Vedic traditions meet heartfelt devotion,
             offering spiritual solace and guidance to all who seek the grace of the Divine Mother.
           </p>
@@ -34,9 +34,9 @@ export default function About() {
       </section>
 
       {/* ===== PART 2: TEMPLE INTRODUCTION — Full image, no crop, light blue bg ===== */}
-      <section className="min-h-screen px-6 flex items-center justify-center bg-blue-50">
-        <div className="max-w-7xl mx-auto w-full py-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
+      <section className="flex min-h-screen items-center justify-center bg-blue-50 px-4 py-10 sm:px-6 md:px-8">
+        <div className="mx-auto w-full max-w-7xl py-2 sm:py-6 lg:py-10">
+          <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 lg:gap-12">
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -45,9 +45,9 @@ export default function About() {
               className="order-1 md:order-none flex justify-center items-center"
             >
               <img
-                src="/public/image/Mahashakti_Temple.png"
+                src="/image/Mahashakti_Temple.png"
                 alt="Maha Shaktipeetha Temple"
-                className="w-full h-auto max-h-[70vh] rounded-2xl shadow-lg object-contain bg-gray-100"
+                className="h-auto max-h-[70vh] w-full rounded-2xl bg-gray-100 object-contain shadow-lg"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =
                     "https://placehold.co/600x400/e2e8f0/1e293b?text=Temple+Image";
@@ -62,11 +62,11 @@ export default function About() {
               variants={fadeUpDelay(0.2)}
               className="order-2"
             >
-              <h2 className="font-serif text-3xl md:text-4xl text-[#083C78] mb-3">
+              <h2 className="mb-3 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">
                 A Divine Sanctuary of Faith
               </h2>
               <div className="w-16 h-1 bg-[#D4AF37] mb-5" />
-              <div className="font-sans text-[15px] md:text-[16px] lg:text-[17px] text-gray-700 leading-relaxed md:leading-8 text-justify space-y-4">
+              <div className="space-y-4 text-justify font-sans text-[15px] leading-relaxed text-gray-700 md:text-[16px] md:leading-8 lg:text-[17px]">
                 <p>
                   Maha Shaktipeetha Temple is a sacred place dedicated to the Divine Mother,
                   where devotees come with faith and devotion to seek her blessings. Located in
@@ -100,7 +100,7 @@ export default function About() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUp}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center bg-white rounded-3xl shadow-xl p-6 md:p-8 lg:p-12"
+            className="grid grid-cols-1 items-center gap-8 rounded-3xl bg-white p-5 shadow-xl sm:p-6 md:p-8 lg:grid-cols-2 lg:gap-12 lg:p-12"
           >
             <div className="flex justify-center">
               <div className="w-full max-w-sm rounded-2xl overflow-hidden shadow-lg">
@@ -119,11 +119,11 @@ export default function About() {
               <span className="inline-block text-sm font-semibold uppercase tracking-[0.3em] text-[#D4AF37] mb-2">
                 The Dharmadarshi of Maha Shaktipeetha Temple
               </span>
-              <h2 className="font-serif text-3xl md:text-4xl text-[#083C78] mb-2">
+              <h2 className="mb-2 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">
                 Sri Shivappa S. S. – Dharmadarshi
               </h2>
               <div className="w-16 h-1 bg-[#D4AF37] mb-5" />
-              <div className="space-y-4 text-gray-700 text-[15px] md:text-[16px] lg:text-[17px] leading-relaxed md:leading-8 text-justify">
+              <div className="space-y-4 text-justify text-[15px] leading-relaxed text-gray-700 md:text-[16px] md:leading-8 lg:text-[17px]">
                 <p>
                   <strong>Sri Shivappa S. S.</strong> is the Dharmadarshi of Maha Shaktipeetha Temple.
                   He leads the temple with great devotion, sincerity, and respect for its sacred

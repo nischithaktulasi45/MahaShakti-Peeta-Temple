@@ -23,7 +23,7 @@ export default function MahaShaktiPeethas() {
 
   return (
     <div className="w-full bg-transparent py-12 min-h-[100dvh]">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Back button – styled as a button with arrow */}
         <div className="mb-6">
           <Link
@@ -47,11 +47,11 @@ export default function MahaShaktiPeethas() {
 
         {/* Header – same style as Gallery */}
         <div className="text-center mb-10">
-          <h1 className="font-serif text-3xl md:text-4xl text-[#083C78] mb-4">
+          <h1 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">
             18 Maha Shakti Peethas
           </h1>
           <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
-          <p className="mt-5 text-base md:text-lg text-gray-600 max-w-3xl mx-auto font-sans">
+          <p className="mx-auto mt-5 max-w-3xl font-sans text-sm text-gray-600 sm:text-base md:text-lg">
             The 18 Maha Shakti Peethas are the holiest shrines dedicated to Goddess Sati
             (Adi Shakti). According to legend, the divine body parts of Sati fell at these
             sacred sites when Lord Shiva carried her. Each peetha is a powerful energy
@@ -60,7 +60,7 @@ export default function MahaShaktiPeethas() {
         </div>
 
         {/* Grid of cards – 3 columns on large, 2 on medium, 1 on small */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {mahaShaktiPeethas.map((peetha, idx) => (
             <ShaktiPeethaCard key={peetha.id} peetha={peetha} index={idx} />
           ))}

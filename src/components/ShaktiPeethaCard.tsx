@@ -13,7 +13,7 @@ export default function ShaktiPeethaCard({ peetha, index }: Props) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, delay: index * 0.05 }}
-      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+      className="overflow-hidden rounded-xl bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl"
     >
       {/* Square image container */}
       <div className="aspect-square w-full overflow-hidden bg-gray-100">
@@ -30,27 +30,27 @@ export default function ShaktiPeethaCard({ peetha, index }: Props) {
       </div>
 
       <div className="p-5">
-        <h3 className="font-serif text-xl md:text-2xl text-[#0A4D9B] font-bold mb-1">
+        <h3 className="mb-1 font-serif text-lg font-bold text-[#0A4D9B] sm:text-xl md:text-2xl">
           {peetha.name}
         </h3>
-        <p className="text-sm text-gray-500 mb-2">
+        <p className="mb-2 text-sm text-gray-500">
           <span className="font-semibold">📍</span> {peetha.location}
         </p>
-        <p className="text-sm text-gray-700 mb-1">
+        <p className="mb-1 text-sm text-gray-700">
           <span className="font-semibold">Goddess:</span> {peetha.presidingGoddess}
         </p>
-        <p className="text-sm text-gray-700 mb-3">
+        <p className="mb-3 text-sm text-gray-700">
           <span className="font-semibold">Bhairava:</span> {peetha.associatedBhairava}
         </p>
 
-        <div className="space-y-2 text-sm text-gray-700 leading-relaxed">
+        <div className="space-y-2 text-sm leading-relaxed text-gray-700">
           {peetha.description.slice(0, 2).map((para, i) => (
             <p key={i}>{para}</p>
           ))}
         </div>
 
         <div className="mt-4 border-t border-gray-200 pt-4">
-          <p className="font-semibold text-[#0A4D9B] text-sm">Significance:</p>
+          <p className="text-sm font-semibold text-[#0A4D9B]">Significance:</p>
           <p className="text-sm text-gray-700">{peetha.significance}</p>
         </div>
 

@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { submitContactMessage } from "../services/contactService";
 
 type ContactFormState = {
   name: string;
@@ -17,7 +18,6 @@ const initialFormState: ContactFormState = {
   message: "",
 };
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
 const MAPS_QUERY = "X7JW+WF3 Bhantrakuppe, Karnataka";
 const MAPS_EMBED_URL = `https://www.google.com/maps?q=${encodeURIComponent(MAPS_QUERY)}&output=embed`;
 const MAPS_DIRECTIONS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAPS_QUERY)}`;
@@ -43,22 +43,10 @@ export default function Contact() {
     setStatusType(null);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/contact`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const payload = await response.json();
-
-      if (!response.ok) {
-        throw new Error(payload?.message || "Failed to send message");
-      }
+      const response = await submitContactMessage(formData);
 
       setStatusType("success");
-      setStatusMessage("Your message was saved successfully.");
+      setStatusMessage(response.data?.message || "Your message was saved successfully.");
       setFormData(initialFormState);
     } catch (error) {
       setStatusType("error");
@@ -70,25 +58,25 @@ export default function Contact() {
 
   return (
     <div className="w-full bg-transparent py-12 min-h-[100dvh]">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-10">
-          <h1 className="font-serif text-3xl md:text-4xl text-[#083C78] mb-4">Contact Us</h1>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 text-center">
+          <h1 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">Contact Us</h1>
           <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
-          <p className="mt-5 text-base md:text-lg text-gray-600 max-w-3xl mx-auto font-sans">
+          <p className="mx-auto mt-5 max-w-3xl font-sans text-sm text-gray-600 sm:text-base md:text-lg">
             We welcome your inquiries, feedback, and requests. Please reach out to us using the details below or fill out the contact form.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div className="bg-[#F8F9FA] text-[#083C78] p-8 md:p-10 rounded-2xl shadow-xl border border-[#EAF4FF] flex flex-col justify-between">
+        <div className="grid gap-8 lg:grid-cols-2">
+          <div className="flex flex-col justify-between rounded-2xl border border-[#EAF4FF] bg-[#F8F9FA] p-5 text-[#083C78] shadow-xl sm:p-8 md:p-10">
             <div>
-              <h2 className="font-serif text-3xl text-[#083C78] mb-4">Get in Touch</h2>
+              <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl">Get in Touch</h2>
               <div className="w-20 h-1 bg-[#D4AF37] mb-8" />
 
               <div className="space-y-6 font-sans">
-                <div className="flex items-start gap-4">
-                  <FaMapMarkerAlt className="text-[#D4AF37] text-2xl mt-1 flex-shrink-0" />
-                  <div>
+                <div className="flex flex-wrap items-start gap-4">
+                  <FaMapMarkerAlt className="mt-1 flex-shrink-0 text-2xl text-[#D4AF37]" />
+                  <div className="min-w-0">
                     <h4 className="font-bold text-lg mb-1">Address</h4>
                     <p className="text-gray-600">
                       Mahashakti Peeta Temple,<br />
@@ -98,9 +86,9 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <FaPhoneAlt className="text-[#D4AF37] text-2xl mt-1 flex-shrink-0" />
-                  <div>
+                <div className="flex flex-wrap items-start gap-4">
+                  <FaPhoneAlt className="mt-1 flex-shrink-0 text-2xl text-[#D4AF37]" />
+                  <div className="min-w-0">
                     <h4 className="font-bold text-lg mb-1">Phone</h4>
                     <p className="text-gray-600">
                       +91 9876543210<br />+91 9876543211 <br />+91 9686903945
@@ -108,9 +96,9 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <FaEnvelope className="text-[#D4AF37] text-2xl mt-1 flex-shrink-0" />
-                  <div>
+                <div className="flex flex-wrap items-start gap-4">
+                  <FaEnvelope className="mt-1 flex-shrink-0 text-2xl text-[#D4AF37]" />
+                  <div className="min-w-0">
                     <h4 className="font-bold text-lg mb-1">Email</h4>
                     <p className="text-gray-600">mahashakthipeetacharitabletres@gmail.com</p>
                   </div>
@@ -140,12 +128,12 @@ export default function Contact() {
             </a>
           </div>
 
-          <div className="p-8 md:p-10 bg-[#F8F9FA] rounded-2xl shadow-xl border border-[#EAF4FF]">
-            <h2 className="font-serif text-3xl text-[#083C78] mb-4">Send a Message</h2>
+          <div className="rounded-2xl border border-[#EAF4FF] bg-[#F8F9FA] p-5 shadow-xl sm:p-8 md:p-10">
+            <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl">Send a Message</h2>
             <div className="w-20 h-1 bg-[#D4AF37] mb-8" />
 
             <form className="space-y-6 font-sans" onSubmit={handleSubmit}>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-gray-700" htmlFor="name">
                     Full Name
@@ -244,7 +232,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#0A4D9B] text-white py-4 rounded font-bold uppercase tracking-wider hover:bg-[#083C78] hover:text-[#D4AF37] transition-colors font-mono shadow-md hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full min-h-[44px] rounded bg-[#0A4D9B] py-3 font-mono font-bold uppercase tracking-wider text-white shadow-md transition-colors hover:bg-[#083C78] hover:text-[#D4AF37] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70 sm:py-4"
               >
                 {isSubmitting ? "Submitting..." : "Submit Message"}
               </button>

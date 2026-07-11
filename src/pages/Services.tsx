@@ -4,20 +4,20 @@ import { motion } from "framer-motion";
 export default function Services() {
   return (
     <div className="w-full bg-transparent">
-      <div className="py-14 px-6 text-center">
-        <h1 className="font-serif text-3xl md:text-4xl text-[#083C78] mb-4">Temple Services</h1>
+      <div className="px-4 py-12 text-center sm:px-6 sm:py-14 lg:px-8">
+        <h1 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">Temple Services</h1>
         <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
         <p className="mt-5 font-sans text-base md:text-lg max-w-3xl mx-auto text-gray-600">
           Experience the divine presence through our daily rituals, sevas, and offerings.
         </p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 pb-14">
+      <div className="mx-auto max-w-7xl px-4 pb-14 sm:px-6 lg:px-8">
         
         {/* Timings Section */}
         <section className="mb-16">
-          <div className="text-center mb-10">
-            <h2 className="font-serif text-2xl md:text-3xl text-[#083C78] mb-4">Temple Timings</h2>
+          <div className="mb-10 text-center">
+            <h2 className="mb-4 font-serif text-xl text-[#083C78] sm:text-2xl md:text-3xl">Temple Timings</h2>
             <div className="w-20 h-1 bg-[#D4AF37] mx-auto" />
           </div>
           
@@ -26,22 +26,22 @@ export default function Services() {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100"
           >
-            <div className="bg-[#EAF4FF] grid grid-cols-2 p-6 border-b-2 border-[#0A4D9B]">
-              <div className="font-serif text-xl font-bold text-[#083C78]">Days</div>
-              <div className="font-serif text-xl font-bold text-[#083C78]">Timings</div>
+            <div className="grid grid-cols-1 border-b-2 border-[#0A4D9B] bg-[#EAF4FF] p-4 sm:grid-cols-2 sm:p-6">
+              <div className="font-serif text-lg font-bold text-[#083C78] sm:text-xl">Days</div>
+              <div className="font-serif text-lg font-bold text-[#083C78] sm:text-xl">Timings</div>
             </div>
             <div className="divide-y divide-gray-100 font-sans">
-              <div className="grid grid-cols-2 p-6 hover:bg-gray-50 transition-colors">
+              <div className="grid grid-cols-1 gap-2 p-4 transition-colors hover:bg-gray-50 sm:grid-cols-2 sm:gap-0 sm:p-6">
                 <div className="font-medium text-gray-800">Monday - Friday</div>
-                <div className="text-[#0A4D9B] font-bold">5:00 AM - 9:00 PM</div>
+                <div className="font-bold text-[#0A4D9B]">5:00 AM - 9:00 PM</div>
               </div>
-              <div className="grid grid-cols-2 p-6 hover:bg-gray-50 transition-colors bg-gray-50/50">
+              <div className="grid grid-cols-1 gap-2 bg-gray-50/50 p-4 transition-colors hover:bg-gray-50 sm:grid-cols-2 sm:gap-0 sm:p-6">
                 <div className="font-medium text-gray-800">Saturday - Sunday</div>
-                <div className="text-[#0A4D9B] font-bold">5:00 AM - 10:00 PM</div>
+                <div className="font-bold text-[#0A4D9B]">5:00 AM - 10:00 PM</div>
               </div>
-              <div className="grid grid-cols-2 p-6 hover:bg-gray-50 transition-colors">
+              <div className="grid grid-cols-1 gap-2 p-4 transition-colors hover:bg-gray-50 sm:grid-cols-2 sm:gap-0 sm:p-6">
                 <div className="font-medium text-gray-800">Festival Days</div>
-                <div className="text-[#0A4D9B] font-bold">4:00 AM - 11:00 PM</div>
+                <div className="font-bold text-[#0A4D9B]">4:00 AM - 11:00 PM</div>
               </div>
             </div>
           </motion.div>
@@ -49,8 +49,8 @@ export default function Services() {
 
         {/* Daily Sevas Section */}
         <section>
-          <div className="text-center mb-10">
-            <h2 className="font-serif text-2xl md:text-3xl text-[#083C78] mb-4">Daily Sevas</h2>
+          <div className="mb-10 text-center">
+            <h2 className="mb-4 font-serif text-xl text-[#083C78] sm:text-2xl md:text-3xl">Daily Sevas</h2>
             <div className="w-20 h-1 bg-[#D4AF37] mx-auto" />
           </div>
 
