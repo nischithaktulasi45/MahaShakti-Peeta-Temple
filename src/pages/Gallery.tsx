@@ -1,6 +1,11 @@
+import { useEffect } from "react";
 import GalleryGrid from "@/components/GalleryGrid";
 
 export default function Gallery() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="w-full bg-transparent py-12 min-h-[100dvh]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

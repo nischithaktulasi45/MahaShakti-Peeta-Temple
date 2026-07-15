@@ -158,7 +158,11 @@ export default function Home() {
             ))}
           </div>
           <div className="mt-10 text-center">
-            <Link href="/gallery" className="inline-flex min-h-[44px] items-center justify-center rounded border-2 border-[#0A4D9B] px-6 py-3 font-bold uppercase tracking-wider text-[#0A4D9B] transition-colors hover:bg-[#0A4D9B] hover:text-white sm:px-8">
+            <Link
+              href="/gallery"
+              className="inline-flex min-h-[44px] items-center justify-center rounded border-2 border-[#0A4D9B] px-6 py-3 font-bold uppercase tracking-wider text-[#0A4D9B] transition-colors hover:bg-[#0A4D9B] hover:text-white sm:px-8"
+              onClick={() => window.scrollTo(0, 0)}
+            >
               View Complete Gallery
             </Link>
           </div>
