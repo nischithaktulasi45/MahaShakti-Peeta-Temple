@@ -92,10 +92,10 @@ export default function GodCarousel() {
                   </div>
                   {god.showKnowMore && (
                     <Link
-                      href="/maha-shakti-peethas"
+                      href="/maha-shakti-peeta"
                       className="inline-flex items-center justify-center bg-[#D4AF37] px-6 py-2.5 text-sm font-bold uppercase tracking-wider text-[#083C78] shadow-[0_8px_20px_rgba(212,175,55,0.3)] transition-transform duration-300 hover:scale-105 hover:shadow-[0_12px_30px_rgba(212,175,55,0.4)] md:px-8 md:py-3 md:text-base"
                     >
-                      Know More
+                      More Details 
                     </Link>
                   )}
                 </motion.div>

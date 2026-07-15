@@ -46,7 +46,7 @@ export default function About() {
             >
               <img
                 src="/image/Mahashakti_Temple.png"
-                alt="Maha Shaktipeetha Temple"
+                alt="Maha Shaktipeeta Temple"
                 className="h-auto max-h-[70vh] w-full rounded-2xl bg-gray-100 object-contain shadow-lg"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =
@@ -68,7 +68,7 @@ export default function About() {
               <div className="w-16 h-1 bg-[#D4AF37] mb-5" />
               <div className="space-y-4 text-justify font-sans text-[15px] leading-relaxed text-gray-700 md:text-[16px] md:leading-8 lg:text-[17px]">
                 <p>
-                  Maha Shaktipeetha Temple is a sacred place dedicated to the Divine Mother,
+                  Maha Shaktipeeta Temple is a sacred place dedicated to the Divine Mother,
                   where devotees come with faith and devotion to seek her blessings. Located in
                   the peaceful surroundings of Magadi, the temple offers a calm and spiritual
                   atmosphere that inspires prayer, hope, and inner peace.
@@ -81,7 +81,7 @@ export default function About() {
                 </p>
                 <p>
                   Whether you visit to offer prayers, participate in religious ceremonies, or
-                  simply spend time in a peaceful environment, Maha Shaktipeetha Temple welcomes
+                  simply spend time in a peaceful environment, Maha Shaktipeeta Temple welcomes
                   everyone with warmth and devotion. It continues to be a place where faith is
                   strengthened, traditions are honored, and the blessings of the Divine Mother
                   are shared with all.
@@ -93,7 +93,7 @@ export default function About() {
       </section>
 
       {/* ===== PART 3: DHARMADARSHI — Light blue bg, white card stays ===== */}
-      <section className="min-h-screen px-6 flex items-center justify-center bg-blue-50">
+      <section className="min-h-screen px-4 py-10 flex items-center justify-center bg-blue-50 sm:px-6 md:px-8">
         <div className="max-w-7xl mx-auto w-full py-10">
           <motion.div
             initial="hidden"
@@ -117,7 +117,7 @@ export default function About() {
             </div>
             <div>
               <span className="inline-block text-sm font-semibold uppercase tracking-[0.3em] text-[#D4AF37] mb-2">
-                The Dharmadarshi of Maha Shaktipeetha Temple
+                The Dharmadarshi of Maha Shaktipeeta Temple
               </span>
               <h2 className="mb-2 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">
                 Sri Shivappa S. S. – Dharmadarshi
@@ -125,7 +125,7 @@ export default function About() {
               <div className="w-16 h-1 bg-[#D4AF37] mb-5" />
               <div className="space-y-4 text-justify text-[15px] leading-relaxed text-gray-700 md:text-[16px] md:leading-8 lg:text-[17px]">
                 <p>
-                  <strong>Sri Shivappa S. S.</strong> is the Dharmadarshi of Maha Shaktipeetha Temple.
+                  <strong>Sri Shivappa S. S.</strong> is the Dharmadarshi of Maha Shaktipeeta Temple.
                   He leads the temple with great devotion, sincerity, and respect for its sacred
                   traditions. His dedication helps ensure that the temple remains a peaceful and
                   spiritual place where devotees can worship and seek the blessings of the Divine Mother.
@@ -137,7 +137,7 @@ export default function About() {
                   creating an atmosphere of faith, devotion, and spiritual growth for everyone.
                 </p>
                 <p>
-                  Under his guidance, Maha Shaktipeetha Temple has become a place where people from
+                  Under his guidance, Maha Shaktipeeta Temple has become a place where people from
                   different backgrounds come to pray, find peace, and receive divine blessings.
                   Through his service and commitment, Sri Shivappa S. S. continues to inspire
                   devotees and supports the temple's mission of promoting spirituality, cultural

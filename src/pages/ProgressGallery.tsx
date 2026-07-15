@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const PROGRESS_VIDEOS = [
   { id: 1, src: "/progress/video1.mp4" },
@@ -24,8 +24,24 @@ const PROGRESS_VIDEOS = [
  
 ];
 
+type Orientation = "horizontal" | "vertical";
+
 export default function ProgressGallery() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
+  const [orientations, setOrientations] = useState<Record<number, Orientation>>({});
+
+  const sortedVideos = useMemo(() => {
+    return [...PROGRESS_VIDEOS].sort((a, b) => {
+      const aOrientation = orientations[a.id] || "horizontal";
+      const bOrientation = orientations[b.id] || "horizontal";
+
+      if (aOrientation === bOrientation) {
+        return a.id - b.id;
+      }
+
+      return aOrientation === "horizontal" ? -1 : 1;
+    });
+  }, [orientations]);
 
   useEffect(() => {
     if (!activeVideo) {
@@ -62,30 +78,49 @@ export default function ProgressGallery() {
         </div>
 
         <div className="mb-10 flex justify-center">
-          <span className="rounded-full bg-[#0A4D9B] px-6 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-lg shadow-[#0A4D9B]/30 sm:px-8">
+          <span className="rounded-full bg-[#0A4D9B] px-4 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-lg shadow-[#0A4D9B]/30 sm:px-8">
             All
           </span>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {PROGRESS_VIDEOS.map((video) => (
-            <article
-              key={video.id}
-              className="overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(8,60,120,0.12)] ring-1 ring-slate-200/70 transition-transform duration-300 hover:-translate-y-1"
-            >
-              <video
-                className="h-56 w-full cursor-pointer object-cover sm:h-60"
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="metadata"
-                onClick={() => setActiveVideo(video.src)}
+          {sortedVideos.map((video) => {
+            const orientation = orientations[video.id] || "horizontal";
+            const aspectClass =
+              orientation === "vertical" ? "aspect-[9/16]" : "aspect-[16/9]";
+
+            return (
+              <article
+                key={video.id}
+                className="overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(8,60,120,0.12)] ring-1 ring-slate-200/70 transition-transform duration-300 hover:-translate-y-1"
               >
-                <source src={video.src} type="video/mp4" />
-              </video>
-            </article>
-          ))}
+                <div className={`relative w-full overflow-hidden bg-slate-50 ${aspectClass}`}>
+                  <video
+                    className="absolute inset-0 h-full w-full cursor-pointer object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    onLoadedMetadata={(event) => {
+                      const media = event.currentTarget;
+                      const detectedOrientation: Orientation =
+                        media.videoWidth >= media.videoHeight ? "horizontal" : "vertical";
+
+                      setOrientations((current) =>
+                        current[video.id] === detectedOrientation
+                          ? current
+                          : { ...current, [video.id]: detectedOrientation }
+                      );
+                    }}
+                    onClick={() => setActiveVideo(video.src)}
+                  >
+                    <source src={video.src} type="video/mp4" />
+                  </video>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 

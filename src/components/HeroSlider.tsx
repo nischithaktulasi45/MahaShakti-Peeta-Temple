@@ -37,12 +37,12 @@ export default function HeroSlider() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/45" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-8 text-center sm:px-6 lg:px-8">
-        <p className="mx-auto mb-3 max-w-5xl text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-white sm:text-xs md:text-sm">
+        <p className="mx-auto mb-3 max-w-[90vw] text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-white sm:text-xs md:text-sm">
           Sacred Abode of the Divine Grace and Spiritual Enlightenment
         </p>
 
         <h1
-          className="mx-auto max-w-6xl font-serif text-3xl font-black uppercase leading-[1.05] tracking-[0.04em] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+          className="mx-auto max-w-[90vw] md:max-w-5xl font-serif text-3xl font-black uppercase leading-[1.05] tracking-[0.04em] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
           translate="no"
         >
           {titleLines.map((line, index) => (
@@ -59,7 +59,7 @@ export default function HeroSlider() {
           ))}
         </h1>
 
-        <p className="mx-auto mt-4 max-w-4xl text-base font-semibold leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)] sm:text-lg md:text-xl">
+        <p className="mx-auto mt-4 max-w-[90vw] text-base font-semibold leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)] sm:text-lg md:text-xl">
           Sacred Abode of the Divine Grace and Spiritual Enlightenment
         </p>
 
@@ -71,7 +71,7 @@ export default function HeroSlider() {
             Visit Temple
           </Link>
           <Link
-            href="/donate/qr"
+            href="/donate"
             className="inline-flex min-h-[44px] items-center justify-center border-2 border-white px-6 py-3 text-base font-bold text-white transition-colors duration-300 hover:bg-white hover:text-[#083C78] sm:px-8"
           >
             Donate Now

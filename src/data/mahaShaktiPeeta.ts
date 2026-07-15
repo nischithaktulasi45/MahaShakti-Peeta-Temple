@@ -12,16 +12,16 @@ export interface ShaktiPeetha {
   visitingInfo?: string;
 }
 
-export const mahaShaktiPeethas: ShaktiPeetha[] = [
+export const mahaShaktiPeeta: ShaktiPeetha[] = [
   {
     id: 1,
-    name: "Chamundeshwari Maha Shakti Peetha",
+    name: "Chamundeshwari Maha Shakti Peeta",
     image: "/image/shaktipeeta/chamundeshwari.png",
     location: "Mysuru, Karnataka, India",
     presidingGoddess: "Chamundeshwari",
     associatedBhairava: "–",
     description: [
-      "The Chamundeshwari Temple is located atop the Chamundi Hills in Mysuru. It is one of the most powerful Shakti Peethas, believed to be the site where the hair of Sati fell.",
+      "The Chamundeshwari Temple is located atop the Chamundi Hills in Mysuru. It is one of the most powerful Shakti Peetas, believed to be the site where the hair of Sati fell.",
       "The goddess is worshipped as the slayer of demons and the protector of the royal family of Mysore. The temple is a fine example of Dravidian architecture.",
       "Devotees climb 1,000 steps to reach the temple, seeking blessings for courage and prosperity.",
     ],
@@ -32,13 +32,13 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 2,
-    name: "Kanchi Kamakshi Amman Maha Shakti Peetha",
+    name: "Kanchi Kamakshi Amman Maha Shakti Peeta",
     image: "/image/shaktipeeta/kanchi.jpeg",
     location: "Kanchipuram, Tamil Nadu, India",
     presidingGoddess: "Kamakshi",
     associatedBhairava: "–",
     description: [
-      "The Kanchi Kamakshi Temple is a revered Shakti Peetha where the navel of Sati is believed to have fallen. The goddess is seated in a majestic posture with a sugarcane bow and flower arrows.",
+      "The Kanchi Kamakshi Temple is a revered Shakti Peeta where the navel of Sati is believed to have fallen. The goddess is seated in a majestic posture with a sugarcane bow and flower arrows.",
       "The temple is a center of Sri Vidya worship and attracts devotees from all over the world.",
       "The temple tank and the golden vimana are iconic features.",
     ],
@@ -49,7 +49,7 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 3,
-    name: "Jogulamba Devi Maha Shakti Peetha",
+    name: "Jogulamba Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/jogu.png",
     location: "Alampur, Telangana, India",
     presidingGoddess: "Jogulamba",
@@ -66,7 +66,7 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 4,
-    name: "Bhramaramba Devi Maha Shakti Peetha",
+    name: "Bhramaramba Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/brama.png",
     location: "Srisailam, Andhra Pradesh, India",
     presidingGoddess: "Bhramaramba",
@@ -83,13 +83,13 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 5,
-    name: "Kolhapur Mahalakshmi Maha Shakti Peetha",
+    name: "Kolhapur Mahalakshmi Maha Shakti Peeta",
     image: "/image/shaktipeeta/kollapura.jpeg",
     location: "Kolhapur, Maharashtra, India",
     presidingGoddess: "Mahalakshmi",
     associatedBhairava: "–",
     description: [
-      "The Mahalakshmi Temple in Kolhapur is one of the oldest Shakti Peethas, believed to be the site where the eyes of Sati fell.",
+      "The Mahalakshmi Temple in Kolhapur is one of the oldest Shakti Peetas, believed to be the site where the eyes of Sati fell.",
       "The idol is a striking stone sculpture of the goddess holding a mace, shield, and other weapons. She is flanked by Ganesha and a lion.",
       "The temple architecture is a fine blend of Dravidian and Chalukyan styles.",
     ],
@@ -100,7 +100,7 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 6,
-    name: "Mahapur Renuka Devi Maha Shakti Peetha",
+    name: "Mahapur Renuka Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/mahapur.png",
     location: "Mahur, Maharashtra, India",
     presidingGoddess: "Renuka",
@@ -117,13 +117,13 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 7,
-    name: "Mahakali Devi Maha Shakti Peetha",
+    name: "Mahakali Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/mahakali.png",
     location: "Ujjain, Madhya Pradesh, India",
     presidingGoddess: "Mahakali",
     associatedBhairava: "–",
     description: [
-      "The Mahakali Temple in Ujjain is one of the most ancient and powerful Shakti Peethas. It is believed that the lips of Sati fell here.",
+      "The Mahakali Temple in Ujjain is one of the most ancient and powerful Shakti Peetas. It is believed that the lips of Sati fell here.",
       "The goddess is worshipped as the fierce form of Durga, and the temple is an important site for Tantric rituals.",
       "Ujjain is also one of the twelve Jyotirlinga locations, enhancing its spiritual significance.",
     ],
@@ -134,13 +134,13 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 8,
-    name: "Puravatika Devi Maha Shakti Peetha",
+    name: "Puravatika Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/puravatika.png",
     location: "Andhra Pradesh, India",
     presidingGoddess: "Puravatika",
     associatedBhairava: "–",
     description: [
-      "The Puravatika Temple is a sacred Shakti Peetha where the chest of Sati is believed to have fallen. It is located in a serene region of Andhra Pradesh.",
+      "The Puravatika Temple is a sacred Shakti Peeta where the chest of Sati is believed to have fallen. It is located in a serene region of Andhra Pradesh.",
       "The goddess is worshipped as the protector of the region and is known for granting peace and prosperity.",
       "The temple architecture reflects the regional style.",
     ],
@@ -151,7 +151,7 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 9,
-    name: "Girija Devi Maha Shakti Peetha",
+    name: "Girija Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/girija.png",
     location: "Odisha, India",
     presidingGoddess: "Girija",
@@ -168,13 +168,13 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 10,
-    name: "Manikyamba Devi Maha Shakti Peetha",
+    name: "Manikyamba Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/manikyabma.jpeg",
     location: "Andhra Pradesh, India",
     presidingGoddess: "Manikyamba",
     associatedBhairava: "–",
     description: [
-      "The Manikyamba Temple is a prominent Shakti Peetha, believed to be the site where the ankle of Sati fell. The goddess is adorned with precious gems and is a symbol of divine wealth.",
+      "The Manikyamba Temple is a prominent Shakti Peeta, believed to be the site where the ankle of Sati fell. The goddess is adorned with precious gems and is a symbol of divine wealth.",
       "The temple is known for its beautiful idol and the celebration of various festivals.",
       "It is an important pilgrimage site for devotees seeking prosperity.",
     ],
@@ -185,13 +185,13 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 11,
-    name: "Kamakhya Devi Maha Shakti Peetha",
+    name: "Kamakhya Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/kamakya.png",
     location: "Guwahati, Assam, India",
     presidingGoddess: "Kamakhya",
     associatedBhairava: "Umananda",
     description: [
-      "Kamakhya Temple is a prominent Shakti Peetha situated on the Nilachal Hill. The yoni (genital) of Sati is believed to have fallen here.",
+      "Kamakhya Temple is a prominent Shakti Peeta situated on the Nilachal Hill. The yoni (genital) of Sati is believed to have fallen here.",
       "The temple is unique because it has no idol; the goddess is worshipped in the form of a natural rock fissure that is always moist.",
       "The Ambubachi Mela is the most famous festival, celebrating the menstrual cycle of the goddess.",
     ],
@@ -202,7 +202,7 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 12,
-    name: "Jwalamukhi Devi Maha Shakti Peetha",
+    name: "Jwalamukhi Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/jwala.png",
     location: "Jwalamukhi, Himachal Pradesh, India",
     presidingGoddess: "Jwalamukhi",
@@ -219,7 +219,7 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 13,
-    name: "Sarva Mangala Devi Maha Shakti Peetha",
+    name: "Sarva Mangala Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/sarva.png",
     location: "Gaya, Bihar, India",
     presidingGoddess: "Sarva Mangala",
@@ -236,7 +236,7 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 14,
-    name: "Vishalakshi Maha Shakti Peetha",
+    name: "Vishalakshi Maha Shakti Peeta",
     image: "/image/shaktipeeta/vishalakshi.png",
     location: "Kashi (Varanasi), Uttar Pradesh, India",
     presidingGoddess: "Vishalakshi",
@@ -253,13 +253,13 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 15,
-    name: "Sharada Maha Shakti Peetha",
+    name: "Sharada Maha Shakti Peeta",
     image: "/image/shaktipeeta/sharada.jpeg",
     location: "Sindh, Pakistan",
     presidingGoddess: "Sharada",
     associatedBhairava: "–",
     description: [
-      "The Sharada Peetha is one of the most ancient Shakti Peethas, located in the Neelum Valley of Pakistan-administered Kashmir. It is believed that the right hand of Sati fell here.",
+      "The Sharada Peeta is one of the most ancient Shakti Peetas, located in the Neelum Valley of Pakistan-administered Kashmir. It is believed that the right hand of Sati fell here.",
       "The temple ruins still attract devotees and historians. It was a major center of learning in ancient times.",
       "The goddess Sharada is revered as the goddess of knowledge and wisdom.",
     ],
@@ -270,7 +270,7 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 16,
-    name: "Shankari Devi Maha Shakti Peetha",
+    name: "Shankari Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/shankari.png",
     location: "Trincomalee, Sri Lanka",
     presidingGoddess: "Shankari",
@@ -287,7 +287,7 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 17,
-    name: "Shrunkalaya Devi Maha Shakti Peetha",
+    name: "Shrunkalaya Devi Maha Shakti Peeta",
     image: "/image/shaktipeeta/shrunkalaya.png",
     location: "West Bengal, India",
     presidingGoddess: "Shrinkala",
@@ -304,7 +304,7 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
   },
   {
     id: 18,
-    name: "Madhaveshwari Maha Shakti Peetha",
+    name: "Madhaveshwari Maha Shakti Peeta",
     image: "/image/shaktipeeta/madhaveshwari.png",
     location: "Prayagraj, Uttar Pradesh, India",
     presidingGoddess: "Madhaveshwari",
@@ -312,7 +312,7 @@ export const mahaShaktiPeethas: ShaktiPeetha[] = [
     description: [
       "The Madhaveshwari Temple is located in Prayagraj (Allahabad), at the confluence of the Ganga, Yamuna, and Saraswati rivers. It is believed that the wrist of Sati fell here.",
       "The goddess is worshipped as the supreme mother who blesses devotees with spiritual liberation.",
-      "Prayagraj is also famous for the Kumbh Mela, making this Peetha especially sacred.",
+      "Prayagraj is also famous for the Kumbh Mela, making this Peeta especially sacred.",
     ],
     significance: "Bestows salvation and spiritual purity.",
     highlights: ["Triveni Sangam", "Kumbh Mela", "Ancient temple"],

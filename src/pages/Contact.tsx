@@ -18,9 +18,10 @@ const initialFormState: ContactFormState = {
   message: "",
 };
 
-const MAPS_QUERY = "X7JW+WF3 Bhantrakuppe, Karnataka";
-const MAPS_EMBED_URL = `https://www.google.com/maps?q=${encodeURIComponent(MAPS_QUERY)}&output=embed`;
-const MAPS_DIRECTIONS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAPS_QUERY)}`;
+const MAPS_LAT = "12.9822625";
+const MAPS_LNG = "77.296171875";
+const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${MAPS_LAT},${MAPS_LNG}&t=k&z=19&output=embed`;
+const MAPS_DIRECTIONS_URL = `https://www.google.com/maps/search/?api=1&query=${MAPS_LAT},${MAPS_LNG}`;
 
 export default function Contact() {
   const [formData, setFormData] = useState<ContactFormState>(initialFormState);
@@ -67,8 +68,8 @@ export default function Contact() {
           </p>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-2">
-          <div className="flex flex-col justify-between rounded-2xl border border-[#EAF4FF] bg-[#F8F9FA] p-5 text-[#083C78] shadow-xl sm:p-8 md:p-10">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="flex flex-col justify-between rounded-2xl border border-[#EAF4FF] bg-[#F8F9FA] p-5 text-[#083C78] shadow-xl sm:p-6 md:p-8 lg:p-10">
             <div>
               <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl">Get in Touch</h2>
               <div className="w-20 h-1 bg-[#D4AF37] mb-8" />
@@ -91,7 +92,7 @@ export default function Contact() {
                   <div className="min-w-0">
                     <h4 className="font-bold text-lg mb-1">Phone</h4>
                     <p className="text-gray-600">
-                      +91 9876543210<br />+91 9876543211 <br />+91 9686903945
+                     +91 9876543211 <br />+91 9686903945
                     </p>
                   </div>
                 </div>
@@ -106,17 +107,16 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="mt-8 rounded-xl overflow-hidden border-4 border-[#D4AF37]/30 h-44 w-full bg-gray-200">
-              <iframe
-                src={MAPS_EMBED_URL}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Mahashakti Peeta location map"
-              ></iframe>
+            {/* Map container – fixed white space below map */}
+            <div className="mt-8 relative w-full overflow-hidden rounded-xl border-4 border-[#D4AF37]/30 bg-gray-200 h-[260px] sm:h-[320px] md:h-[420px]">
+                <iframe
+                  src={MAPS_EMBED_URL}
+                  title="Mahashakti Peeta location map"
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  style={{ width: "100%", height: "100%", display: "block", border: 0 }}
+                ></iframe>
             </div>
             <a
               href={MAPS_DIRECTIONS_URL}
@@ -214,7 +214,7 @@ export default function Contact() {
                   className="w-full px-4 py-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-[#0A4D9B] transition-colors resize-none"
                   placeholder="Type your message here..."
                   required
-                ></textarea>
+                />
               </div>
 
               {statusMessage && (

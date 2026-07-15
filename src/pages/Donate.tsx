@@ -129,7 +129,8 @@ export default function Donate() {
                   onChange={handleChange}
                   className="w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm transition focus:border-[#0A4D9B] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
                 >
-                  <option>Temple Development</option>
+                  <option>Temple Development Funds</option>
+                  <option>Constructions</option>
                   <option>Annaprasadam</option>
                   <option>Medical Support</option>
                 </select>
@@ -140,13 +141,13 @@ export default function Donate() {
               <button
                 type="button"
                 onClick={() => navigate("/contact")}
-                className="inline-flex min-h-[44px] min-w-[120px] items-center justify-center rounded-xl border border-slate-300 px-6 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-100 sm:px-8 sm:py-4"
+                className="inline-flex w-full min-h-[44px] items-center justify-center rounded-xl border border-slate-300 px-6 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-100 sm:w-auto sm:px-8 sm:py-4"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="inline-flex min-h-[44px] min-w-[180px] items-center justify-center rounded-xl bg-[#0A4D9B] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0A4D9B]/20 transition hover:bg-[#083C78] sm:px-8 sm:py-4"
+                className="inline-flex w-full min-h-[44px] items-center justify-center rounded-xl bg-[#0A4D9B] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0A4D9B]/20 transition hover:bg-[#083C78] sm:w-auto sm:px-8 sm:py-4"
               >
                 Submit &amp; Continue
               </button>

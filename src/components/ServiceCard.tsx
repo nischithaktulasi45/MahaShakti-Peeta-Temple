@@ -25,7 +25,7 @@ export default function ServiceCard({
       transition={{ delay }}
       className="group relative overflow-hidden rounded-xl bg-white shadow-md transition-shadow duration-300 hover:shadow-xl"
     >
-      <div className="relative h-64 w-full overflow-hidden sm:h-72">
+      <div className="relative h-[280px] w-full overflow-hidden sm:h-72">
         <img
           src={image}
           alt={title}

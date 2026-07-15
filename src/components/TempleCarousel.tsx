@@ -38,7 +38,7 @@ export default function TempleCarousel() {
           <SwiperSlide key={idx}>
             <div className="grid md:grid-cols-2 min-h-[600px]">
               <div 
-                className="w-full h-[400px] md:h-full bg-cover bg-center"
+                className="w-full h-[280px] sm:h-[340px] md:h-full bg-cover bg-center"
                 style={{ backgroundImage: `url(${temple.image})` }}
               />
               <div className="flex flex-col justify-center p-12 md:p-20 bg-gradient-to-r from-[#083C78] to-[#0A4D9B]">
@@ -53,7 +53,7 @@ export default function TempleCarousel() {
                     {temple.description}
                   </p>
                   <Link href="/services" className="inline-block border-2 border-[#D4AF37] text-[#D4AF37] px-8 py-3 rounded font-bold uppercase hover:bg-[#D4AF37] hover:text-[#083C78] transition-colors">
-                    Know More
+                   More Details
                   </Link>
                 </motion.div>
               </div>

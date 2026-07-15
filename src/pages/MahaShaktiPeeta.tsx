@@ -1,22 +1,22 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
-import { mahaShaktiPeethas } from "@/data/mahaShaktiPeethas";
+import { mahaShaktiPeeta } from "@/data/mahaShaktiPeeta";
 import ShaktiPeethaCard from "@/components/ShaktiPeethaCard";
 
-export default function MahaShaktiPeethas() {
+export default function MahaShaktiPeeta() {
   useEffect(() => {
-    document.title = "18 Maha Shakti Peethas – Sacred Abodes of Goddess Shakti";
+    document.title = "18 Maha Shakti Peetas – Sacred Abodes of Goddess Shakti";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute(
         "content",
-        "Explore the 18 Maha Shakti Peethas, the most sacred shrines dedicated to Goddess Sati. Learn about each temple's legend, goddess, and spiritual significance."
+        "Explore the 18 Maha Shakti Peetas, the most sacred shrines dedicated to Goddess Sati. Learn about each temple's legend, goddess, and spiritual significance."
       );
     } else {
       const meta = document.createElement("meta");
       meta.name = "description";
       meta.content =
-        "Explore the 18 Maha Shakti Peethas, the most sacred shrines dedicated to Goddess Sati. Learn about each temple's legend, goddess, and spiritual significance.";
+        "Explore the 18 Maha Shakti Peetas, the most sacred shrines dedicated to Goddess Sati. Learn about each temple's legend, goddess, and spiritual significance.";
       document.head.appendChild(meta);
     }
   }, []);
@@ -48,20 +48,20 @@ export default function MahaShaktiPeethas() {
         {/* Header – same style as Gallery */}
         <div className="text-center mb-10">
           <h1 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">
-            18 Maha Shakti Peethas
+            18 Maha Shakti Peeta
           </h1>
           <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
           <p className="mx-auto mt-5 max-w-3xl font-sans text-sm text-gray-600 sm:text-base md:text-lg">
-            The 18 Maha Shakti Peethas are the holiest shrines dedicated to Goddess Sati
+            The 18 Maha Shakti Peetas are the holiest shrines dedicated to Goddess Sati
             (Adi Shakti). According to legend, the divine body parts of Sati fell at these
-            sacred sites when Lord Shiva carried her. Each peetha is a powerful energy
+            sacred sites when Lord Shiva carried her. Each peeta is a powerful energy
             center and a destination for spiritual seekers from around the world.
           </p>
         </div>
 
         {/* Grid of cards – 3 columns on large, 2 on medium, 1 on small */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-          {mahaShaktiPeethas.map((peetha, idx) => (
+          {mahaShaktiPeeta.map((peetha, idx) => (
             <ShaktiPeethaCard key={peetha.id} peetha={peetha} index={idx} />
           ))}
         </div>

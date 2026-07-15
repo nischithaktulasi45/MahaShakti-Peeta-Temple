@@ -114,11 +114,6 @@ export default function Home() {
             delay={0.5}
           />
         </div>
-        <div className="mt-10 text-center">
-          <Link href="/services" className="inline-flex min-h-[44px] items-center justify-center rounded bg-[#0A4D9B] px-6 py-3 font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#D4AF37] hover:text-[#083C78] sm:px-8">
-            View All Services
-          </Link>
-        </div>
       </section>
 
       {/* Donation Banner */}
@@ -146,13 +141,13 @@ export default function Home() {
             <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">Temple Gallery</h2>
             <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
           </div>
-          <div className="columns-1 gap-4 space-y-4 sm:columns-2 sm:gap-6 sm:space-y-6 md:columns-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
             {GALLERY_IMAGES.map((image) => (
               <img
                 key={image.id}
                 src={image.src}
                 alt={`Gallery ${image.id}`}
-                className="mb-4 w-full rounded-lg shadow-md transition-transform duration-300 hover:scale-105 sm:mb-0"
+                className="w-full rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
                 loading="lazy"
               />
             ))}

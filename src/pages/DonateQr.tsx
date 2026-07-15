@@ -92,7 +92,7 @@ export default function DonateQr() {
 
           <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center">
-              <div className="mx-auto flex h-64 w-64 items-center justify-center rounded-2xl border-8 border-white bg-white p-4 shadow-inner">
+              <div className="mx-auto flex max-w-[320px] w-full items-center justify-center rounded-2xl border-8 border-white bg-white p-4 shadow-inner">
                 <img
                   src={qrSources[qrSourceIndex]}
                   alt="Donation QR code"

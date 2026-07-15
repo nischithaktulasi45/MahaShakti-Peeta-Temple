@@ -1,4 +1,5 @@
 import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
+import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Navbar from "@/components/Navbar";
@@ -20,7 +21,7 @@ import Contact from "@/pages/Contact";
 import DonateQr from "@/pages/DonateQr";
 
 // ✅ New import
-import MahaShaktiPeethas from "@/pages/MahaShaktiPeethas";
+import MahaShaktiPeeta from "@/pages/MahaShaktiPeeta";
 
 function Router() {
   return (
@@ -37,7 +38,7 @@ function Router() {
       <Route path="/donate/qr" component={DonateQr} />
       <Route path="/contact" component={Contact} />
       {/* ✅ New route */}
-      <Route path="/maha-shakti-peethas" component={MahaShaktiPeethas} />
+      <Route path="/maha-shakti-peeta" component={MahaShaktiPeeta} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -45,12 +46,24 @@ function Router() {
 
 function Layout() {
   const [location] = useLocation();
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  useEffect(() => {
+    const update = () => {
+      const el = document.getElementById("site-header");
+      setHeaderHeight(el ? el.offsetHeight : 0);
+    };
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <Navbar />
       <GoogleTranslateToggle />
-      <main className="flex-1">
+      <main className="flex-1" style={{ paddingTop: headerHeight }}>
         <Router />
       </main>
       <Footer />

@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { ShaktiPeetha } from "@/data/mahaShaktiPeethas";
+import { ShaktiPeetha } from "@/data/mahaShaktiPeeta";
 
 interface Props {
-  peetha: ShaktiPeetha;
+  peeta: ShaktiPeetha;
   index: number;
 }
 
@@ -24,7 +24,7 @@ export default function ShaktiPeethaCard({ peetha, index }: Props) {
           loading="lazy"
           onError={(e) => {
             (e.target as HTMLImageElement).src =
-              "https://placehold.co/400x400/e2e8f0/1e293b?text=Peetha";
+              "https://placehold.co/400x400/e2e8f0/1e293b?text=Peeta";
           }}
         />
       </div>
