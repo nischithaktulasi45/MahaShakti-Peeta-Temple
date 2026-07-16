@@ -23,8 +23,22 @@ export default function Footer() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <FaYoutube className="cursor-pointer text-xl transition-colors hover:text-[#D4AF37]" />
-            <FaInstagram className="cursor-pointer text-xl transition-colors hover:text-[#D4AF37]" />
-            <FaWhatsapp className="cursor-pointer text-xl transition-colors hover:text-[#D4AF37]" />
+            <a
+              href="https://www.instagram.com/mahashakti_peeta/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer text-xl transition-colors hover:text-[#D4AF37]"
+            >
+              <FaInstagram />
+            </a>
+            <a
+              href="https://wa.me/919686903945?text=Hello%20Shivappa,%20I%20would%20like%20to%20know%20more%20about%20the%20temple.%20Please%20assist%20me.%20Thank%20you."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer text-xl transition-colors hover:text-[#D4AF37]"
+            >
+              <FaWhatsapp />
+            </a>
           </div>
         </div>
 

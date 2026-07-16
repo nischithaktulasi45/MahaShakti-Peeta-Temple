@@ -85,10 +85,17 @@ export default function Navbar() {
           <div className="flex gap-3 text-sm">
             <FaYoutube className="hover:text-[#D4AF37] cursor-pointer transition-colors" />
 
-            <FaInstagram className="hover:text-[#D4AF37] cursor-pointer transition-colors" />
+            <a
+              href="https://www.instagram.com/mahashakti_peeta/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#D4AF37] cursor-pointer transition-colors"
+            >
+              <FaInstagram />
+            </a>
             {/* ✅ WhatsApp link with the same pre‑filled message as the floating button */}
             <a
-              href="https://api.whatsapp.com/send?phone=919686903945&text=Hello%20I%20would%20like%20to%20know%20more%20about%20temple%20services"
+              href="https://wa.me/919686903945?text=Hello%20Shivappa,%20I%20would%20like%20to%20know%20more%20about%20the%20temple.%20Please%20assist%20me.%20Thank%20you."
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-[#D4AF37] transition-colors"
