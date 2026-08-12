@@ -18,6 +18,7 @@ const NAV_LINKS = [
   { name: "About Us", path: "/about" },
   { name: "Gods", path: "/gods" },
   { name: "Trust", path: "/trust" },
+  { name: "Trust Documents", path: "/trust-documents" },
   { name: "Events", path: "/events" },
   { name: "progress gallery", path: "/progress_gallery" },
   { name: "Gallery", path: "/gallery" },
@@ -66,7 +67,7 @@ export default function Navbar() {
         <div className="flex gap-6">
           <span className="flex items-center gap-2">
             <FaPhoneAlt className="text-[#D4AF37]" />
-             +91 9876543211 ,
+             +91 9008294112 ,
             +91 9686903945
           </span>
 
@@ -86,7 +87,7 @@ export default function Navbar() {
             <FaYoutube className="hover:text-[#D4AF37] cursor-pointer transition-colors" />
 
             <a
-              href="https://www.instagram.com/mahashakti_peeta/"
+              href="https://www.instagram.com/mahashakti_peeta/?utm_source=ig_web_button_share_sheet"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-[#D4AF37] cursor-pointer transition-colors"

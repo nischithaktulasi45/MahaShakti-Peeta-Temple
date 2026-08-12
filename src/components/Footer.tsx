@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="flex flex-wrap justify-center gap-4">
             <FaYoutube className="cursor-pointer text-xl transition-colors hover:text-[#D4AF37]" />
             <a
-              href="https://www.instagram.com/mahashakti_peeta/"
+              href="https://www.instagram.com/mahashakti_peeta/?utm_source=ig_web_button_share_sheet"
               target="_blank"
               rel="noopener noreferrer"
               className="cursor-pointer text-xl transition-colors hover:text-[#D4AF37]"
@@ -78,7 +78,7 @@ export default function Footer() {
             </li>
             <li className="flex items-center justify-center gap-3 text-center">
               <FaPhoneAlt className="text-[#D4AF37]" />
-              <span>+91 9876543211, +91 9686903945</span>
+              <span>+91 9008294112 ,+91 9686903945</span>
             </li>
             <li className="flex items-center justify-center gap-2 text-center">
               <SiGmail className="flex-shrink-0 text-sm text-[#D4AF37] md:text-base" />

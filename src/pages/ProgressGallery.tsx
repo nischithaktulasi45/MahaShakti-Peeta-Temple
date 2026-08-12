@@ -1,47 +1,28 @@
 import { useEffect, useMemo, useState } from "react";
-
-const PROGRESS_VIDEOS = [
-  { id: 1, src: "/progress/video1.mp4" },
-  { id: 2, src: "/progress/video2.mp4" },
-  { id: 3, src: "/progress/video3.mp4" },
-  { id: 4, src: "/progress/video4.mp4" },
-  { id: 5, src: "/progress/video5.mp4" },
-  { id: 6, src: "/progress/video6.mp4" },
-  { id: 7, src: "/progress/video7.mp4" },
-  { id: 8, src: "/progress/video8.mp4" },
-  { id: 9, src: "/progress/video9.mp4" },
-  { id: 10, src: "/progress/video10.mp4" },
-  { id: 11, src: "/progress/video11.mp4" },
-  { id: 12, src: "/progress/video12.mp4" },
-  { id: 13, src: "/progress/video13.mp4" },
-  { id: 14, src: "/progress/video14.mp4" },
-  { id: 15, src: "/progress/video15.mp4" },
-  { id: 16, src: "/progress/video16.mp4" },
-  { id: 17, src: "/progress/video17.mp4" },
-  { id: 18, src: "/progress/video18.mp4" },
-  { id: 19, src: "/progress/video19.mp4" },
-  // 🆕 New video20 – muted by default (all videos have muted attribute)
- 
-];
-
-type Orientation = "horizontal" | "vertical";
+import { contentService } from "@/services/contentService";
+import { sortMediaByOrientation, type MediaOrientation } from "@/lib/mediaOrientation";
 
 export default function ProgressGallery() {
+  const [videos, setVideos] = useState<Array<{ _id: string; title: string; videoUrl: string }>>([]);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
-  const [orientations, setOrientations] = useState<Record<number, Orientation>>({});
+  const [orientations, setOrientations] = useState<Record<string, MediaOrientation>>({});
+
+  useEffect(() => {
+    const loadVideos = async () => {
+      try {
+        const response = await contentService.getVideos();
+        setVideos(response.data || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadVideos();
+  }, []);
 
   const sortedVideos = useMemo(() => {
-    return [...PROGRESS_VIDEOS].sort((a, b) => {
-      const aOrientation = orientations[a.id] || "horizontal";
-      const bOrientation = orientations[b.id] || "horizontal";
-
-      if (aOrientation === bOrientation) {
-        return a.id - b.id;
-      }
-
-      return aOrientation === "horizontal" ? -1 : 1;
-    });
-  }, [orientations]);
+    return sortMediaByOrientation(videos, (video) => orientations[video._id]);
+  }, [orientations, videos]);
 
   useEffect(() => {
     if (!activeVideo) {
@@ -85,13 +66,13 @@ export default function ProgressGallery() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {sortedVideos.map((video) => {
-            const orientation = orientations[video.id] || "horizontal";
+            const orientation = orientations[video._id] || "landscape";
             const aspectClass =
-              orientation === "vertical" ? "aspect-[9/16]" : "aspect-[16/9]";
+              orientation === "portrait" ? "aspect-[9/16]" : "aspect-[16/9]";
 
             return (
               <article
-                key={video.id}
+                key={video._id}
                 className="overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(8,60,120,0.12)] ring-1 ring-slate-200/70 transition-transform duration-300 hover:-translate-y-1"
               >
                 <div className={`relative w-full overflow-hidden bg-slate-50 ${aspectClass}`}>
@@ -104,18 +85,18 @@ export default function ProgressGallery() {
                     preload="metadata"
                     onLoadedMetadata={(event) => {
                       const media = event.currentTarget;
-                      const detectedOrientation: Orientation =
-                        media.videoWidth >= media.videoHeight ? "horizontal" : "vertical";
+                      const detectedOrientation: MediaOrientation =
+                        media.videoWidth >= media.videoHeight ? "landscape" : "portrait";
 
                       setOrientations((current) =>
-                        current[video.id] === detectedOrientation
+                        current[video._id] === detectedOrientation
                           ? current
-                          : { ...current, [video.id]: detectedOrientation }
+                          : { ...current, [video._id]: detectedOrientation }
                       );
                     }}
-                    onClick={() => setActiveVideo(video.src)}
+                    onClick={() => setActiveVideo(video.videoUrl)}
                   >
-                    <source src={video.src} type="video/mp4" />
+                    <source src={video.videoUrl} type="video/mp4" />
                   </video>
                 </div>
               </article>

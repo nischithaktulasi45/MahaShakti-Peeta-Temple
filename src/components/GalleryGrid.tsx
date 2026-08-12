@@ -1,48 +1,39 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { contentService } from "@/services/contentService";
+import { sortMediaByOrientation, type MediaOrientation } from "@/lib/mediaOrientation";
 
 const CATEGORIES = ["All"];
-
-const IMAGES = [
-  
-  // New 10 photos (photo1.jpg to photo10.jpg)
-  { id: 13, src: "/image/photo1.jpeg", category: "All" },
-  { id: 14, src: "/image/photo2.jpeg", category: "All" },
-  { id: 15, src: "/image/photo3.jpeg", category: "All" },
-  { id: 16, src: "/image/photo4.jpeg", category: "All" },
-  { id: 17, src: "/image/photo5.jpeg", category: "All" },
-  { id: 18, src: "/image/photo6.jpeg", category: "All" },
-  { id: 19, src: "/image/photo7.jpeg", category: "All" },
-  { id: 20, src: "/image/photo8.jpeg", category: "All" },
-  
-
-
-  // Existing 12 images
-  { id: 1, src: "/image/page_1.jpg", category: "All" },
-  { id: 2, src: "/image/page_2.jpg", category: "All" },
-  { id: 3, src: "/image/page_3.jpg", category: "All" },
-  { id: 4, src: "/image/page_4.jpg", category: "All" },
-  { id: 5, src: "/image/page_5.jpg", category: "All" },
-  { id: 6, src: "/image/page_6.jpg", category: "All" },
-  { id: 7, src: "/image/page_7.jpg", category: "All" },
-  { id: 8, src: "/image/page_8.jpg", category: "All" },
-  { id: 9, src: "/image/page_9.jpg", category: "All" },
-  { id: 10, src: "/image/page_10.jpg", category: "All" },
-  { id: 11, src: "/image/page_11.jpg", category: "All" },
-  { id: 12, src: "/image/page_12.jpg", category: "All" },
-];
 
 // Smaller placeholder SVG
 const PLACEHOLDER_SVG =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='24' fill='%234a5568' text-anchor='middle' dy='.3em'%3ENo Image%3C/text%3E%3C/svg%3E";
 
 export default function GalleryGrid() {
+  const [images, setImages] = useState<Array<{ _id: string; title: string; imageUrl: string; category: string }>>([]);
   const [activeCategory, setActiveCategory] = useState("All");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
+  const [imageOrientations, setImageOrientations] = useState<Record<string, MediaOrientation>>({});
 
-  const filteredImages = IMAGES.filter(img => activeCategory === "All" || img.category === activeCategory);
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const response = await contentService.getGallery();
+        setImages(response.data || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadImages();
+  }, []);
+
+  const filteredImages = useMemo(() => {
+    const visibleImages = images.filter((img) => activeCategory === "All" || img.category === activeCategory);
+    return sortMediaByOrientation(visibleImages, (img) => imageOrientations[img._id]);
+  }, [activeCategory, imageOrientations, images]);
 
   const openLightbox = (index: number) => {
     setCurrentImageIdx(index);
@@ -88,17 +79,22 @@ export default function GalleryGrid() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
-              key={img.id}
+              key={img._id}
               className="relative rounded-lg overflow-hidden group cursor-pointer shadow-sm hover:shadow-xl transition-shadow"
               onClick={() => openLightbox(idx)}
             >
               {/* Smaller aspect ratio: 3:4 (portrait) to reduce width, or use fixed height */}
               <div className="aspect-w-3 aspect-h-4">
                 <img
-                  src={img.src}
-                  alt="Gallery item"
+                  src={img.imageUrl}
+                  alt={img.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   loading="lazy"
+                  onLoad={(event) => {
+                    const media = event.currentTarget;
+                    const orientation: MediaOrientation = media.naturalWidth >= media.naturalHeight ? "landscape" : "portrait";
+                    setImageOrientations((current) => (current[img._id] === orientation ? current : { ...current, [img._id]: orientation }));
+                  }}
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = PLACEHOLDER_SVG;
                   }}
@@ -131,8 +127,8 @@ export default function GalleryGrid() {
               <FaChevronLeft />
             </button>
             <img 
-              src={filteredImages[currentImageIdx].src} 
-              alt="Lightbox view" 
+              src={filteredImages[currentImageIdx]?.imageUrl} 
+              alt={filteredImages[currentImageIdx]?.title || "Lightbox view"} 
               className="max-h-[90vh] max-w-[90vw] object-contain shadow-2xl rounded"
               onClick={(e) => e.stopPropagation()}
               onError={(e) => {

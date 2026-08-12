@@ -92,7 +92,7 @@ export default function Contact() {
                   <div className="min-w-0">
                     <h4 className="font-bold text-lg mb-1">Phone</h4>
                     <p className="text-gray-600">
-                     +91 9876543211 <br />+91 9686903945
+                     +91 9008294112 <br />+91 9686903945
                     </p>
                   </div>
                 </div>
