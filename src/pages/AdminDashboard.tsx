@@ -6,12 +6,16 @@ import { adminService } from "@/services/adminService";
 interface GalleryItem { _id: string; title: string; imageUrl: string; category: string; createdAt?: string; }
 interface ProgressVideo { _id: string; title: string; videoUrl: string; createdAt?: string; }
 interface EventItem { _id: string; title: string; date: string; location: string; createdAt?: string; }
+interface ContactMessage { _id: string; name: string; email: string; phone: string; subject: string; message: string; createdAt: string; }
+interface DonationRecord { _id: string; name: string; email: string; phone: string; amount: number; purpose: string; utrNumber: string; paymentStatus: string; createdAt: string; }
 
 export default function AdminDashboard() {
   const [, setLocation] = useLocation();
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
   const [videos, setVideos] = useState<ProgressVideo[]>([]);
   const [events, setEvents] = useState<EventItem[]>([]);
+  const [contactMessages, setContactMessages] = useState<ContactMessage[]>([]);
+  const [donationRecords, setDonationRecords] = useState<DonationRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [form, setForm] = useState({ title: "", description: "", imageUrl: "", category: "General", videoUrl: "", thumbnailUrl: "", date: "", time: "", location: "", contactInfo: "" });
@@ -25,14 +29,18 @@ export default function AdminDashboard() {
 
     const loadData = async () => {
       try {
-        const [galleryRes, videoRes, eventRes] = await Promise.all([
+        const [galleryRes, videoRes, eventRes, contactRes, donationRes] = await Promise.all([
           contentService.getGallery(),
           contentService.getVideos(),
           contentService.getEvents(),
+          adminService.getContactMessages(),
+          adminService.getDonationRecords(),
         ]);
-        setGallery(galleryRes.data || []);
-        setVideos(videoRes.data || []);
-        setEvents(eventRes.data || []);
+        setGallery(galleryRes || []);
+        setVideos(videoRes || []);
+        setEvents(eventRes || []);
+        setContactMessages(contactRes?.data || []);
+        setDonationRecords(donationRes?.data || []);
       } catch (error) {
         console.error(error);
       } finally {
@@ -56,14 +64,18 @@ export default function AdminDashboard() {
 
   const refreshData = async () => {
     setLoading(true);
-    const [galleryRes, videoRes, eventRes] = await Promise.all([
+    const [galleryRes, videoRes, eventRes, contactRes, donationRes] = await Promise.all([
       contentService.getGallery(),
       contentService.getVideos(),
       contentService.getEvents(),
+      adminService.getContactMessages(),
+      adminService.getDonationRecords(),
     ]);
     setGallery(galleryRes.data || []);
     setVideos(videoRes.data || []);
     setEvents(eventRes.data || []);
+    setContactMessages(contactRes.data || []);
+    setDonationRecords(donationRes.data || []);
     setLoading(false);
   };
 
@@ -119,6 +131,8 @@ export default function AdminDashboard() {
           <nav className="mt-8 space-y-2">
             {[
               ["dashboard", "Dashboard"],
+              ["contacts", "Contact Messages"],
+              ["donations", "Donation Records"],
               ["gallery", "Gallery Photos"],
               ["videos", "Progress Videos"],
               ["events", "Events"],
@@ -231,6 +245,72 @@ export default function AdminDashboard() {
                       <button onClick={() => handleDeleteEvent(item._id)} className="rounded-lg bg-red-600 px-3 py-2 text-sm">Delete</button>
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "contacts" && (
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+                <h2 className="text-xl font-semibold">Contact Messages</h2>
+                <div className="mt-4 divide-y divide-slate-800">
+                  {contactMessages.length === 0 ? (
+                    <p className="text-slate-400">No contact messages yet.</p>
+                  ) : (
+                    contactMessages.map((message) => (
+                      <div key={message._id} className="rounded-2xl border border-slate-800 p-4 even:bg-slate-950/50">
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                          <div>
+                            <p className="font-semibold">{message.name}</p>
+                            <p className="text-sm text-slate-400">{new Date(message.createdAt).toLocaleString()}</p>
+                          </div>
+                          <div className="space-y-1 text-right text-sm text-slate-400">
+                            <p>{message.email}</p>
+                            <p>{message.phone}</p>
+                          </div>
+                        </div>
+                        <div className="mt-3 space-y-2 text-sm text-slate-300">
+                          <p><span className="font-semibold">Subject:</span> {message.subject}</p>
+                          <p><span className="font-semibold">Message:</span> {message.message}</p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "donations" && (
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+                <h2 className="text-xl font-semibold">Donation Records</h2>
+                <div className="mt-4 divide-y divide-slate-800">
+                  {donationRecords.length === 0 ? (
+                    <p className="text-slate-400">No donation records yet.</p>
+                  ) : (
+                    donationRecords.map((record) => (
+                      <div key={record._id} className="rounded-2xl border border-slate-800 p-4 even:bg-slate-950/50">
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                          <div>
+                            <p className="font-semibold">{record.name}</p>
+                            <p className="text-sm text-slate-400">{new Date(record.createdAt).toLocaleString()}</p>
+                          </div>
+                          <div className="space-y-1 text-right text-sm text-slate-400">
+                            <p>{record.email}</p>
+                            <p>{record.phone}</p>
+                          </div>
+                        </div>
+                        <div className="mt-3 grid gap-3 text-sm text-slate-300 md:grid-cols-2">
+                          <p><span className="font-semibold">Amount:</span> ₹{record.amount}</p>
+                          <p><span className="font-semibold">Status:</span> {record.paymentStatus}</p>
+                          <p><span className="font-semibold">Purpose:</span> {record.purpose}</p>
+                          <p><span className="font-semibold">UTR Number:</span> {record.utrNumber}</p>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
