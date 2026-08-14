@@ -84,7 +84,15 @@ export default function Navbar() {
 
         <div className="flex items-center gap-4">
           <div className="flex gap-3 text-sm">
-            <FaYoutube className="hover:text-[#D4AF37] cursor-pointer transition-colors" />
+            <a
+              href="https://www.youtube.com/@mahashakthipeetacharitabletrus"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#D4AF37] cursor-pointer transition-colors"
+              aria-label="Visit Mahashakti Peeta Charitable Trust on YouTube"
+            >
+              <FaYoutube />
+            </a>
 
             <a
               href="https://www.instagram.com/mahashakti_peeta/?utm_source=ig_web_button_share_sheet"
@@ -116,12 +124,12 @@ export default function Navbar() {
       </div>
 
       {/* Main Navbar */}
-      <nav className="bg-[#0A4D9B] px-3 py-3 text-white sm:px-6 sm:py-4">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
+      <nav className="bg-[#0A4D9B] px-3 py-2 text-white sm:px-5 lg:px-6">
+        <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-3">
           {/* Logo + Title */}
           <Link
             href="/"
-            className="flex min-w-0 items-center gap-2 sm:gap-3"
+            className="flex min-w-0 flex-shrink-0 items-center gap-2 sm:gap-3 lg:gap-4"
           >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 p-1 shadow-lg shadow-black/25 ring-2 ring-[#D4AF37]/70 backdrop-blur-sm sm:h-14 sm:w-14 lg:h-16 lg:w-16">
               <img
@@ -132,11 +140,11 @@ export default function Navbar() {
             </div>
 
             {language === "kn" ? (
-              <h1 className="max-w-[220px] sm:max-w-[260px] font-serif font-bold text-[#D4AF37] text-base sm:text-lg md:text-xl leading-snug whitespace-normal break-words tracking-normal">
+              <h1 className="max-w-[220px] whitespace-normal break-words font-serif text-base font-bold leading-[0.95] tracking-normal text-[#D4AF37] sm:max-w-[260px] sm:text-lg md:text-xl">
                 ಮಹಾಶಕ್ತಿ ಪೀಠ <br />ದೇವಾಲಯ
               </h1>
             ) : (
-              <h1 className="max-w-[220px] sm:max-w-[260px] font-serif text-base font-bold tracking-wider text-[#D4AF37] sm:text-lg md:text-xl lg:text-2xl">
+              <h1 className="max-w-[220px] whitespace-normal break-words font-serif text-base font-bold leading-[0.95] tracking-[0.08em] text-[#D4AF37] sm:max-w-[260px] sm:text-lg md:text-xl lg:text-[2rem]">
                 Mahashakti Peeta
                 <br /> Temple
               </h1>
@@ -144,7 +152,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden items-center gap-4 lg:flex xl:gap-6">
+          <div className="hidden flex-1 items-center justify-center gap-1 overflow-visible lg:flex xl:gap-2 2xl:gap-3">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.path}
@@ -154,27 +162,33 @@ export default function Navbar() {
                   link.name === "Donate"
                     ? `
                     relative
-                    overflow-hidden
-                    flex
+                    inline-flex
                     items-center
+                    justify-center
                     gap-2
-                    px-6
-                    py-2
+                    whitespace-nowrap
                     rounded-full
                     bg-gradient-to-r
                     from-yellow-500
                     via-orange-400
                     to-yellow-500
-                    text-white
+                    px-5
+                    py-2
+                    text-[0.72rem]
                     font-bold
+                    text-white
                     shadow-lg
                     shadow-yellow-500/60
                     transition-all
                     duration-300
-                    hover:scale-110
+                    hover:scale-105
                     animate-pulse
+                    ml-1
+                    sm:text-sm
+                    lg:text-[0.9rem]
+                    xl:text-base
                   `
-                    : `font-sans text-sm font-medium transition-all duration-300 py-2 border-b-2 ${
+                    : `whitespace-nowrap border-b-2 px-1 py-2 text-[0.68rem] font-medium leading-none transition-all duration-300 sm:text-[0.72rem] md:text-[0.8rem] lg:text-[0.85rem] xl:text-base ${
                         location === link.path
                           ? "border-[#D4AF37] text-[#D4AF37]"
                           : "border-transparent hover:text-[#D4AF37]"

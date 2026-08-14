@@ -1,69 +1,43 @@
 import { useState, useEffect } from "react";
+import { contentService } from "@/services/contentService";
 
 type EventCard = {
+  _id: string;
   title: string;
   description: string;
-  image: string;
+  imageUrl: string;
   tag?: string;
 };
 
-const events: EventCard[] = [
-  {
-    title: "Siddha Eye Drops",
-    description:
-      "Distribution of Siddha eye drops every month for community wellness and support.",
-    image: "/image/event/Sidda.jpeg",
-    tag: "Every 30",
-  },
-  {
-    title: "Blood Donation",
-    description:
-      "A monthly blood donation drive that encourages lifesaving service and community participation.",
-    image: "/image/event/blood.jpg",
-    tag: "Monthly",
-  },
-   {
-    title: "Book Donation",
-    description:
-      "Donate books and support reading, learning, and spiritual education in the community.",
-    image: "/image/event/book.jpg",
-    
-  },
-  {
-    title: "Health Camps",
-    description:
-      "Free health camps that offer basic checkups, wellness guidance, and community care.",
-    image: "/image/event/health.png",
-    tag: "Free Care",
-  },
-  {
-    title: "Annadana Seva",
-    description:
-      "Temple food service and community sharing for devotees and visitors.",
-    image: "/image/event/dasoha.avif",
-    tag: "Seva",
-  },
-  {
-    title: "Tree Plantation",
-    description:
-      "Green initiatives focused on planting and protecting trees around the temple area.",
-    image: "/image/event/tree.jpg",
-    tag: "Eco",
-  },
-  {
-    title: "Vadya Goshti",
-    description:
-      "Traditional music and devotional programs that enrich temple celebrations.",
-    image: "/image/event/vadya.jpg",
-    tag: "Cultural",
-  },
-];
-
 export default function Events() {
+  const [events, setEvents] = useState<EventCard[]>([]);
   const [language, setLanguage] = useState<"en" | "kn">(() => {
     const saved = typeof window !== "undefined" ? localStorage.getItem("site-language") : null;
     return saved === "kn" ? "kn" : "en";
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await contentService.getEvents();
+        const responseData = Array.isArray(response?.data) ? response.data : [];
+        console.info("Temple Events loaded:", responseData.length);
+        setEvents(responseData);
+      } catch (error) {
+        console.error("Failed to load temple events:", error);
+        setError("Unable to load events right now. Please try again later.");
+        setEvents([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEvents();
+  }, []);
 
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
@@ -96,35 +70,49 @@ export default function Events() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {events.map((item) => (
-            <article
-              key={item.title}
-              className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/70 bg-white/90 shadow-[0_18px_50px_rgba(10,77,155,0.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_65px_rgba(10,77,155,0.14)]"
-            >
-              <div className="relative h-64 w-full overflow-hidden rounded-t-[32px]">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="absolute inset-0 w-full h-full object-cover object-center"
-                  loading="lazy"
-                />
-              </div>
+        {loading ? (
+          <div className="mt-12 rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center text-sm text-slate-600 shadow-sm">
+            Loading events...
+          </div>
+        ) : error ? (
+          <div className="mt-12 rounded-2xl border border-red-200 bg-red-50 px-6 py-12 text-center text-sm text-red-700">
+            {error}
+          </div>
+        ) : events.length === 0 ? (
+          <div className="mt-12 rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center text-sm text-slate-600 shadow-sm">
+            No events available.
+          </div>
+        ) : (
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {events.map((item) => (
+              <article
+                key={item._id}
+                className="group flex h-full max-w-full flex-col overflow-hidden rounded-3xl border border-white/70 bg-white/90 shadow-[0_18px_50px_rgba(10,77,155,0.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_65px_rgba(10,77,155,0.14)]"
+              >
+                <div className="relative h-64 w-full max-w-full overflow-hidden rounded-t-[32px] bg-slate-100">
+                  <img
+                    src={item.imageUrl}
+                    alt={item.title}
+                    className="absolute inset-0 h-full w-full max-w-full object-contain object-center"
+                    loading="lazy"
+                  />
+                </div>
 
-              <div className="space-y-4 flex-1 p-5 sm:p-6">
-                {item.tag ? (
-                  <span className="inline-flex rounded-full bg-[#fff6d9] px-4 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#d1a21f]">
-                    {item.tag}
-                  </span>
-                ) : null}
-                <h2 className="font-serif text-2xl uppercase tracking-wide text-[#083C78] sm:text-3xl">
-                  {item.title}
-                </h2>
-                <p className="text-sm leading-7 text-slate-600 sm:text-base">{item.description}</p>
-              </div>
-            </article>
-          ))}
-        </div>
+                <div className="space-y-4 flex-1 p-5 sm:p-6">
+                  {item.tag ? (
+                    <span className="inline-flex rounded-full bg-[#fff6d9] px-4 py-1 text-xs font-bold uppercase tracking-[0.2em] text-[#d1a21f]">
+                      {item.tag}
+                    </span>
+                  ) : null}
+                  <h2 className="font-serif text-2xl uppercase tracking-wide text-[#083C78] sm:text-3xl">
+                    {item.title}
+                  </h2>
+                  <p className="text-sm leading-7 text-slate-600 sm:text-base">{item.description}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

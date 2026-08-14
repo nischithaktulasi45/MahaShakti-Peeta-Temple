@@ -1,27 +1,59 @@
 import { useEffect, useMemo, useState } from "react";
-import { contentService } from "@/services/contentService";
 import { sortMediaByOrientation, type MediaOrientation } from "@/lib/mediaOrientation";
 
+const progressVideoPaths = [
+  "/progress/video1.mp4",
+  "/progress/video2.mp4",
+  "/progress/video3.mp4",
+  "/progress/video4.mp4",
+  "/progress/video5.mp4",
+  "/progress/video6.mp4",
+  "/progress/video7.mp4",
+  "/progress/video8.mp4",
+  "/progress/video9.mp4",
+  "/progress/video10.mp4",
+  "/progress/video11.mp4",
+  "/progress/video12.mp4",
+  "/progress/video13.mp4",
+  "/progress/video14.mp4",
+  "/progress/video15.mp4",
+  "/progress/video16.mp4",
+  "/progress/video17.mp4",
+  "/progress/video18.mp4",
+  "/progress/video19.mp4",
+  "/progress/video20.mp4",
+];
+
+interface ProgressVideo { _id: string; title: string; videoUrl: string; orientation?: MediaOrientation; }
+
 export default function ProgressGallery() {
-  const [videos, setVideos] = useState<Array<{ _id: string; title: string; videoUrl: string }>>([]);
+  const [videos, setVideos] = useState<ProgressVideo[]>([]);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [orientations, setOrientations] = useState<Record<string, MediaOrientation>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadVideos = async () => {
-      try {
-        const response = await contentService.getVideos();
-        setVideos(response.data || []);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    try {
+      const nextVideos = progressVideoPaths.map((videoUrl) => ({
+        _id: videoUrl,
+        title: videoUrl.split("/").pop() ?? videoUrl,
+        videoUrl,
+      }));
 
-    loadVideos();
+      setVideos(nextVideos);
+      setError(null);
+    } catch (error) {
+      console.error("Failed to prepare progress gallery videos:", error);
+      setVideos([]);
+      setError("Unable to load videos right now. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const sortedVideos = useMemo(() => {
-    return sortMediaByOrientation(videos, (video) => orientations[video._id]);
+    return sortMediaByOrientation(videos, (video) => video.orientation || orientations[video._id]);
   }, [orientations, videos]);
 
   useEffect(() => {
@@ -64,45 +96,65 @@ export default function ProgressGallery() {
           </span>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {sortedVideos.map((video) => {
-            const orientation = orientations[video._id] || "landscape";
-            const aspectClass =
-              orientation === "portrait" ? "aspect-[9/16]" : "aspect-[16/9]";
+        {loading ? (
+          <div className="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center text-sm text-slate-600 shadow-sm">
+            Loading videos...
+          </div>
+        ) : error ? (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-6 py-12 text-center text-sm text-red-700">
+            {error}
+          </div>
+        ) : sortedVideos.length === 0 ? (
+          <div className="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center text-sm text-slate-600 shadow-sm">
+            No videos available.
+          </div>
+        ) : (
+          <div className="grid max-w-full gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {sortedVideos.map((video) => {
+              const orientation = video.orientation || orientations[video._id] || "landscape";
+              const aspectStyle =
+                orientation === "portrait"
+                  ? { aspectRatio: "9 / 16" }
+                  : orientation === "square"
+                  ? { aspectRatio: "1 / 1" }
+                  : orientation === "vertical"
+                  ? { aspectRatio: "9 / 16" }
+                  : { aspectRatio: "16 / 9" };
 
-            return (
-              <article
-                key={video._id}
-                className="overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(8,60,120,0.12)] ring-1 ring-slate-200/70 transition-transform duration-300 hover:-translate-y-1"
-              >
-                <div className={`relative w-full overflow-hidden bg-slate-50 ${aspectClass}`}>
-                  <video
-                    className="absolute inset-0 h-full w-full cursor-pointer object-cover"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="metadata"
-                    onLoadedMetadata={(event) => {
-                      const media = event.currentTarget;
-                      const detectedOrientation: MediaOrientation =
-                        media.videoWidth >= media.videoHeight ? "landscape" : "portrait";
+              return (
+                <article
+                  key={video._id}
+                  className="max-w-full overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(8,60,120,0.12)] ring-1 ring-slate-200/70 transition-transform duration-300 hover:-translate-y-1"
+                >
+                  <div className="relative w-full overflow-hidden bg-slate-50" style={aspectStyle}>
+                    <video
+                      className="absolute inset-0 h-full w-full max-w-full cursor-pointer object-contain"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="metadata"
+                      onLoadedMetadata={(event) => {
+                        const media = event.currentTarget;
+                        const detectedOrientation: MediaOrientation =
+                          media.videoWidth >= media.videoHeight ? "landscape" : "portrait";
 
-                      setOrientations((current) =>
-                        current[video._id] === detectedOrientation
-                          ? current
-                          : { ...current, [video._id]: detectedOrientation }
-                      );
-                    }}
-                    onClick={() => setActiveVideo(video.videoUrl)}
-                  >
-                    <source src={video.videoUrl} type="video/mp4" />
-                  </video>
-                </div>
-              </article>
-            );
-          })}
-        </div>
+                        setOrientations((current) =>
+                          current[video._id] === detectedOrientation
+                            ? current
+                            : { ...current, [video._id]: detectedOrientation }
+                        );
+                      }}
+                      onClick={() => setActiveVideo(video.videoUrl)}
+                    >
+                      <source src={video.videoUrl} type="video/mp4" />
+                    </video>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {activeVideo && (

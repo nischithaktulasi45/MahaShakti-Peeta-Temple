@@ -74,6 +74,10 @@ export default function AdminLogin() {
             <label className="mb-2 block text-sm">Email</label>
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white" required />
           </div>
+          <div>
+            <label className="mb-2 block text-sm">Password</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-white" required />
+          </div>
           {verificationError ? <p className="text-sm text-yellow-300">{verificationError}</p> : null}
           {verificationMessage ? <p className="text-sm text-green-300">{verificationMessage}</p> : null}
           {error ? <p className="text-sm text-red-400">{error}</p> : null}

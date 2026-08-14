@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { contentService } from "@/services/contentService";
 import { adminService } from "@/services/adminService";
 
-interface GalleryItem { _id: string; title: string; imageUrl: string; category: string; createdAt?: string; }
+interface GalleryItem { _id: string; title: string; imageUrl: string; category: string; orientation?: "landscape" | "portrait" | "square" | "vertical"; createdAt?: string; }
 interface ProgressVideo { _id: string; title: string; videoUrl: string; createdAt?: string; }
 interface EventItem { _id: string; title: string; date: string; location: string; createdAt?: string; }
 interface ContactMessage { _id: string; name: string; email: string; phone: string; subject: string; message: string; createdAt: string; }
@@ -17,8 +17,35 @@ export default function AdminDashboard() {
   const [contactMessages, setContactMessages] = useState<ContactMessage[]>([]);
   const [donationRecords, setDonationRecords] = useState<DonationRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [contactError, setContactError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [form, setForm] = useState({ title: "", description: "", imageUrl: "", category: "General", videoUrl: "", thumbnailUrl: "", date: "", time: "", location: "", contactInfo: "" });
+  const [form, setForm] = useState({ tag: "", title: "", description: "", imageUrl: "", category: "General", videoUrl: "", thumbnailUrl: "", date: "", time: "", location: "", contactInfo: "" });
+
+  const [eventSelectedFile, setEventSelectedFile] = useState<File | null>(null);
+  const [eventPreviewUrl, setEventPreviewUrl] = useState<string>("");
+  const [eventPreviewName, setEventPreviewName] = useState<string>("");
+  const [eventPreviewDimensions, setEventPreviewDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [eventPreviewOrientation, setEventPreviewOrientation] = useState<"landscape" | "portrait" | "square" | "vertical" | "">("");
+  const [eventPreviewError, setEventPreviewError] = useState<string | null>(null);
+  const [eventImageBase64, setEventImageBase64] = useState<string>("");
+  const [uploading, setUploading] = useState(false);
+  const [eventError, setEventError] = useState<string | null>(null);
+  const [eventSuccess, setEventSuccess] = useState<string | null>(null);
+
+  const [gallerySelectedFile, setGallerySelectedFile] = useState<File | null>(null);
+  const [galleryPreviewUrl, setGalleryPreviewUrl] = useState<string>("");
+  const [galleryPreviewName, setGalleryPreviewName] = useState<string>("");
+  const [galleryPreviewDimensions, setGalleryPreviewDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [galleryPreviewOrientation, setGalleryPreviewOrientation] = useState<"landscape" | "portrait" | "square" | "vertical" | "">("");
+  const [galleryPreviewError, setGalleryPreviewError] = useState<string | null>(null);
+  const [galleryImageBase64, setGalleryImageBase64] = useState<string>("");
+
+  const [selectedVideoFile, setSelectedVideoFile] = useState<File | null>(null);
+  const [selectedVideoPreviewUrl, setSelectedVideoPreviewUrl] = useState<string>("");
+  const [orientation, setOrientation] = useState<"landscape" | "portrait" | "square" | "vertical" | "">("");
+  const [videoUploading, setVideoUploading] = useState(false);
+  const [videoUploadStatus, setVideoUploadStatus] = useState<"idle" | "success" | "error">("idle");
+  const [videoUploadError, setVideoUploadError] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("admin-token");
@@ -29,6 +56,7 @@ export default function AdminDashboard() {
 
     const loadData = async () => {
       try {
+        setContactError(null);
         const [galleryRes, videoRes, eventRes, contactRes, donationRes] = await Promise.all([
           contentService.getGallery(),
           contentService.getVideos(),
@@ -43,6 +71,7 @@ export default function AdminDashboard() {
         setDonationRecords(donationRes?.data || []);
       } catch (error) {
         console.error(error);
+        setContactError("Unable to load contact messages.");
       } finally {
         setLoading(false);
       }
@@ -64,40 +93,328 @@ export default function AdminDashboard() {
 
   const refreshData = async () => {
     setLoading(true);
-    const [galleryRes, videoRes, eventRes, contactRes, donationRes] = await Promise.all([
-      contentService.getGallery(),
-      contentService.getVideos(),
-      contentService.getEvents(),
-      adminService.getContactMessages(),
-      adminService.getDonationRecords(),
-    ]);
-    setGallery(galleryRes.data || []);
-    setVideos(videoRes.data || []);
-    setEvents(eventRes.data || []);
-    setContactMessages(contactRes.data || []);
-    setDonationRecords(donationRes.data || []);
-    setLoading(false);
-  };
-
-  const handleAddGallery = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await contentService.createGallery({ title: form.title, description: form.description, imageUrl: form.imageUrl, category: form.category });
-    setForm({ ...form, title: "", description: "", imageUrl: "", category: "General" });
-    await refreshData();
+    setContactError(null);
+    try {
+      const [galleryRes, videoRes, eventRes, contactRes, donationRes] = await Promise.all([
+        contentService.getGallery(),
+        contentService.getVideos(),
+        contentService.getEvents(),
+        adminService.getContactMessages(),
+        adminService.getDonationRecords(),
+      ]);
+      setGallery(galleryRes || []);
+      setVideos(videoRes || []);
+      setEvents(eventRes || []);
+      setContactMessages(contactRes?.data || []);
+      setDonationRecords(donationRes?.data || []);
+    } catch (error) {
+      console.error(error);
+      setContactError("Unable to refresh contact messages.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddVideo = async (e: React.FormEvent) => {
     e.preventDefault();
-    await contentService.createVideo({ title: form.title, description: form.description, videoUrl: form.videoUrl, thumbnailUrl: form.thumbnailUrl });
-    setForm({ ...form, title: "", description: "", videoUrl: "", thumbnailUrl: "" });
-    await refreshData();
+
+    if (!selectedVideoFile) {
+      setVideoUploadError("Please select a video file before saving.");
+      return;
+    }
+
+    if (!orientation) {
+      setVideoUploadError("Please select the video orientation before saving.");
+      return;
+    }
+
+    setVideoUploading(true);
+    setVideoUploadError(null);
+    setVideoUploadStatus("idle");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedVideoFile);
+      formData.append("orientation", orientation);
+
+      const uploadRes = await contentService.uploadProgressVideo(formData);
+      const videoUrl = uploadRes?.data?.videoUrl || "";
+      const publicId = uploadRes?.data?.publicId || "";
+
+      if (!videoUrl) {
+        throw new Error("Upload failed");
+      }
+
+      const title = selectedVideoFile.name.replace(/\.[^/.]+$/, "") || "Progress Video";
+
+      await contentService.createVideo({
+        title,
+        description: "",
+        videoUrl,
+        thumbnailUrl: "",
+        publicId,
+        orientation,
+      });
+
+      setVideoUploadStatus("success");
+      setSelectedVideoFile(null);
+      setOrientation("");
+
+      if (selectedVideoPreviewUrl) {
+        URL.revokeObjectURL(selectedVideoPreviewUrl);
+      }
+      setSelectedVideoPreviewUrl("");
+      await refreshData();
+    } catch (error) {
+      console.error(error);
+      setVideoUploadStatus("error");
+      setVideoUploadError("Failed to save video");
+    } finally {
+      setVideoUploading(false);
+    }
   };
 
   const handleAddEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-    await contentService.createEvent({ title: form.title, description: form.description, date: form.date, startTime: form.time, location: form.location, contactInfo: form.contactInfo, category: form.category, imageUrl: form.imageUrl });
-    setForm({ ...form, title: "", description: "", date: "", time: "", location: "", contactInfo: "", category: "General", imageUrl: "" });
-    await refreshData();
+
+    if (!form.title.trim()) {
+      setEventError("Please enter an event title.");
+      setEventSuccess(null);
+      return;
+    }
+
+    if (!form.description.trim()) {
+      setEventError("Please enter an event description.");
+      setEventSuccess(null);
+      return;
+    }
+
+    if (!eventSelectedFile) {
+      setEventError("Please select an event photo.");
+      setEventSuccess(null);
+      return;
+    }
+
+    setUploading(true);
+    setEventError(null);
+    setEventSuccess(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", eventSelectedFile);
+
+      const uploadRes = await contentService.uploadEventImage(formData);
+      const imageUrl = uploadRes?.data?.imageUrl || uploadRes?.imageUrl || "";
+
+      if (!imageUrl) {
+        throw new Error("Unable to upload the selected event photo.");
+      }
+
+      await contentService.createEvent({
+        tag: form.tag.trim(),
+        title: form.title.trim(),
+        description: form.description.trim(),
+        imageUrl,
+        category: form.category || "General",
+        date: form.date,
+        startTime: form.time,
+        location: form.location,
+        contactInfo: form.contactInfo,
+      });
+
+      setForm({ ...form, tag: "", title: "", description: "", date: "", time: "", location: "", contactInfo: "", category: "General", imageUrl: "" });
+      setEventSelectedFile(null);
+      setEventPreviewUrl("");
+      setEventPreviewName("");
+      setEventPreviewDimensions(null);
+      setEventPreviewOrientation("");
+      setEventImageBase64("");
+      setEventSuccess("Event saved successfully.");
+      await refreshData();
+    } catch (error) {
+      console.error(error);
+      setEventError("Unable to save event.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const getOrientationFromDimensions = (dimensions: { width: number; height: number } | null) => {
+    if (!dimensions) return "landscape" as const;
+    const { width, height } = dimensions;
+    if (width === height) return "square" as const;
+    if (height / width >= 1.3) return "vertical" as const;
+    if (height > width) return "portrait" as const;
+    return "landscape" as const;
+  };
+
+  const handleEventFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+    if (!file) {
+      setEventSelectedFile(null);
+      setEventPreviewUrl("");
+      setEventPreviewName("");
+      setEventPreviewDimensions(null);
+      setEventImageBase64("");
+      setEventPreviewError(null);
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      setEventPreviewError("Please choose a valid image file.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        setEventSelectedFile(file);
+        setEventPreviewUrl(result);
+        setEventPreviewName(file.name);
+        setEventImageBase64(result);
+        setEventPreviewDimensions(null);
+        setEventPreviewOrientation("");
+        setEventPreviewError(null);
+      }
+    };
+    reader.onerror = () => setEventPreviewError("Unable to read the selected image.");
+    reader.readAsDataURL(file);
+  };
+
+  const handleGalleryFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+    if (!file) {
+      setGallerySelectedFile(null);
+      setGalleryPreviewUrl("");
+      setGalleryPreviewName("");
+      setGalleryPreviewDimensions(null);
+      setGalleryImageBase64("");
+      setGalleryPreviewError(null);
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      setGalleryPreviewError("Please choose a valid image file.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        setGallerySelectedFile(file);
+        setGalleryPreviewUrl(result);
+        setGalleryPreviewName(file.name);
+        setGalleryImageBase64(result);
+        setGalleryPreviewDimensions(null);
+        setGalleryPreviewOrientation("");
+        setGalleryPreviewError(null);
+      }
+    };
+    reader.onerror = () => setGalleryPreviewError("Unable to read the selected image.");
+    reader.readAsDataURL(file);
+  };
+
+  const handleVideoFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+    if (!file) {
+      if (selectedVideoPreviewUrl) {
+        URL.revokeObjectURL(selectedVideoPreviewUrl);
+      }
+      setSelectedVideoFile(null);
+      setSelectedVideoPreviewUrl("");
+      setOrientation("");
+      setVideoUploadError(null);
+      setVideoUploadStatus("idle");
+      return;
+    }
+
+    if (!file.type.startsWith("video/")) {
+      setVideoUploadError("Please choose a supported video file.");
+      return;
+    }
+
+    if (selectedVideoPreviewUrl) {
+      URL.revokeObjectURL(selectedVideoPreviewUrl);
+    }
+
+    setSelectedVideoFile(file);
+    setSelectedVideoPreviewUrl(URL.createObjectURL(file));
+    setOrientation("");
+    setVideoUploadError(null);
+    setVideoUploadStatus("idle");
+  };
+
+  const handleEventPreviewImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    const media = event.currentTarget;
+    const dimensions = { width: media.naturalWidth, height: media.naturalHeight };
+    setEventPreviewDimensions(dimensions);
+    if (!eventPreviewOrientation) {
+      setEventPreviewOrientation(getOrientationFromDimensions(dimensions));
+    }
+  };
+
+  const handleGalleryPreviewImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    const media = event.currentTarget;
+    const dimensions = { width: media.naturalWidth, height: media.naturalHeight };
+    setGalleryPreviewDimensions(dimensions);
+    if (!galleryPreviewOrientation) {
+      setGalleryPreviewOrientation(getOrientationFromDimensions(dimensions));
+    }
+  };
+
+  const handleAddGallery = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setUploading(true);
+    setGalleryPreviewError(null);
+
+    try {
+      if (!gallerySelectedFile) {
+        setGalleryPreviewError("Please select an image file before saving.");
+        setUploading(false);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", gallerySelectedFile);
+
+      const uploadRes = await contentService.uploadGalleryImage(formData);
+      const imageUrl = uploadRes?.data?.imageUrl || "";
+      const publicId = uploadRes?.data?.publicId;
+
+      if (!imageUrl) {
+        setGalleryPreviewError("Unable to upload the selected image.");
+        setUploading(false);
+        return;
+      }
+
+      const orientation = galleryPreviewOrientation || getOrientationFromDimensions(galleryPreviewDimensions);
+      const title = gallerySelectedFile.name.replace(/\.[^/.]+$/, "") || "Gallery Photo";
+      const category = "General";
+
+      await contentService.createGallery({
+        title,
+        imageUrl,
+        publicId,
+        category,
+        orientation,
+      });
+
+      setForm({ ...form, title: "", imageUrl: "", category: "General" });
+      setGallerySelectedFile(null);
+      setGalleryPreviewUrl("");
+      setGalleryPreviewName("");
+      setGalleryPreviewDimensions(null);
+      setGalleryPreviewOrientation("");
+      setGalleryImageBase64("");
+      await refreshData();
+    } catch (error) {
+      console.error(error);
+      setGalleryPreviewError("Unable to save gallery photo.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleDeleteGallery = async (id: string) => {
@@ -165,14 +482,55 @@ export default function AdminDashboard() {
           {activeTab === "gallery" && (
             <div className="space-y-6">
               <form onSubmit={handleAddGallery} className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-                <h2 className="text-xl font-semibold">Add Gallery Photo</h2>
+                <h2 className="text-xl font-semibold">Add Photo</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3" placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3" placeholder="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3 md:col-span-2" placeholder="Image URL" value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} required />
-                  <textarea className="rounded-xl border border-slate-700 bg-slate-800 p-3 md:col-span-2" placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm text-slate-300">Select Image</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleGalleryFileChange}
+                      className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100"
+                      required
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm text-slate-300">Orientation</label>
+                    <select
+                      value={galleryPreviewOrientation || ""}
+                      onChange={(e) => setGalleryPreviewOrientation(e.target.value as "landscape" | "portrait" | "square" | "vertical")}
+                      className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100"
+                    >
+                      <option value="">Auto detect from image</option>
+                      <option value="landscape">Landscape</option>
+                      <option value="portrait">Portrait</option>
+                      <option value="square">Square</option>
+                      <option value="vertical">Vertical</option>
+                    </select>
+                  </div>
                 </div>
-                <button className="mt-4 rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900">Save Photo</button>
+                {galleryPreviewError ? <p className="mt-4 text-sm text-red-400">{galleryPreviewError}</p> : null}
+                {galleryPreviewUrl && (
+                  <div className="mt-4 rounded-2xl border border-slate-700 bg-slate-950/80 p-4">
+                    <p className="text-sm text-slate-400">Preview: {galleryPreviewName}</p>
+                    <div className="mt-3 overflow-hidden rounded-xl bg-slate-900">
+                      <img
+                        src={galleryPreviewUrl}
+                        alt={galleryPreviewName}
+                        onLoad={handleGalleryPreviewImageLoad}
+                        className="h-72 max-h-72 w-full object-contain"
+                      />
+                    </div>
+                    <p className="mt-3 text-sm text-slate-400">Detected orientation: {galleryPreviewOrientation || getOrientationFromDimensions(galleryPreviewDimensions)}</p>
+                  </div>
+                )}
+                <button
+                  type="submit"
+                  disabled={uploading || !gallerySelectedFile}
+                  className="mt-4 rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {uploading ? "Saving…" : "Save Photo"}
+                </button>
               </form>
               <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
                 <h2 className="text-xl font-semibold">Gallery Photos</h2>
@@ -182,6 +540,7 @@ export default function AdminDashboard() {
                       {item.imageUrl ? <img src={item.imageUrl} alt={item.title} className="h-40 w-full rounded-lg object-cover" /> : null}
                       <p className="mt-2 font-semibold">{item.title}</p>
                       <p className="text-sm text-slate-400">{item.category}</p>
+                      <p className="text-sm text-slate-400">Orientation: {item.orientation || "landscape"}</p>
                       <button onClick={() => handleDeleteGallery(item._id)} className="mt-3 rounded-lg bg-red-600 px-3 py-2 text-sm">Delete</button>
                     </div>
                   ))}
@@ -193,14 +552,59 @@ export default function AdminDashboard() {
           {activeTab === "videos" && (
             <div className="space-y-6">
               <form onSubmit={handleAddVideo} className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-                <h2 className="text-xl font-semibold">Add Progress Video</h2>
+                <h2 className="text-xl font-semibold">Add Video</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3" placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3" placeholder="Video URL" value={form.videoUrl} onChange={(e) => setForm({ ...form, videoUrl: e.target.value })} required />
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3" placeholder="Thumbnail URL" value={form.thumbnailUrl} onChange={(e) => setForm({ ...form, thumbnailUrl: e.target.value })} />
-                  <textarea className="rounded-xl border border-slate-700 bg-slate-800 p-3 md:col-span-2" placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm text-slate-300">Select Video</label>
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoFileChange}
+                      className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100"
+                      required
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm text-slate-300">Orientation</label>
+                    <select
+                      value={orientation || ""}
+                      onChange={(e) => setOrientation(e.target.value as "landscape" | "portrait" | "square" | "vertical")}
+                      className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100"
+                      required
+                    >
+                      <option value="">Select orientation</option>
+                      <option value="landscape">Landscape</option>
+                      <option value="portrait">Portrait</option>
+                      <option value="square">Square</option>
+                      <option value="vertical">Vertical</option>
+                    </select>
+                  </div>
                 </div>
-                <button className="mt-4 rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900">Save Video</button>
+
+                {selectedVideoPreviewUrl && (
+                  <div className="mt-4 rounded-2xl border border-slate-700 bg-slate-950/80 p-4">
+                    <p className="text-sm text-slate-400">Video Preview</p>
+                    <div className="mt-3 overflow-hidden rounded-xl bg-slate-900">
+                      <video
+                        src={selectedVideoPreviewUrl}
+                        controls
+                        className="h-72 max-h-72 w-full object-contain"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {videoUploadError ? <p className="mt-4 text-sm text-red-400">{videoUploadError}</p> : null}
+                {videoUploadStatus === "success" ? <p className="mt-4 text-sm text-emerald-400">Video saved successfully</p> : null}
+                {videoUploadStatus === "error" ? <p className="mt-4 text-sm text-red-400">Failed to save video</p> : null}
+
+                <button
+                  type="submit"
+                  disabled={videoUploading || !selectedVideoFile || !orientation}
+                  className="mt-4 rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {videoUploading ? "Uploading..." : "Save Video"}
+                </button>
               </form>
               <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
                 <h2 className="text-xl font-semibold">Progress Videos</h2>
@@ -208,7 +612,7 @@ export default function AdminDashboard() {
                   {videos.map((item) => (
                     <div key={item._id} className="rounded-xl border border-slate-800 p-3">
                       <p className="font-semibold">{item.title}</p>
-                      <p className="mt-2 text-sm text-slate-400">{item.videoUrl}</p>
+                      <p className="mt-2 text-sm text-slate-400 break-words">{item.videoUrl}</p>
                       <button onClick={() => handleDeleteVideo(item._id)} className="mt-3 rounded-lg bg-red-600 px-3 py-2 text-sm">Delete</button>
                     </div>
                   ))}
@@ -220,18 +624,66 @@ export default function AdminDashboard() {
           {activeTab === "events" && (
             <div className="space-y-6">
               <form onSubmit={handleAddEvent} className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-                <h2 className="text-xl font-semibold">Add Event</h2>
+                <h2 className="text-xl font-semibold">ADD EVENT</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3" placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3" placeholder="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3" placeholder="Date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3" placeholder="Time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} />
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3" placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
-                  <input className="rounded-xl border border-slate-700 bg-slate-800 p-3" placeholder="Image URL" value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} />
-                  <textarea className="rounded-xl border border-slate-700 bg-slate-800 p-3 md:col-span-2" placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-                  <textarea className="rounded-xl border border-slate-700 bg-slate-800 p-3 md:col-span-2" placeholder="Contact Info" value={form.contactInfo} onChange={(e) => setForm({ ...form, contactInfo: e.target.value })} />
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm text-slate-300">Tag (Optional)</label>
+                    <input
+                      className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100"
+                      placeholder="Enter event tag"
+                      value={form.tag}
+                      onChange={(e) => setForm({ ...form, tag: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm text-slate-300">Photo</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleEventFileChange}
+                      className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100"
+                    />
+                  </div>
+
+                  {eventPreviewUrl && (
+                    <div className="md:col-span-2 rounded-2xl border border-slate-700 bg-slate-950/80 p-4">
+                      <p className="text-sm text-slate-400">Photo Preview</p>
+                      <div className="mt-3 overflow-hidden rounded-xl bg-slate-900">
+                        <img src={eventPreviewUrl} alt="Event preview" className="h-72 max-h-72 w-full rounded-xl object-contain" onLoad={handleEventPreviewImageLoad} />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm text-slate-300">Title</label>
+                    <input
+                      className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100"
+                      placeholder="Enter event title"
+                      value={form.title}
+                      onChange={(e) => setForm({ ...form, title: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm text-slate-300">Description</label>
+                    <textarea
+                      className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100"
+                      placeholder="Enter event description"
+                      value={form.description}
+                      onChange={(e) => setForm({ ...form, description: e.target.value })}
+                      rows={5}
+                    />
+                  </div>
                 </div>
-                <button className="mt-4 rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900">Save Event</button>
+
+                {eventError ? <p className="mt-4 text-sm text-red-400">{eventError}</p> : null}
+                {eventSuccess ? <p className="mt-4 text-sm text-emerald-400">{eventSuccess}</p> : null}
+                {eventPreviewError ? <p className="mt-4 text-sm text-red-400">{eventPreviewError}</p> : null}
+
+                <button type="submit" disabled={uploading} className="mt-4 rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900 disabled:cursor-not-allowed disabled:opacity-60">
+                  {uploading ? "Saving..." : "Save Event"}
+                </button>
               </form>
               <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
                 <h2 className="text-xl font-semibold">Events</h2>
@@ -256,7 +708,11 @@ export default function AdminDashboard() {
                 <h2 className="text-xl font-semibold">Contact Messages</h2>
                 <div className="mt-4 divide-y divide-slate-800">
                   {contactMessages.length === 0 ? (
-                    <p className="text-slate-400">No contact messages yet.</p>
+                    contactError ? (
+                      <p className="text-red-400">{contactError}</p>
+                    ) : (
+                      <p className="text-slate-400">No contact messages yet.</p>
+                    )
                   ) : (
                     contactMessages.map((message) => (
                       <div key={message._id} className="rounded-2xl border border-slate-800 p-4 even:bg-slate-950/50">

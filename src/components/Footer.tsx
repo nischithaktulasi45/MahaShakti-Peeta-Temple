@@ -22,7 +22,15 @@ export default function Footer() {
             A sacred, premium spiritual destination. Step into our divine ancient temple — unhurried, serene, and awe-inspiring.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <FaYoutube className="cursor-pointer text-xl transition-colors hover:text-[#D4AF37]" />
+            <a
+              href="https://www.youtube.com/@mahashakthipeetacharitabletrus"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer text-xl transition-colors hover:text-[#D4AF37]"
+              aria-label="Visit Mahashakti Peeta Charitable Trust on YouTube"
+            >
+              <FaYoutube />
+            </a>
             <a
               href="https://www.instagram.com/mahashakti_peeta/?utm_source=ig_web_button_share_sheet"
               target="_blank"

@@ -27,11 +27,11 @@ export default function EventCard({
     >
       {/* Image Section */}
       {image && (
-        <div className="relative h-48 w-full overflow-hidden bg-slate-100">
+        <div className="relative h-48 w-full max-w-full overflow-hidden bg-slate-100">
           <img
             src={image}
             alt={title}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+            className="h-full w-full max-w-full object-contain transition duration-500 group-hover:scale-105"
           />
         </div>
       )}
