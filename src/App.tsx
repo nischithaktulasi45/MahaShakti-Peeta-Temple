@@ -23,6 +23,7 @@ import DonateQr from "@/pages/DonateQr";
 import TrustDocuments from "@/pages/TrustDocuments";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
+import AdminEntry from "@/pages/AdminEntry";
 
 // ✅ New import
 import MahaShaktiPeeta from "@/pages/MahaShaktiPeeta";
@@ -43,7 +44,7 @@ function Router() {
       <Route path="/donate/qr" component={DonateQr} />
       <Route path="/contact" component={Contact} />
       <Route path="/admin/login" component={AdminLogin} />
-      <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin" component={AdminEntry} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/gallery" component={AdminDashboard} />
       <Route path="/admin/progress-videos" component={AdminDashboard} />

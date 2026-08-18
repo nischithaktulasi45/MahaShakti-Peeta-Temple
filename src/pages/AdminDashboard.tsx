@@ -584,6 +584,23 @@ export default function AdminDashboard() {
     await refreshData();
   };
 
+  const handleDeleteContactMessage = async (id: string) => {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this contact submission?"
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await adminService.deleteContactMessage(id);
+    await refreshData();
+  } catch (error) {
+    console.error("Failed to delete contact message:", error);
+    alert("Unable to delete the contact submission.");
+  }
+};
+
+
   if (loading) {
     return <div className="min-h-screen bg-slate-950 p-8 text-white">Loading dashboard...</div>;
   }
@@ -918,6 +935,15 @@ export default function AdminDashboard() {
                           <p><span className="font-semibold">Subject:</span> {message.subject}</p>
                           <p><span className="font-semibold">Message:</span> {message.message}</p>
                         </div>
+                        <div className="mt-4 flex justify-end">
+  <button
+    type="button"
+    onClick={() => handleDeleteContactMessage(message._id)}
+    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+  >
+    Delete
+  </button>
+</div>
                       </div>
                     ))
                   )}

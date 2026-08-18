@@ -48,16 +48,27 @@ export const contentService = {
 
     return { ...response.data, data: normalizedVideos };
   },
+async createVideo(payload: Record<string, unknown>) {
+  const response = await api.post("/progress-videos", payload);
+  return response.data;
+},
 
-  async createVideo(payload: Record<string, unknown>) {
-    const response = await api.post("/progress-videos", payload);
-    return response.data;
-  },
+async updateVideo(
+  id: string,
+  payload: Record<string, unknown>
+) {
+  const response = await api.put(
+    `/progress-videos/${id}`,
+    payload
+  );
 
-  async deleteVideo(id: string) {
-    const response = await api.delete(`/progress-videos/${id}`);
-    return response.data;
-  },
+  return response.data;
+},
+
+async deleteVideo(id: string) {
+  const response = await api.delete(`/progress-videos/${id}`);
+  return response.data;
+},
 
   async getEvents() {
     const response = await api.get("/events");

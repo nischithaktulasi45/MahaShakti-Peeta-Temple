@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useEffect , useState } from "react";
 import { useLocation } from "wouter";
 import { adminService } from "@/services/adminService";
 
@@ -12,13 +12,16 @@ export default function AdminLogin() {
   const [verificationError, setVerificationError] = useState<string | null>(null);
   const [resendLoading, setResendLoading] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem("admin-token");
-    if (token) {
-      setLocation("/admin/dashboard");
-    }
-  }, [setLocation]);
+ useEffect(() => {
+  const token = localStorage.getItem("admin-token");
 
+  if (!token) {
+    setLocation("/admin/login");
+    return;
+  }
+
+  // load dashboard...
+}, [setLocation]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);

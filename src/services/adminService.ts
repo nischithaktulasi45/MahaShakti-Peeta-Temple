@@ -26,6 +26,11 @@ export const adminService = {
     return response.data;
   },
 
+  async deleteContactMessage(id: string) {
+  const response = await api.delete(`/admin/contacts/${id}`);
+  return response.data;
+},
+
   async getDonationRecords() {
     const response = await api.get("/admin/donations");
     return response.data;
