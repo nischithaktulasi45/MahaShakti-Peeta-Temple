@@ -1,28 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { contentService } from "@/services/contentService";
 import { sortMediaByOrientation, type MediaOrientation } from "@/lib/mediaOrientation";
-
-const progressVideoPaths = [
-  "/progress/video1.mp4",
-  "/progress/video2.mp4",
-  "/progress/video3.mp4",
-  "/progress/video4.mp4",
-  "/progress/video5.mp4",
-  "/progress/video6.mp4",
-  "/progress/video7.mp4",
-  "/progress/video8.mp4",
-  "/progress/video9.mp4",
-  "/progress/video10.mp4",
-  "/progress/video11.mp4",
-  "/progress/video12.mp4",
-  "/progress/video13.mp4",
-  "/progress/video14.mp4",
-  "/progress/video15.mp4",
-  "/progress/video16.mp4",
-  "/progress/video17.mp4",
-  "/progress/video18.mp4",
-  "/progress/video19.mp4",
-  "/progress/video20.mp4",
-];
 
 interface ProgressVideo { _id: string; title: string; videoUrl: string; orientation?: MediaOrientation; }
 
@@ -34,22 +12,23 @@ export default function ProgressGallery() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const nextVideos = progressVideoPaths.map((videoUrl) => ({
-        _id: videoUrl,
-        title: videoUrl.split("/").pop() ?? videoUrl,
-        videoUrl,
-      }));
+    const loadVideos = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await contentService.getVideos();
+        const responseData = Array.isArray(response?.data) ? response.data : [];
+        setVideos(responseData);
+      } catch (err) {
+        console.error("Failed to load progress gallery videos:", err);
+        setVideos([]);
+        setError("Unable to load videos right now. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      setVideos(nextVideos);
-      setError(null);
-    } catch (error) {
-      console.error("Failed to prepare progress gallery videos:", error);
-      setVideos([]);
-      setError("Unable to load videos right now. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
+    loadVideos();
   }, []);
 
   const sortedVideos = useMemo(() => {

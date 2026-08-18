@@ -3,9 +3,38 @@ import { Link, useLocation } from "wouter";
 import { contentService } from "@/services/contentService";
 import { adminService } from "@/services/adminService";
 
-interface GalleryItem { _id: string; title: string; imageUrl: string; category: string; orientation?: "landscape" | "portrait" | "square" | "vertical"; createdAt?: string; }
-interface ProgressVideo { _id: string; title: string; videoUrl: string; createdAt?: string; }
-interface EventItem { _id: string; title: string; date: string; location: string; createdAt?: string; }
+interface GalleryItem {
+  _id: string;
+  title: string;
+  description?: string;
+  imageUrl: string;
+  category: string;
+  orientation?: "landscape" | "portrait" | "square" | "vertical";
+  createdAt?: string;
+}
+interface ProgressVideo {
+  _id: string;
+  title: string;
+  description?: string;
+  videoUrl: string;
+  thumbnailUrl?: string;
+  orientation?: "landscape" | "portrait" | "square" | "vertical";
+  createdAt?: string;
+}
+interface EventItem {
+  _id: string;
+  tag?: string;
+  title: string;
+  description?: string;
+  date: string;
+  startTime?: string;
+  endTime?: string;
+  location: string;
+  imageUrl?: string;
+  category?: string;
+  contactInfo?: string;
+  createdAt?: string;
+}
 interface ContactMessage { _id: string; name: string; email: string; phone: string; subject: string; message: string; createdAt: string; }
 interface DonationRecord { _id: string; name: string; email: string; phone: string; amount: number; purpose: string; utrNumber: string; paymentStatus: string; createdAt: string; }
 
@@ -47,6 +76,16 @@ export default function AdminDashboard() {
   const [videoUploadStatus, setVideoUploadStatus] = useState<"idle" | "success" | "error">("idle");
   const [videoUploadError, setVideoUploadError] = useState<string | null>(null);
 
+  // ---------------------------------------------------------
+  // Edit state
+  // ---------------------------------------------------------
+  const [editingType, setEditingType] = useState<"gallery" | "video" | "event" | null>(null);
+  const [editingGallery, setEditingGallery] = useState<GalleryItem | null>(null);
+  const [editingVideo, setEditingVideo] = useState<ProgressVideo | null>(null);
+  const [editingEvent, setEditingEvent] = useState<EventItem | null>(null);
+  const [editSaving, setEditSaving] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+
   useEffect(() => {
     const token = localStorage.getItem("admin-token");
     if (!token) {
@@ -55,26 +94,31 @@ export default function AdminDashboard() {
     }
 
     const loadData = async () => {
-      try {
-        setContactError(null);
-        const [galleryRes, videoRes, eventRes, contactRes, donationRes] = await Promise.all([
-          contentService.getGallery(),
-          contentService.getVideos(),
-          contentService.getEvents(),
-          adminService.getContactMessages(),
-          adminService.getDonationRecords(),
-        ]);
-        setGallery(galleryRes || []);
-        setVideos(videoRes || []);
-        setEvents(eventRes || []);
-        setContactMessages(contactRes?.data || []);
-        setDonationRecords(donationRes?.data || []);
-      } catch (error) {
-        console.error(error);
+      setContactError(null);
+      const [galleryRes, videoRes, eventRes, contactRes, donationRes] = await Promise.allSettled([
+        contentService.getGallery(),
+        contentService.getVideos(),
+        contentService.getEvents(),
+        adminService.getContactMessages(),
+        adminService.getDonationRecords(),
+      ]);
+
+      if (galleryRes.status === "fulfilled") setGallery(galleryRes.value?.data || []);
+      if (videoRes.status === "fulfilled") setVideos(videoRes.value?.data || []);
+      if (eventRes.status === "fulfilled") setEvents(eventRes.value?.data || []);
+      if (contactRes.status === "fulfilled") {
+        setContactMessages(contactRes.value?.data || []);
+      } else {
+        console.error(contactRes.reason);
         setContactError("Unable to load contact messages.");
-      } finally {
-        setLoading(false);
       }
+      if (donationRes.status === "fulfilled") {
+        setDonationRecords(donationRes.value?.data || []);
+      } else {
+        console.error(donationRes.reason);
+      }
+
+      setLoading(false);
     };
 
     loadData();
@@ -94,25 +138,30 @@ export default function AdminDashboard() {
   const refreshData = async () => {
     setLoading(true);
     setContactError(null);
-    try {
-      const [galleryRes, videoRes, eventRes, contactRes, donationRes] = await Promise.all([
-        contentService.getGallery(),
-        contentService.getVideos(),
-        contentService.getEvents(),
-        adminService.getContactMessages(),
-        adminService.getDonationRecords(),
-      ]);
-      setGallery(galleryRes || []);
-      setVideos(videoRes || []);
-      setEvents(eventRes || []);
-      setContactMessages(contactRes?.data || []);
-      setDonationRecords(donationRes?.data || []);
-    } catch (error) {
-      console.error(error);
+    const [galleryRes, videoRes, eventRes, contactRes, donationRes] = await Promise.allSettled([
+      contentService.getGallery(),
+      contentService.getVideos(),
+      contentService.getEvents(),
+      adminService.getContactMessages(),
+      adminService.getDonationRecords(),
+    ]);
+
+    if (galleryRes.status === "fulfilled") setGallery(galleryRes.value?.data || []);
+    if (videoRes.status === "fulfilled") setVideos(videoRes.value?.data || []);
+    if (eventRes.status === "fulfilled") setEvents(eventRes.value?.data || []);
+    if (contactRes.status === "fulfilled") {
+      setContactMessages(contactRes.value?.data || []);
+    } else {
+      console.error(contactRes.reason);
       setContactError("Unable to refresh contact messages.");
-    } finally {
-      setLoading(false);
     }
+    if (donationRes.status === "fulfilled") {
+      setDonationRecords(donationRes.value?.data || []);
+    } else {
+      console.error(donationRes.reason);
+    }
+
+    setLoading(false);
   };
 
   const handleAddVideo = async (e: React.FormEvent) => {
@@ -417,6 +466,106 @@ export default function AdminDashboard() {
     }
   };
 
+  const startGalleryEdit = (item: GalleryItem) => {
+    setEditingType("gallery");
+    setEditingGallery({ ...item });
+    setEditingVideo(null);
+    setEditingEvent(null);
+    setEditError(null);
+  };
+
+  const startVideoEdit = (item: ProgressVideo) => {
+    setEditingType("video");
+    setEditingVideo({ ...item });
+    setEditingGallery(null);
+    setEditingEvent(null);
+    setEditError(null);
+  };
+
+  const startEventEdit = (item: EventItem) => {
+    setEditingType("event");
+    setEditingEvent({ ...item });
+    setEditingGallery(null);
+    setEditingVideo(null);
+    setEditError(null);
+  };
+
+  const closeEditModal = () => {
+    if (editSaving) return;
+    setEditingType(null);
+    setEditingGallery(null);
+    setEditingVideo(null);
+    setEditingEvent(null);
+    setEditError(null);
+  };
+
+  const saveEditedContent = async () => {
+    if (!editingType) return;
+
+    setEditSaving(true);
+    setEditError(null);
+
+    try {
+      const editableService = contentService as typeof contentService & {
+        updateGallery?: (id: string, payload: Record<string, unknown>) => Promise<unknown>;
+        updateVideo?: (id: string, payload: Record<string, unknown>) => Promise<unknown>;
+      };
+
+      if (editingType === "gallery" && editingGallery) {
+        if (!editableService.updateGallery) {
+          throw new Error("contentService.updateGallery is not available.");
+        }
+
+        await editableService.updateGallery(editingGallery._id, {
+          title: editingGallery.title.trim(),
+          description: editingGallery.description || "",
+          category: editingGallery.category || "General",
+          orientation: editingGallery.orientation || "landscape",
+        });
+      }
+
+      if (editingType === "video" && editingVideo) {
+        if (!editableService.updateVideo) {
+          throw new Error("contentService.updateVideo is not available.");
+        }
+
+        await editableService.updateVideo(editingVideo._id, {
+          title: editingVideo.title.trim(),
+          description: editingVideo.description || "",
+          thumbnailUrl: editingVideo.thumbnailUrl || "",
+          orientation: editingVideo.orientation || "landscape",
+        });
+      }
+
+      if (editingType === "event" && editingEvent) {
+        await contentService.updateEvent(editingEvent._id, {
+          tag: editingEvent.tag || "",
+          title: editingEvent.title.trim(),
+          description: editingEvent.description || "",
+          date: editingEvent.date || "",
+          startTime: editingEvent.startTime || "",
+          endTime: editingEvent.endTime || "",
+          location: editingEvent.location || "",
+          imageUrl: editingEvent.imageUrl || "",
+          category: editingEvent.category || "General",
+          contactInfo: editingEvent.contactInfo || "",
+        });
+      }
+
+      await refreshData();
+      closeEditModal();
+    } catch (error) {
+      console.error("Failed to save edited content:", error);
+      setEditError(
+        error instanceof Error
+          ? error.message
+          : "Unable to save the changes. Please try again."
+      );
+    } finally {
+      setEditSaving(false);
+    }
+  };
+
   const handleDeleteGallery = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this photo?")) return;
     await contentService.deleteGallery(id);
@@ -541,7 +690,20 @@ export default function AdminDashboard() {
                       <p className="mt-2 font-semibold">{item.title}</p>
                       <p className="text-sm text-slate-400">{item.category}</p>
                       <p className="text-sm text-slate-400">Orientation: {item.orientation || "landscape"}</p>
-                      <button onClick={() => handleDeleteGallery(item._id)} className="mt-3 rounded-lg bg-red-600 px-3 py-2 text-sm">Delete</button>
+                      <div className="mt-3 flex gap-2">
+                        <button
+                          onClick={() => startGalleryEdit(item)}
+                          className="rounded-lg bg-[#D4AF37] px-3 py-2 text-sm font-semibold text-slate-900"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteGallery(item._id)}
+                          className="rounded-lg bg-red-600 px-3 py-2 text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -613,7 +775,20 @@ export default function AdminDashboard() {
                     <div key={item._id} className="rounded-xl border border-slate-800 p-3">
                       <p className="font-semibold">{item.title}</p>
                       <p className="mt-2 text-sm text-slate-400 break-words">{item.videoUrl}</p>
-                      <button onClick={() => handleDeleteVideo(item._id)} className="mt-3 rounded-lg bg-red-600 px-3 py-2 text-sm">Delete</button>
+                      <div className="mt-3 flex gap-2">
+                        <button
+                          onClick={() => startVideoEdit(item)}
+                          className="rounded-lg bg-[#D4AF37] px-3 py-2 text-sm font-semibold text-slate-900"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteVideo(item._id)}
+                          className="rounded-lg bg-red-600 px-3 py-2 text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -694,7 +869,20 @@ export default function AdminDashboard() {
                         <p className="font-semibold">{item.title}</p>
                         <p className="text-sm text-slate-400">{item.date} • {item.location}</p>
                       </div>
-                      <button onClick={() => handleDeleteEvent(item._id)} className="rounded-lg bg-red-600 px-3 py-2 text-sm">Delete</button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => startEventEdit(item)}
+                          className="rounded-lg bg-[#D4AF37] px-3 py-2 text-sm font-semibold text-slate-900"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteEvent(item._id)}
+                          className="rounded-lg bg-red-600 px-3 py-2 text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -767,6 +955,273 @@ export default function AdminDashboard() {
                       </div>
                     ))
                   )}
+                </div>
+              </div>
+            </div>
+          )}
+          
+
+          {editingType && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+              <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-slate-700 bg-slate-900 p-6 shadow-2xl">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#D4AF37]">
+                      Admin Editor
+                    </p>
+                    <h2 className="mt-1 text-2xl font-semibold">
+                      Edit {editingType === "gallery" ? "Gallery Photo" : editingType === "video" ? "Progress Video" : "Event"}
+                    </h2>
+                    <p className="mt-1 text-sm text-slate-400">
+                      Changes are saved to the backend and will appear on the public site after refresh.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={closeEditModal}
+                    disabled={editSaving}
+                    className="rounded-lg border border-slate-700 px-3 py-2 text-slate-300 hover:bg-slate-800 disabled:opacity-50"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {editError ? (
+                  <div className="mt-5 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+                    {editError}
+                  </div>
+                ) : null}
+
+                {editingType === "gallery" && editingGallery && (
+                  <div className="mt-6 space-y-4">
+                    {editingGallery.imageUrl ? (
+                      <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+                        <img
+                          src={editingGallery.imageUrl}
+                          alt={editingGallery.title}
+                          className="h-56 w-full object-contain"
+                        />
+                      </div>
+                    ) : null}
+
+                    <div>
+                      <label className="mb-2 block text-sm text-slate-300">Title</label>
+                      <input
+                        value={editingGallery.title}
+                        onChange={(e) => setEditingGallery({ ...editingGallery, title: e.target.value })}
+                        className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm text-slate-300">Description</label>
+                      <textarea
+                        value={editingGallery.description || ""}
+                        onChange={(e) => setEditingGallery({ ...editingGallery, description: e.target.value })}
+                        rows={4}
+                        className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                      />
+                    </div>
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div>
+                        <label className="mb-2 block text-sm text-slate-300">Category</label>
+                        <input
+                          value={editingGallery.category || "General"}
+                          onChange={(e) => setEditingGallery({ ...editingGallery, category: e.target.value })}
+                          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-sm text-slate-300">Orientation</label>
+                        <select
+                          value={editingGallery.orientation || "landscape"}
+                          onChange={(e) => setEditingGallery({ ...editingGallery, orientation: e.target.value as GalleryItem["orientation"] })}
+                          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                        >
+                          <option value="landscape">Landscape</option>
+                          <option value="portrait">Portrait</option>
+                          <option value="square">Square</option>
+                          <option value="vertical">Vertical</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {editingType === "video" && editingVideo && (
+                  <div className="mt-6 space-y-4">
+                    <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+                      <video src={editingVideo.videoUrl} controls className="h-56 w-full object-contain" />
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm text-slate-300">Title</label>
+                      <input
+                        value={editingVideo.title}
+                        onChange={(e) => setEditingVideo({ ...editingVideo, title: e.target.value })}
+                        className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm text-slate-300">Description</label>
+                      <textarea
+                        value={editingVideo.description || ""}
+                        onChange={(e) => setEditingVideo({ ...editingVideo, description: e.target.value })}
+                        rows={4}
+                        className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                      />
+                    </div>
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div>
+                        <label className="mb-2 block text-sm text-slate-300">Thumbnail URL</label>
+                        <input
+                          value={editingVideo.thumbnailUrl || ""}
+                          onChange={(e) => setEditingVideo({ ...editingVideo, thumbnailUrl: e.target.value })}
+                          placeholder="Optional thumbnail URL"
+                          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-sm text-slate-300">Orientation</label>
+                        <select
+                          value={editingVideo.orientation || "landscape"}
+                          onChange={(e) => setEditingVideo({ ...editingVideo, orientation: e.target.value as ProgressVideo["orientation"] })}
+                          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                        >
+                          <option value="landscape">Landscape</option>
+                          <option value="portrait">Portrait</option>
+                          <option value="square">Square</option>
+                          <option value="vertical">Vertical</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {editingType === "event" && editingEvent && (
+                  <div className="mt-6 space-y-4">
+                    {editingEvent.imageUrl ? (
+                      <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+                        <img
+                          src={editingEvent.imageUrl}
+                          alt={editingEvent.title}
+                          className="h-56 w-full object-contain"
+                        />
+                      </div>
+                    ) : null}
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div>
+                        <label className="mb-2 block text-sm text-slate-300">Tag</label>
+                        <input
+                          value={editingEvent.tag || ""}
+                          onChange={(e) => setEditingEvent({ ...editingEvent, tag: e.target.value })}
+                          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm text-slate-300">Category</label>
+                        <input
+                          value={editingEvent.category || "General"}
+                          onChange={(e) => setEditingEvent({ ...editingEvent, category: e.target.value })}
+                          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm text-slate-300">Title</label>
+                      <input
+                        value={editingEvent.title}
+                        onChange={(e) => setEditingEvent({ ...editingEvent, title: e.target.value })}
+                        className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm text-slate-300">Description</label>
+                      <textarea
+                        value={editingEvent.description || ""}
+                        onChange={(e) => setEditingEvent({ ...editingEvent, description: e.target.value })}
+                        rows={4}
+                        className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                      />
+                    </div>
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div>
+                        <label className="mb-2 block text-sm text-slate-300">Date</label>
+                        <input
+                          type="date"
+                          value={editingEvent.date || ""}
+                          onChange={(e) => setEditingEvent({ ...editingEvent, date: e.target.value })}
+                          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm text-slate-300">Location</label>
+                        <input
+                          value={editingEvent.location || ""}
+                          onChange={(e) => setEditingEvent({ ...editingEvent, location: e.target.value })}
+                          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div>
+                        <label className="mb-2 block text-sm text-slate-300">Start Time</label>
+                        <input
+                          type="time"
+                          value={editingEvent.startTime || ""}
+                          onChange={(e) => setEditingEvent({ ...editingEvent, startTime: e.target.value })}
+                          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm text-slate-300">End Time</label>
+                        <input
+                          type="time"
+                          value={editingEvent.endTime || ""}
+                          onChange={(e) => setEditingEvent({ ...editingEvent, endTime: e.target.value })}
+                          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="mb-2 block text-sm text-slate-300">Contact Information</label>
+                      <input
+                        value={editingEvent.contactInfo || ""}
+                        onChange={(e) => setEditingEvent({ ...editingEvent, contactInfo: e.target.value })}
+                        className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100 outline-none focus:border-[#D4AF37]"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-6 flex justify-end gap-3 border-t border-slate-800 pt-5">
+                  <button
+                    type="button"
+                    onClick={closeEditModal}
+                    disabled={editSaving}
+                    className="rounded-xl border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-800 disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={saveEditedContent}
+                    disabled={editSaving}
+                    className="rounded-xl bg-[#D4AF37] px-5 py-3 text-sm font-semibold text-slate-900 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {editSaving ? "Saving Changes..." : "Save Changes"}
+                  </button>
                 </div>
               </div>
             </div>

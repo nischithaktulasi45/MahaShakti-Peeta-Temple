@@ -88,4 +88,16 @@ export const contentService = {
     const response = await api.delete(`/events/${id}`);
     return response.data;
   },
+  async updateGallery(
+  id: string,
+  payload: Record<string, unknown>
+) {
+  const response = await api.put(
+    `/gallery/${id}`,
+    payload
+  );
+
+  return response.data;
+},
+
 };
