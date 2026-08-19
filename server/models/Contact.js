@@ -27,18 +27,7 @@ const contactSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-    },
-    whatsappNotificationSent: {
-      type: Boolean,
-      default: false,
-    },
-    whatsappNotificationSentAt: {
-      type: Date,
-    },
-    whatsappMessageId: {
-      type: String,
-      trim: true,
-    },
+    }
   },
   {
     timestamps: true,
