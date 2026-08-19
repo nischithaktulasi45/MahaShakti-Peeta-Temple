@@ -57,11 +57,10 @@ export default function Events() {
             {language === "kn" ? "ಕಾರ್ಯಕ್ರಮಗಳು" : "Events"}
           </p>
           <h1
-            className={`mt-4 font-serif text-[#083C78] ${
-              language === "kn"
-                ? "text-2xl sm:text-3xl md:text-4xl leading-snug"
-                : "text-3xl sm:text-4xl md:text-5xl"
-            }`}
+            className={`mt-4 font-serif text-[#083C78] ${language === "kn"
+              ? "text-2xl sm:text-3xl md:text-4xl leading-snug"
+              : "text-3xl sm:text-4xl md:text-5xl"
+              }`}
           >
             {language === "kn" ? "ದೇವಾಲಯದ ಕಾರ್ಯಕ್ರಮಗಳು" : "Temple Events"}
           </h1>
@@ -89,12 +88,23 @@ export default function Events() {
                 key={item._id}
                 className="group flex h-full max-w-full flex-col overflow-hidden rounded-3xl border border-white/70 bg-white/90 shadow-[0_18px_50px_rgba(10,77,155,0.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_65px_rgba(10,77,155,0.14)]"
               >
-                <div className="relative h-64 w-full max-w-full overflow-hidden rounded-t-[32px] bg-slate-100">
+                <div
+                  className="relative w-full overflow-hidden rounded-t-[32px] bg-slate-100"
+                  style={{
+                    height: "260px",
+                  }}
+                >
                   <img
                     src={item.imageUrl}
                     alt={item.title}
-                    className="absolute inset-0 h-full w-full max-w-full object-contain object-center"
                     loading="lazy"
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      objectPosition: "center",
+                    }}
                   />
                 </div>
 
