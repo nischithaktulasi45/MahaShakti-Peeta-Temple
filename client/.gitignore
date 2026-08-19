@@ -1,0 +1,15 @@
+node_modules/
+client/node_modules/
+server/node_modules/
+dist/
+client/dist/
+.env
+client/.env
+server/.env
+
+.env
+node_modules/
+dist/
+build.log
+
+/public/progress/video17.mp4
