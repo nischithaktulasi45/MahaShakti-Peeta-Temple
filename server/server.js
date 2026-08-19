@@ -1,7 +1,17 @@
+const dotenv = require("dotenv");
+
+// =====================================================
+// LOAD ENVIRONMENT VARIABLES FIRST
+// =====================================================
+
+dotenv.config();
+
+// =====================================================
+// IMPORTS
+// =====================================================
+
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
-const path = require("path");
 
 const connectDB = require("./config/db");
 
@@ -21,12 +31,6 @@ const {
 const {
   seedDefaultContentIfNeeded,
 } = require("./utils/storage");
-
-// =====================================================
-// ENVIRONMENT VARIABLES
-// =====================================================
-
-dotenv.config();
 
 // =====================================================
 // EXPRESS APP
@@ -60,8 +64,8 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests without Origin header.
-      // Example: server-to-server requests.
+      // Allow requests without an Origin header.
+      // Example: Postman, curl, server-to-server requests.
       if (!origin) {
         return callback(null, true);
       }
@@ -73,10 +77,15 @@ app.use(
 
       // Allow local development.
       if (
-        /^http:\/\/(localhost|127\.0\.0\.1):(5173|5174|4173|3000|3001)$/.test(
+        /^https?:\/\/(localhost|127\.0\.0\.1):(5173|5174|4173|3000|3001)$/.test(
           origin
         )
       ) {
+        return callback(null, true);
+      }
+
+      // Allow Vercel frontend deployments.
+      if (origin.endsWith(".vercel.app")) {
         return callback(null, true);
       }
 
@@ -119,94 +128,136 @@ app.get("/", (req, res) => {
   });
 });
 
-// Health endpoint
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Server is healthy",
-    environment: process.env.NODE_ENV || "development",
-  });
+app.get("/health", async (req, res) => {
+  try {
+    await initializeDatabase();
+
+    res.status(200).json({
+      success: true,
+      message: "Server is healthy",
+      environment: process.env.NODE_ENV || "development",
+      database: "connected",
+    });
+  } catch (error) {
+    console.error("Health check database error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server is running but database is unavailable",
+      environment: process.env.NODE_ENV || "development",
+      database: "disconnected",
+    });
+  }
+});
+
+// =====================================================
+// DATABASE INITIALIZATION
+// =====================================================
+
+let initializationPromise = null;
+
+const initializeDatabase = async () => {
+  // Prevent multiple simultaneous database connections.
+  if (initializationPromise) {
+    return initializationPromise;
+  }
+
+  initializationPromise = (async () => {
+    try {
+      // Connect MongoDB
+      await connectDB();
+
+      console.log("MongoDB connected successfully.");
+
+      // =================================================
+      // CREATE / CHECK DEFAULT ADMIN
+      // =================================================
+
+      try {
+        await createAdminIfNeeded();
+
+        console.log("Admin initialization completed.");
+      } catch (error) {
+        console.error(
+          "Admin initialization failed:",
+          error?.message || error
+        );
+      }
+
+      // =================================================
+      // SEED DEFAULT CONTENT
+      // =================================================
+
+      try {
+        await seedDefaultContentIfNeeded();
+
+        console.log(
+          "Default content initialization completed."
+        );
+      } catch (error) {
+        console.error(
+          "Default content initialization failed:",
+          error?.message || error
+        );
+      }
+
+      return true;
+    } catch (error) {
+      console.error(
+        "MongoDB connection failed:",
+        error?.message || error
+      );
+
+      // Allow another request to retry the connection.
+      initializationPromise = null;
+
+      throw error;
+    }
+  })();
+
+  return initializationPromise;
+};
+
+// =====================================================
+// DATABASE MIDDLEWARE
+// =====================================================
+
+// Make sure MongoDB is connected before API requests.
+
+app.use("/api", async (req, res, next) => {
+  try {
+    await initializeDatabase();
+
+    next();
+  } catch (error) {
+    console.error(
+      "Database middleware error:",
+      error?.message || error
+    );
+
+    res.status(503).json({
+      success: false,
+      message:
+        "Database connection unavailable. Please try again later.",
+    });
+  }
 });
 
 // =====================================================
 // API ROUTES
 // =====================================================
 
-app.use(
-  "/api/contact",
-  contactRoutes
-);
+app.use("/api/contact", contactRoutes);
 
-app.use(
-  "/api/donations",
-  donationRoutes
-);
+app.use("/api/donations", donationRoutes);
 
-app.use(
-  "/api/admin",
-  adminRoutes
-);
+app.use("/api/admin", adminRoutes);
 
-app.use(
-  "/api/gallery",
-  galleryRoutes
-);
+app.use("/api/gallery", galleryRoutes);
 
-app.use(
-  "/api/progress-videos",
-  videoRoutes
-);
+app.use("/api/progress-videos", videoRoutes);
 
-app.use(
-  "/api/events",
-  eventRoutes
-);
-
-// =====================================================
-// STATIC MEDIA
-// =====================================================
-
-// Client images
-app.use(
-  "/images",
-  express.static(
-    path.join(
-      __dirname,
-      "..",
-      "client",
-      "public",
-      "images"
-    )
-  )
-);
-
-// Client image folder
-app.use(
-  "/image",
-  express.static(
-    path.join(
-      __dirname,
-      "..",
-      "client",
-      "public",
-      "image"
-    )
-  )
-);
-
-// Progress videos
-app.use(
-  "/progress",
-  express.static(
-    path.join(
-      __dirname,
-      "..",
-      "client",
-      "public",
-      "progress"
-    )
-  )
-);
+app.use("/api/events", eventRoutes);
 
 // =====================================================
 // 404 HANDLER
@@ -227,79 +278,34 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // =====================================================
-// DATABASE / INITIALIZATION
-// =====================================================
-
-const initializeServer = async () => {
-  // Connect to MongoDB if configured.
-  if (process.env.MONGODB_URI) {
-    try {
-      await connectDB();
-
-      console.log("MongoDB connected successfully.");
-    } catch (error) {
-      console.warn(
-        "MongoDB unavailable, continuing with memory storage."
-      );
-
-      console.warn(
-        error?.message || error
-      );
-    }
-  } else {
-    console.warn(
-      "MONGODB_URI not set, continuing with memory storage."
-    );
-  }
-
-  // Create default admin if needed.
-  try {
-    await createAdminIfNeeded();
-  } catch (error) {
-    console.warn(
-      "Could not create/check default admin."
-    );
-
-    console.warn(
-      error?.message || error
-    );
-  }
-
-  // Seed default content if needed.
-  try {
-    await seedDefaultContentIfNeeded();
-  } catch (error) {
-    console.warn(
-      "Could not seed default content."
-    );
-
-    console.warn(
-      error?.message || error
-    );
-  }
-};
-
-// =====================================================
-// LOCAL DEVELOPMENT SERVER
+// LOCAL DEVELOPMENT
 // =====================================================
 
 // When running:
-// npm start
 //
-// Node starts the normal Express server.
+// npm run dev
 //
-// When Vercel imports this file:
-// server/api/index.js
+// or:
 //
-// require.main !== module,
-// so app.listen() will NOT execute.
+// node server.js
+//
+// the server starts normally.
+//
+// When Vercel imports this file, app.listen()
+// will not execute.
 
 if (require.main === module) {
-  initializeServer()
+  initializeDatabase()
     .then(() => {
       app.listen(PORT, () => {
         console.log(
           `Server running on port ${PORT}`
+        );
+
+        console.log(
+          `Environment: ${
+            process.env.NODE_ENV || "development"
+          }`
         );
       });
     })
@@ -308,7 +314,9 @@ if (require.main === module) {
         "Failed to initialize server:"
       );
 
-      console.error(error);
+      console.error(
+        error?.message || error
+      );
 
       process.exit(1);
     });
