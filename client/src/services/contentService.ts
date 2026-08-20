@@ -1,11 +1,12 @@
 import api from "./api";
 
 const normalizeMediaUrl = (url?: string) => {
-  if (!url) return url;
-  if (/^https?:\/\//i.test(url)) return url;
-
-  const baseUrl = (import.meta.env.VITE_API_URL || "http://localhost:5000/api").replace(/\/api$/, "");
-  return `${baseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url) || url.startsWith("data:") || url.startsWith("blob:")) {
+    return url;
+  }
+  // Ensure leading slash for client-hosted static assets (e.g., /image/..., /images/..., /progress/...)
+  return url.startsWith("/") ? url : `/${url}`;
 };
 
 export const contentService = {

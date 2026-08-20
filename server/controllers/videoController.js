@@ -114,6 +114,12 @@ const removeUploadedMediaFile = (mediaUrl) => {
 // UPLOAD PROGRESS VIDEO
 // =========================================================
 
+const {
+  isCloudinaryConfigured,
+  uploadBufferToCloudinary,
+  deleteFromCloudinary,
+} = require("../utils/cloudinaryHelper");
+
 const uploadProgressVideo = asyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({
@@ -142,6 +148,26 @@ const uploadProgressVideo = asyncHandler(async (req, res) => {
   }
 
   const buffer = req.file.buffer;
+
+  // Try Cloudinary video upload if configured
+  if (isCloudinaryConfigured()) {
+    try {
+      const result = await uploadBufferToCloudinary(buffer, {
+        folder: "temple-website/videos",
+        resource_type: "video",
+      });
+      return res.status(201).json({
+        success: true,
+        data: {
+          videoUrl: result.url,
+          publicId: result.publicId,
+          orientation,
+        },
+      });
+    } catch (err) {
+      console.warn("Cloudinary video upload failed, falling back to local storage:", err?.message || err);
+    }
+  }
 
   const originalName =
     req.file.originalname || "video";
@@ -173,13 +199,7 @@ const uploadProgressVideo = asyncHandler(async (req, res) => {
 
   fs.writeFileSync(videoPath, buffer);
 
-  const baseUrl = (
-    process.env.SERVER_URL ||
-    process.env.API_URL ||
-    "http://localhost:5000"
-  ).replace(/\/$/, "");
-
-  const videoUrl = `${baseUrl}/progress/${safeName}`;
+  const videoUrl = `/progress/${safeName}`;
 
   const publicId = safeName;
 
@@ -399,6 +419,10 @@ const deleteProgressVideo = asyncHandler(
         });
       }
 
+      if (video.publicId && !video.publicId.includes(".")) {
+        await deleteFromCloudinary(video.publicId, "video");
+      }
+
       removeUploadedMediaFile(
         video.videoUrl
       );
@@ -420,6 +444,10 @@ const deleteProgressVideo = asyncHandler(
         success: false,
         message: "Progress video not found",
       });
+    }
+
+    if (video.publicId && !video.publicId.includes(".")) {
+      await deleteFromCloudinary(video.publicId, "video");
     }
 
     removeUploadedMediaFile(

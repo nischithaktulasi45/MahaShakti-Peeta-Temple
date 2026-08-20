@@ -16,6 +16,8 @@ const memoryState = {
   videos: [],
   events: [],
   admins: [],
+  contacts: [],
+  donations: [],
 };
 
 const isDatabaseReady = () => {
@@ -769,6 +771,53 @@ const deleteTempleEventRecord = async (
 };
 
 // =========================================================
+// CONTACT MESSAGES
+// =========================================================
+
+const createContactMessageRecord = (payload) => {
+  const record = {
+    _id: randomUUID(),
+    ...payload,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  memoryState.contacts.unshift(record);
+  return record;
+};
+
+const listContactMessages = () => {
+  return [...memoryState.contacts];
+};
+
+const deleteContactMessageRecord = (id) => {
+  const index = memoryState.contacts.findIndex((item) => item._id === id);
+  if (index === -1) return null;
+  const [deleted] = memoryState.contacts.splice(index, 1);
+  return deleted;
+};
+
+// =========================================================
+// DONATIONS
+// =========================================================
+
+const createDonationRecord = (payload) => {
+  const record = {
+    _id: randomUUID(),
+    ...payload,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  memoryState.donations.unshift(record);
+  return record;
+};
+
+const listDonationRecords = () => {
+  return [...memoryState.donations];
+};
+
+// =========================================================
 // EXPORTS
 // =========================================================
 
@@ -796,4 +845,11 @@ module.exports = {
   createTempleEventRecord,
   updateTempleEventRecord,
   deleteTempleEventRecord,
+
+  createContactMessageRecord,
+  listContactMessages,
+  deleteContactMessageRecord,
+
+  createDonationRecord,
+  listDonationRecords,
 };

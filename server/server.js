@@ -12,6 +12,7 @@ dotenv.config();
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const connectDB = require("./config/db");
 
@@ -103,6 +104,16 @@ app.use(
     limit: "10mb",
   })
 );
+
+// =====================================================
+// STATIC ASSETS (IMAGES, VIDEOS, PUBLIC FILES)
+// =====================================================
+
+const clientPublicPath = path.join(__dirname, "..", "client", "public");
+app.use(express.static(clientPublicPath));
+app.use("/image", express.static(path.join(clientPublicPath, "image")));
+app.use("/images", express.static(path.join(clientPublicPath, "images")));
+app.use("/progress", express.static(path.join(clientPublicPath, "progress")));
 
 // =====================================================
 // DATABASE INITIALIZATION
@@ -212,20 +223,17 @@ app.get("/health", async (req, res) => {
 app.use("/api", async (req, res, next) => {
   try {
     await initializeDatabase();
-
-    next();
   } catch (error) {
-    console.error(
-      "Database middleware error:",
+    // DB unavailable - log a warning but allow the request to continue.
+    // Individual controllers will detect the disconnected state and use
+    // in-memory fallback storage instead.
+    console.warn(
+      "MongoDB unavailable, controllers will use in-memory fallback:",
       error?.message || error
     );
-
-    res.status(503).json({
-      success: false,
-      message:
-        "Database connection unavailable. Please try again later.",
-    });
   }
+
+  next();
 });
 
 // =====================================================

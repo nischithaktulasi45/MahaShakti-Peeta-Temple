@@ -21,6 +21,12 @@ export default defineConfig({
     port: Number(process.env.PORT ?? 5173),
     strictPort: true,
     host: "0.0.0.0",
+    proxy: {
+      "/api": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
     port: Number(process.env.PORT ?? 4173),

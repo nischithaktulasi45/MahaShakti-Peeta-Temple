@@ -10,8 +10,25 @@ const CATEGORIES = ["All"];
 const PLACEHOLDER_SVG =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='24' fill='%234a5568' text-anchor='middle' dy='.3em'%3ENo Image%3C/text%3E%3C/svg%3E";
 
+const DEFAULT_GALLERY_IMAGES = [
+  ...Array.from({ length: 12 }, (_, i) => ({
+    _id: `default-page-${i + 1}`,
+    title: `Temple Gallery ${i + 1}`,
+    imageUrl: `/image/page_${i + 1}.jpg`,
+    category: "All",
+    orientation: "landscape" as const,
+  })),
+  ...Array.from({ length: 10 }, (_, i) => ({
+    _id: `default-photo-${i + 1}`,
+    title: `Temple Photo ${i + 1}`,
+    imageUrl: `/image/photo${i + 1}.jpeg`,
+    category: "All",
+    orientation: "landscape" as const,
+  })),
+];
+
 export default function GalleryGrid() {
-  const [images, setImages] = useState<Array<{ _id: string; title: string; imageUrl: string; category: string; orientation?: MediaOrientation }>>([]);
+  const [images, setImages] = useState<Array<{ _id: string; title: string; imageUrl: string; category: string; orientation?: MediaOrientation }>>(DEFAULT_GALLERY_IMAGES);
   const [activeCategory, setActiveCategory] = useState("All");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
@@ -21,9 +38,11 @@ export default function GalleryGrid() {
     const loadImages = async () => {
       try {
         const response = await contentService.getGallery();
-        setImages(response?.data || []);
+        const responseData = Array.isArray(response?.data) && response.data.length > 0 ? response.data : DEFAULT_GALLERY_IMAGES;
+        setImages(responseData);
       } catch (error) {
-        console.error(error);
+        console.error("Failed to load gallery from server, using default images:", error);
+        setImages(DEFAULT_GALLERY_IMAGES);
       }
     };
 

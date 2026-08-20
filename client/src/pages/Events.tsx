@@ -9,8 +9,63 @@ type EventCard = {
   tag?: string;
 };
 
+const DEFAULT_EVENTS: EventCard[] = [
+  {
+    _id: "default-event-1",
+    title: "Sidda Kannina Hani",
+    description: "A compassionate community service focused on health, care, and village welfare.",
+    tag: "Community Service",
+    imageUrl: "/images/events/Sidda.jpeg",
+  },
+  {
+    _id: "default-event-2",
+    title: "Blood Donation",
+    description: "A life-saving humanitarian initiative open to all who wish to serve others.",
+    tag: "Health",
+    imageUrl: "/images/events/blood.jpg",
+  },
+  {
+    _id: "default-event-3",
+    title: "Arogya Shibira",
+    description: "A wellness camp dedicated to prevention, screening, and health awareness.",
+    tag: "Health Camp",
+    imageUrl: "/images/events/health.png",
+  },
+  {
+    _id: "default-event-4",
+    title: "Book Donation",
+    description: "An educational and cultural outreach program encouraging reading and learning.",
+    tag: "Education",
+    imageUrl: "/images/events/book.jpg",
+  },
+  {
+    _id: "default-event-5",
+    title: "Tree Plantation",
+    description: "A green initiative promoting environmental responsibility and collective care.",
+    tag: "Environment",
+    imageUrl: "/images/events/tree.jpg",
+  },
+  {
+    _id: "default-event-6",
+    title: "Vadya Ghoshi",
+    description: "A devotional musical gathering celebrating bhakti, rhythm, and temple culture.",
+    tag: "Cultural",
+    imageUrl: "/images/events/vadya.jpg",
+  },
+  {
+    _id: "default-event-7",
+    title: "Dasoha",
+    description: "The sacred temple serving of food and seva offered as a blessing to all visitors.",
+    tag: "Seva",
+    imageUrl: "/images/events/dasoha.avif",
+  },
+];
+
+const FALLBACK_EVENT_IMAGE =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'%3E%3Crect width='600' height='400' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='26' fill='%234a5568' text-anchor='middle' dy='.3em'%3ETemple Event%3C/text%3E%3C/svg%3E";
+
 export default function Events() {
-  const [events, setEvents] = useState<EventCard[]>([]);
+  const [events, setEvents] = useState<EventCard[]>(DEFAULT_EVENTS);
   const [language, setLanguage] = useState<"en" | "kn">(() => {
     const saved = typeof window !== "undefined" ? localStorage.getItem("site-language") : null;
     return saved === "kn" ? "kn" : "en";
@@ -24,13 +79,12 @@ export default function Events() {
         setLoading(true);
         setError(null);
         const response = await contentService.getEvents();
-        const responseData = Array.isArray(response?.data) ? response.data : [];
+        const responseData = Array.isArray(response?.data) && response.data.length > 0 ? response.data : DEFAULT_EVENTS;
         console.info("Temple Events loaded:", responseData.length);
         setEvents(responseData);
       } catch (error) {
-        console.error("Failed to load temple events:", error);
-        setError("Unable to load events right now. Please try again later.");
-        setEvents([]);
+        console.error("Failed to load temple events from server, using defaults:", error);
+        setEvents(DEFAULT_EVENTS);
       } finally {
         setLoading(false);
       }
@@ -98,6 +152,9 @@ export default function Events() {
                     src={item.imageUrl}
                     alt={item.title}
                     loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = FALLBACK_EVENT_IMAGE;
+                    }}
                     style={{
                       display: "block",
                       width: "100%",

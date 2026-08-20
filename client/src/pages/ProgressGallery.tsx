@@ -4,8 +4,15 @@ import { sortMediaByOrientation, type MediaOrientation } from "@/lib/mediaOrient
 
 interface ProgressVideo { _id: string; title: string; videoUrl: string; orientation?: MediaOrientation; }
 
+const DEFAULT_PROGRESS_VIDEOS: ProgressVideo[] = Array.from({ length: 20 }, (_, i) => ({
+  _id: `default-video-${i + 1}`,
+  title: `Progress Video ${i + 1}`,
+  videoUrl: `/progress/video${i + 1}.mp4`,
+  orientation: "landscape" as const,
+}));
+
 export default function ProgressGallery() {
-  const [videos, setVideos] = useState<ProgressVideo[]>([]);
+  const [videos, setVideos] = useState<ProgressVideo[]>(DEFAULT_PROGRESS_VIDEOS);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [orientations, setOrientations] = useState<Record<string, MediaOrientation>>({});
   const [loading, setLoading] = useState(true);
@@ -17,12 +24,11 @@ export default function ProgressGallery() {
         setLoading(true);
         setError(null);
         const response = await contentService.getVideos();
-        const responseData = Array.isArray(response?.data) ? response.data : [];
+        const responseData = Array.isArray(response?.data) && response.data.length > 0 ? response.data : DEFAULT_PROGRESS_VIDEOS;
         setVideos(responseData);
       } catch (err) {
-        console.error("Failed to load progress gallery videos:", err);
-        setVideos([]);
-        setError("Unable to load videos right now. Please try again later.");
+        console.error("Failed to load progress gallery videos from server, using defaults:", err);
+        setVideos(DEFAULT_PROGRESS_VIDEOS);
       } finally {
         setLoading(false);
       }

@@ -145,12 +145,36 @@ const updateGalleryPhoto = asyncHandler(async (req, res) => {
     data: photo,
   });
 });
+const {
+  isCloudinaryConfigured,
+  uploadBufferToCloudinary,
+  deleteFromCloudinary,
+} = require("../utils/cloudinaryHelper");
+
 const uploadGalleryImage = asyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: "Image file is required" });
   }
 
   const buffer = req.file.buffer;
+
+  // Try Cloudinary upload if configured
+  if (isCloudinaryConfigured()) {
+    try {
+      const result = await uploadBufferToCloudinary(buffer, {
+        folder: "temple-website/gallery",
+        resource_type: "image",
+      });
+      return res.status(201).json({
+        success: true,
+        data: { imageUrl: result.url, publicId: result.publicId },
+      });
+    } catch (err) {
+      console.warn("Cloudinary upload failed, using local storage fallback:", err?.message || err);
+    }
+  }
+
+  // Local storage fallback
   const originalName = req.file.originalname || "image";
   const extension = path.extname(originalName) || ".jpg";
   const publicDir = path.join(__dirname, "..", "..", "client", "public", "image", "gallery");
@@ -160,8 +184,7 @@ const uploadGalleryImage = asyncHandler(async (req, res) => {
   const imagePath = path.join(publicDir, safeName);
   fs.writeFileSync(imagePath, buffer);
 
-  const baseUrl = (process.env.SERVER_URL || process.env.API_URL || "http://localhost:5000").replace(/\/$/, "");
-  const imageUrl = `${baseUrl}/image/gallery/${safeName}`;
+  const imageUrl = `/image/gallery/${safeName}`;
   res.status(201).json({ success: true, data: { imageUrl, publicId: safeName } });
 });
 
@@ -191,6 +214,9 @@ const deleteGalleryPhoto = asyncHandler(async (req, res) => {
     if (!photo) {
       return res.status(404).json({ success: false, message: "Gallery photo not found" });
     }
+    if (photo.publicId && !photo.publicId.includes(".")) {
+      await deleteFromCloudinary(photo.publicId, "image");
+    }
     removeUploadedMediaFile(photo.imageUrl);
     return res.status(200).json({ success: true, message: "Gallery photo deleted successfully" });
   }
@@ -200,6 +226,9 @@ const deleteGalleryPhoto = asyncHandler(async (req, res) => {
     return res.status(404).json({ success: false, message: "Gallery photo not found" });
   }
 
+  if (photo.publicId && !photo.publicId.includes(".")) {
+    await deleteFromCloudinary(photo.publicId, "image");
+  }
   removeUploadedMediaFile(photo.imageUrl);
   res.status(200).json({ success: true, message: "Gallery photo deleted successfully" });
 });

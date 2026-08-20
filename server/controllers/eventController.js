@@ -54,12 +54,34 @@ const getTempleEvents = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: events });
 });
 
+const {
+  isCloudinaryConfigured,
+  uploadBufferToCloudinary,
+  deleteFromCloudinary,
+} = require("../utils/cloudinaryHelper");
+
 const uploadTempleEventImage = asyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: "Event photo is required" });
   }
 
   const buffer = req.file.buffer;
+
+  if (isCloudinaryConfigured()) {
+    try {
+      const result = await uploadBufferToCloudinary(buffer, {
+        folder: "temple-website/events",
+        resource_type: "image",
+      });
+      return res.status(201).json({
+        success: true,
+        data: { imageUrl: result.url, publicId: result.publicId },
+      });
+    } catch (err) {
+      console.warn("Cloudinary event upload failed, using local fallback:", err?.message || err);
+    }
+  }
+
   const originalName = req.file.originalname || "event";
   const extension = path.extname(originalName) || ".jpg";
   const publicDir = path.resolve(__dirname, "..", "..", "client", "public", "images", "events");
@@ -69,13 +91,12 @@ const uploadTempleEventImage = asyncHandler(async (req, res) => {
   const imagePath = path.join(publicDir, safeName);
   fs.writeFileSync(imagePath, buffer);
 
-  const baseUrl = (process.env.SERVER_URL || process.env.API_URL || "http://localhost:5000").replace(/\/$/, "");
-  const imageUrl = `${baseUrl}/images/events/${safeName}`;
+  const imageUrl = `/images/events/${safeName}`;
   res.status(201).json({ success: true, data: { imageUrl, publicId: safeName } });
 });
 
 const createTempleEvent = asyncHandler(async (req, res) => {
-  const { tag, title, description, date, startTime, endTime, location, imageUrl, category, contactInfo } = req.body;
+  const { tag, title, description, date, startTime, endTime, location, imageUrl, publicId, category, contactInfo } = req.body;
 
   if (!title || !title.trim()) {
     return res.status(400).json({ success: false, message: "Please enter an event title." });
@@ -95,6 +116,7 @@ const createTempleEvent = asyncHandler(async (req, res) => {
       endTime,
       location,
       imageUrl,
+      publicId: publicId || "",
       category,
       contactInfo,
     });
@@ -102,18 +124,18 @@ const createTempleEvent = asyncHandler(async (req, res) => {
     return res.status(201).json({ success: true, data: event });
   }
 
-  const event = createTempleEventRecord({ tag: tag || "", title: title.trim(), description: description.trim(), date, startTime, endTime, location, imageUrl, category, contactInfo });
+  const event = createTempleEventRecord({ tag: tag || "", title: title.trim(), description: description.trim(), date, startTime, endTime, location, imageUrl, publicId: publicId || "", category, contactInfo });
   console.log("Temple event saved to memory storage", { id: event._id, title: event.title, imageUrl: event.imageUrl });
   res.status(201).json({ success: true, data: event });
 });
 
 const updateTempleEvent = asyncHandler(async (req, res) => {
-  const { tag, title, description, date, startTime, endTime, location, imageUrl, category, contactInfo } = req.body;
+  const { tag, title, description, date, startTime, endTime, location, imageUrl, publicId, category, contactInfo } = req.body;
 
   if (mongoose.connection.readyState === 1) {
     const event = await TempleEvent.findByIdAndUpdate(
       req.params.id,
-      { tag, title, description, date, startTime, endTime, location, imageUrl, category, contactInfo },
+      { tag, title, description, date, startTime, endTime, location, imageUrl, ...(publicId ? { publicId } : {}), category, contactInfo },
       { new: true, runValidators: true },
     );
     if (!event) {
@@ -136,6 +158,9 @@ const deleteTempleEvent = asyncHandler(async (req, res) => {
     if (!event) {
       return res.status(404).json({ success: false, message: "Event not found" });
     }
+    if (event.publicId && !event.publicId.includes(".")) {
+      await deleteFromCloudinary(event.publicId, "image");
+    }
     removeUploadedMediaFile(event.imageUrl);
     return res.status(200).json({ success: true, message: "Event deleted successfully" });
   }
@@ -145,6 +170,9 @@ const deleteTempleEvent = asyncHandler(async (req, res) => {
     return res.status(404).json({ success: false, message: "Event not found" });
   }
 
+  if (event.publicId && !event.publicId.includes(".")) {
+    await deleteFromCloudinary(event.publicId, "image");
+  }
   removeUploadedMediaFile(event.imageUrl);
   res.status(200).json({ success: true, message: "Event deleted successfully" });
 });
