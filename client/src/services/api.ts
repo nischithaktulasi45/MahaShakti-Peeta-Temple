@@ -2,7 +2,12 @@ import axios from "axios";
 
 const getBaseUrl = () => {
   const envUrl = import.meta.env.VITE_API_URL;
-  if (envUrl && typeof envUrl === "string" && envUrl.trim() !== "") {
+  if (
+    envUrl &&
+    typeof envUrl === "string" &&
+    envUrl.trim() !== "" &&
+    !envUrl.includes("2ssjo1qq0")
+  ) {
     return envUrl.trim().replace(/\/$/, "");
   }
   return import.meta.env.DEV ? "http://localhost:5000/api" : "/api";

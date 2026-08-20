@@ -46,8 +46,9 @@ const PORT = Number(process.env.PORT) || 5000;
 // =====================================================
 
 const allowedOrigins = [
-  "https://maha-shakti-peeta-temple-client-hi8qc4x35-nischitha.vercel.app/",
-  "https://maha-shakti-peeta-temple-2ssjo1qq0-nischitha.vercel.app/",
+  "https://maha-shakti-peeta-temple-client.vercel.app",
+  "https://maha-shakti-peeta-temple-client-hi8qc4x35-nischitha.vercel.app",
+  "https://maha-shakti-peeta-temple-2ssjo1qq0-nischitha.vercel.app",
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:4173",
@@ -64,13 +65,15 @@ const corsOptions = {
       return callback(null, true);
     }
 
+    const cleanOrigin = origin.replace(/\/$/, "");
+
     // Allow your frontend domains
-    if (allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes(cleanOrigin)) {
       return callback(null, true);
     }
 
     // Allow Vercel preview deployments
-    if (origin.endsWith(".vercel.app")) {
+    if (cleanOrigin.endsWith(".vercel.app")) {
       return callback(null, true);
     }
 
