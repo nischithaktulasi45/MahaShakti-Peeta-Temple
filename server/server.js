@@ -45,81 +45,47 @@ const PORT = Number(process.env.PORT) || 5000;
 // =====================================================
 
 const allowedOrigins = [
-  process.env.CLIENT_URL,
-
-  // Production frontend
   "https://maha-shakti-peeta-temple-client.vercel.app",
-
-  // Main frontend if deployed directly
   "https://maha-shakti-peeta-temple.vercel.app",
-
-  // Local development
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:4173",
   "http://localhost:3000",
   "http://localhost:3001",
-
   "http://127.0.0.1:5173",
   "http://127.0.0.1:5174",
-  "http://127.0.0.1:4173",
-  "http://127.0.0.1:3000",
-  "http://127.0.0.1:3001",
-].filter(Boolean);
+];
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests without Origin
+    // Allow requests without an Origin header
     if (!origin) {
       return callback(null, true);
     }
 
-    // Explicitly allowed origins
+    // Allow your frontend domains
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
 
-    // Allow Vercel deployments
+    // Allow Vercel preview deployments
     if (origin.endsWith(".vercel.app")) {
       return callback(null, true);
     }
 
-    // Allow localhost / 127.0.0.1
-    if (
-      /^https?:\/\/(localhost|127\.0\.0\.1):(5173|5174|4173|3000|3001)$/.test(
-        origin
-      )
-    ) {
-      return callback(null, true);
-    }
+    console.log("CORS blocked:", origin);
 
-    console.warn(`CORS blocked for origin: ${origin}`);
-
-    return callback(new Error(`CORS blocked for origin: ${origin}`));
+    return callback(new Error("Not allowed by CORS"));
   },
 
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+
+  allowedHeaders: ["Content-Type", "Authorization"],
+
   credentials: true,
-
-  methods: [
-    "GET",
-    "POST",
-    "PUT",
-    "PATCH",
-    "DELETE",
-    "OPTIONS",
-  ],
-
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-  ],
 };
 
-// IMPORTANT: only ONE CORS middleware
 app.use(cors(corsOptions));
-
-// Explicitly handle preflight requests
-app.options("*", cors(corsOptions));
 
 // =====================================================
 // BODY PARSING
