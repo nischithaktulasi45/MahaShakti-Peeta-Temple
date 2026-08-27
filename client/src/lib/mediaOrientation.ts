@@ -1,5 +1,18 @@
 export type MediaOrientation = "landscape" | "portrait" | "square" | "vertical";
 
+export function getMediaAspectRatio(orientation?: MediaOrientation): string {
+  switch (orientation) {
+    case "square":
+      return "1 / 1";
+    case "portrait":
+      return "3 / 4";
+    case "vertical":
+      return "9 / 16";
+    default:
+      return "16 / 9";
+  }
+}
+
 const orientationOrder: Record<MediaOrientation, number> = {
   landscape: 0,
   square: 1,

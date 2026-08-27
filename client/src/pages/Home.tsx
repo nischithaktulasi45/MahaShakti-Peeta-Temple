@@ -18,8 +18,8 @@ export default function Home() {
       <HeroSlider />
 
       {/* Mission Cards */}
-      <section className="bg-[#EAF4FF] px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+      <section className="bg-[#EAF4FF] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        <div className="mission-cards-grid mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {[
             {
               image: "/image/icons/Spirituality.png",
@@ -48,30 +48,32 @@ export default function Home() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className="rounded-lg border-b-4 border-[#0A4D9B] bg-white p-5 text-center shadow-md transition-transform duration-300 hover:scale-[1.01] hover:shadow-xl sm:p-6"
+              className="flex h-full flex-col items-center rounded-lg border-b-4 border-[#0A4D9B] bg-white p-5 text-center shadow-md transition-transform duration-300 hover:scale-[1.01] hover:shadow-xl sm:p-6"
             >
-              <div className="flex justify-center mb-4">
+              <div className="mission-card-image-frame mb-4 flex shrink-0 items-center justify-center">
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="h-16 w-16 rounded-full border-2 border-[#D4AF37] object-cover shadow-md sm:h-20 sm:w-20"
+                  className="mission-card-image rounded-full border-2 border-[#D4AF37] object-cover shadow-md"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src =
                       "https://placehold.co/80x80/e2e8f0/1e293b?text=No+Image";
                   }}
                 />
               </div>
-              <h3 className="mb-2 font-serif text-lg font-bold text-[#083C78] sm:text-xl">
+              <h3 className="mb-2 flex min-h-[2.5rem] items-center justify-center font-serif text-lg font-bold text-[#083C78] sm:text-xl">
                 {item.title}
               </h3>
-              <p className="font-sans text-sm text-gray-500">{item.desc}</p>
+              <p className="flex min-h-[2.5rem] flex-1 items-start justify-center font-sans text-sm text-gray-500">
+                {item.desc}
+              </p>
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* Services Preview */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mb-10 text-center">
           <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">Temple Services</h2>
           <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />

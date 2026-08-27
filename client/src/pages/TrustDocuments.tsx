@@ -79,7 +79,7 @@ export default function TrustDocuments() {
                   href={doc.url || "#"}
                   target="_blank"
                   rel="noreferrer"
-                  className={`inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors ${doc.url ? "bg-[#D4AF37] text-[#083C78] hover:bg-white hover:text-[#083C78]" : "bg-gray-100 text-gray-500 cursor-not-allowed"}`}
+                  className={`inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium ${doc.url ? "bg-[#D4AF37] text-[#083C78]" : "bg-gray-100 text-gray-500 cursor-not-allowed"}`}
                 >
                   View
                 </a>

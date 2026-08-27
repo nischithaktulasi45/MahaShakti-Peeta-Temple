@@ -12,8 +12,9 @@ import {
   FaHandHoldingHeart,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import GoogleTranslateToggle from "./GoogleTranslateToggle";
 
-const NAV_LINKS = [
+export const NAV_LINKS = [
   { name: "Home", path: "/" },
   { name: "About Us", path: "/about" },
   { name: "Gods", path: "/gods" },
@@ -25,6 +26,19 @@ const NAV_LINKS = [
   { name: "Donate", path: "/donate" },
   { name: "Contact Us", path: "/contact" },
 ];
+
+const KANNADA_NAV_LABELS: Record<string, string> = {
+  Home: "ಮುಖಪುಟ",
+  "About Us": "ನಮ್ಮ ಬಗ್ಗೆ",
+  Gods: "ದೇವರುಗಳು",
+  Trust: "ಟ್ರಸ್ಟ್",
+  "Trust Documents": "ಟ್ರಸ್ಟ್ ದಾಖಲೆಗಳು",
+  Events: "ದೇವಾಲಯದ ಕಾರ್ಯಕ್ರಮಗಳು",
+  "Progress Gallery": "ಪ್ರಗತಿ ಗ್ಯಾಲರಿ",
+  Gallery: "ಗ್ಯಾಲರಿ",
+  Donate: "ದಾನ ಮಾಡಿ",
+  "Contact Us": "ಸಂಪರ್ಕಿಸಿ",
+};
 
 export default function Navbar() {
   const [location] = useLocation();
@@ -103,7 +117,7 @@ export default function Navbar() {
           <span className="flex min-w-0 items-center gap-2 whitespace-nowrap">
             <FaEnvelope className="shrink-0 text-[#D4AF37]" />
             <span className="truncate">
-              mahashakthipeetacharitabletres@gmail.com
+              mahashakthipeetacharitabletrus@gmail.com
             </span>
           </span>
 
@@ -161,7 +175,7 @@ export default function Navbar() {
       {/* =========================================================
           MAIN NAVBAR
       ========================================================= */}
-      <nav className="bg-[#0A4D9B] px-3 py-2 text-white sm:px-4 lg:px-5">
+      <nav className="relative bg-[#0A4D9B] px-3 py-2 text-white sm:px-4 lg:px-5">
         <div className="mx-auto flex w-full max-w-[1600px] items-center gap-3">
           {/* =====================================================
               LOGO + TITLE
@@ -292,12 +306,10 @@ export default function Navbar() {
                         : ""
                     }
                   >
-                    {link.name === "Events"
-                      ? language === "kn"
-                        ? "ದೇವಾಲಯದ ಕಾರ್ಯಕ್ರಮಗಳು"
-                        : "Temple Events"
-                      : language === "kn" && link.name === "Trust"
-                        ? "ಸಂಸ್ಥೆ"
+                    {language === "kn"
+                      ? KANNADA_NAV_LABELS[link.name]
+                      : link.name === "Events"
+                        ? "Temple Events"
                         : link.name}
                   </span>
                 </Link>
@@ -318,6 +330,7 @@ export default function Navbar() {
             {mobileMenuOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
+        <GoogleTranslateToggle embedded />
       </nav>
 
       {/* =========================================================
@@ -356,12 +369,10 @@ export default function Navbar() {
                     {isDonate && <FaHandHoldingHeart />}
 
                     <span>
-                      {link.name === "Events"
-                        ? language === "kn"
-                          ? "ಕಾರ್ಯಕ್ರಮಗಳು"
-                          : "Temple Events"
-                        : language === "kn" && link.name === "Trust"
-                          ? "ಸಂಸ್ಥೆ"
+                      {language === "kn"
+                        ? KANNADA_NAV_LABELS[link.name]
+                        : link.name === "Events"
+                          ? "Temple Events"
                           : link.name}
                     </span>
                   </Link>
@@ -378,7 +389,7 @@ export default function Navbar() {
                   }}
                   className="block min-h-[44px] rounded-lg bg-[#D4AF37] px-6 py-3 text-center font-bold text-[#083C78] transition-colors hover:bg-white"
                 >
-                  Donate Now
+                  {language === "kn" ? "ಈಗಲೇ ದಾನ ಮಾಡಿ" : "Donate Now"}
                 </Link>
               </div>
             </div>

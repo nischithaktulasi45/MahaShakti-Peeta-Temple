@@ -4,7 +4,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import GoogleTranslateToggle from "@/components/GoogleTranslateToggle";
 import ScrollToTop from "@/components/ScrollToTop";
 import NotFound from "@/pages/not-found";
 
@@ -74,7 +73,6 @@ function Layout() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <Navbar />
-      <GoogleTranslateToggle />
       <main className="flex-1" style={{ paddingTop: headerHeight }}>
         <Router />
       </main>

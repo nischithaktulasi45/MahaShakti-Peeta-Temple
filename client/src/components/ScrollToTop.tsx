@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import { FaArrowUp } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ScrollToTop() {
+  const [location] = useLocation();
   const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {

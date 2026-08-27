@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { contentService } from "@/services/contentService";
 import { adminService } from "@/services/adminService";
+import { getMediaAspectRatio, type MediaOrientation } from "@/lib/mediaOrientation";
 
 interface GalleryItem {
   _id: string;
@@ -296,6 +297,9 @@ export default function AdminDashboard() {
     if (height > width) return "portrait" as const;
     return "landscape" as const;
   };
+
+  const getAspectRatio = (value?: GalleryItem["orientation"] | ProgressVideo["orientation"] | "") =>
+    getMediaAspectRatio(value as MediaOrientation | undefined);
 
   const handleEventFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
@@ -679,12 +683,12 @@ export default function AdminDashboard() {
                 {galleryPreviewUrl && (
                   <div className="mt-4 rounded-2xl border border-slate-700 bg-slate-950/80 p-4">
                     <p className="text-sm text-slate-400">Preview: {galleryPreviewName}</p>
-                    <div className="mt-3 overflow-hidden rounded-xl bg-slate-900">
+                    <div className="mx-auto mt-3 max-h-[min(60vh,32rem)] w-full max-w-md overflow-hidden rounded-xl bg-slate-900" style={{ aspectRatio: getAspectRatio(galleryPreviewOrientation || getOrientationFromDimensions(galleryPreviewDimensions)) }}>
                       <img
                         src={galleryPreviewUrl}
                         alt={galleryPreviewName}
                         onLoad={handleGalleryPreviewImageLoad}
-                        className="h-72 max-h-72 w-full object-contain"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                     <p className="mt-3 text-sm text-slate-400">Detected orientation: {galleryPreviewOrientation || getOrientationFromDimensions(galleryPreviewDimensions)}</p>
@@ -763,11 +767,11 @@ export default function AdminDashboard() {
                 {selectedVideoPreviewUrl && (
                   <div className="mt-4 rounded-2xl border border-slate-700 bg-slate-950/80 p-4">
                     <p className="text-sm text-slate-400">Video Preview</p>
-                    <div className="mt-3 overflow-hidden rounded-xl bg-slate-900">
+                    <div className="mx-auto mt-3 max-h-[min(60vh,32rem)] w-full max-w-md overflow-hidden rounded-xl bg-slate-900" style={{ aspectRatio: getAspectRatio(orientation) }}>
                       <video
                         src={selectedVideoPreviewUrl}
                         controls
-                        className="h-72 max-h-72 w-full object-contain"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                   </div>
@@ -1021,11 +1025,11 @@ export default function AdminDashboard() {
                 {editingType === "gallery" && editingGallery && (
                   <div className="mt-6 space-y-4">
                     {editingGallery.imageUrl ? (
-                      <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+                      <div className="mx-auto max-h-[min(45vh,24rem)] w-full max-w-md overflow-hidden rounded-2xl border border-slate-800 bg-slate-950" style={{ aspectRatio: getAspectRatio(editingGallery.orientation) }}>
                         <img
                           src={editingGallery.imageUrl}
                           alt={editingGallery.title}
-                          className="h-56 w-full object-contain"
+                          className="h-full w-full object-contain"
                         />
                       </div>
                     ) : null}
@@ -1078,8 +1082,8 @@ export default function AdminDashboard() {
 
                 {editingType === "video" && editingVideo && (
                   <div className="mt-6 space-y-4">
-                    <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
-                      <video src={editingVideo.videoUrl} controls className="h-56 w-full object-contain" />
+                    <div className="mx-auto max-h-[min(45vh,24rem)] w-full max-w-md overflow-hidden rounded-2xl border border-slate-800 bg-slate-950" style={{ aspectRatio: getAspectRatio(editingVideo.orientation) }}>
+                      <video src={editingVideo.videoUrl} controls className="h-full w-full object-contain" />
                     </div>
 
                     <div>

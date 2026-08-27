@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent, type SyntheticEvent } from "react";
 import { Link, useLocation } from "wouter";
 import { contentService } from "@/services/contentService";
 import { adminService } from "@/services/adminService";
+import { getMediaAspectRatio, type MediaOrientation } from "@/lib/mediaOrientation";
 
 interface GalleryItem {
   _id: string;
@@ -75,6 +76,7 @@ export default function AdminDashboard() {
   const [videoUploading, setVideoUploading] = useState(false);
   const [videoUploadStatus, setVideoUploadStatus] = useState<"idle" | "success" | "error">("idle");
   const [videoUploadError, setVideoUploadError] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ type: "gallery" | "video" | "event"; id: string } | null>(null);
 
   // ---------------------------------------------------------
   // Edit state
@@ -164,7 +166,7 @@ export default function AdminDashboard() {
     setLoading(false);
   };
 
-  const handleAddVideo = async (e: React.FormEvent) => {
+  const handleAddVideo = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!selectedVideoFile) {
@@ -223,7 +225,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleAddEvent = async (e: React.FormEvent) => {
+  const handleAddEvent = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!form.title.trim()) {
@@ -297,7 +299,10 @@ export default function AdminDashboard() {
     return "landscape" as const;
   };
 
-  const handleEventFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const getAspectRatio = (value?: GalleryItem["orientation"] | ProgressVideo["orientation"] | "") =>
+    getMediaAspectRatio(value as MediaOrientation | undefined);
+
+  const handleEventFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     if (!file) {
       setEventSelectedFile(null);
@@ -331,7 +336,7 @@ export default function AdminDashboard() {
     reader.readAsDataURL(file);
   };
 
-  const handleGalleryFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     if (!file) {
       setGallerySelectedFile(null);
@@ -365,7 +370,7 @@ export default function AdminDashboard() {
     reader.readAsDataURL(file);
   };
 
-  const handleVideoFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVideoFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     if (!file) {
       if (selectedVideoPreviewUrl) {
@@ -395,7 +400,7 @@ export default function AdminDashboard() {
     setVideoUploadStatus("idle");
   };
 
-  const handleEventPreviewImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+  const handleEventPreviewImageLoad = (event: SyntheticEvent<HTMLImageElement>) => {
     const media = event.currentTarget;
     const dimensions = { width: media.naturalWidth, height: media.naturalHeight };
     setEventPreviewDimensions(dimensions);
@@ -404,7 +409,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleGalleryPreviewImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+  const handleGalleryPreviewImageLoad = (event: SyntheticEvent<HTMLImageElement>) => {
     const media = event.currentTarget;
     const dimensions = { width: media.naturalWidth, height: media.naturalHeight };
     setGalleryPreviewDimensions(dimensions);
@@ -413,7 +418,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleAddGallery = async (e: React.FormEvent) => {
+  const handleAddGallery = async (e: FormEvent) => {
     e.preventDefault();
     setUploading(true);
     setGalleryPreviewError(null);
@@ -567,21 +572,21 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteGallery = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this photo?")) return;
     await contentService.deleteGallery(id);
     await refreshData();
+    setPendingDelete(null);
   };
 
   const handleDeleteVideo = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this video?")) return;
     await contentService.deleteVideo(id);
     await refreshData();
+    setPendingDelete(null);
   };
 
   const handleDeleteEvent = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this event?")) return;
     await contentService.deleteEvent(id);
     await refreshData();
+    setPendingDelete(null);
   };
 
   const handleDeleteContactMessage = async (id: string) => {
@@ -679,12 +684,12 @@ export default function AdminDashboard() {
                 {galleryPreviewUrl && (
                   <div className="mt-4 rounded-2xl border border-slate-700 bg-slate-950/80 p-4">
                     <p className="text-sm text-slate-400">Preview: {galleryPreviewName}</p>
-                    <div className="mt-3 overflow-hidden rounded-xl bg-slate-900">
+                    <div className="mx-auto mt-3 max-h-[min(60vh,32rem)] w-full max-w-md overflow-hidden rounded-xl bg-slate-900" style={{ aspectRatio: getAspectRatio(galleryPreviewOrientation || getOrientationFromDimensions(galleryPreviewDimensions)) }}>
                       <img
                         src={galleryPreviewUrl}
                         alt={galleryPreviewName}
                         onLoad={handleGalleryPreviewImageLoad}
-                        className="h-72 max-h-72 w-full object-contain"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                     <p className="mt-3 text-sm text-slate-400">Detected orientation: {galleryPreviewOrientation || getOrientationFromDimensions(galleryPreviewDimensions)}</p>
@@ -702,9 +707,9 @@ export default function AdminDashboard() {
                 <h2 className="text-xl font-semibold">Gallery Photos</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                   {gallery.map((item) => (
-                    <div key={item._id} className="rounded-xl border border-slate-800 p-3">
-                      {item.imageUrl ? <img src={item.imageUrl} alt={item.title} className="h-40 w-full rounded-lg object-cover" /> : null}
-                      <p className="mt-2 font-semibold">{item.title}</p>
+                    <div key={item._id} className="min-w-0 rounded-xl border border-slate-800 p-3">
+                      {item.imageUrl ? <div className="w-full overflow-hidden rounded-lg bg-slate-950" style={{ aspectRatio: getAspectRatio(item.orientation) }}><img src={item.imageUrl} alt={item.title} className="h-full w-full object-contain" /></div> : null}
+                      <p className="mt-2 break-words font-semibold">{item.title}</p>
                       <p className="text-sm text-slate-400">{item.category}</p>
                       <p className="text-sm text-slate-400">Orientation: {item.orientation || "landscape"}</p>
                       <div className="mt-3 flex gap-2">
@@ -715,12 +720,21 @@ export default function AdminDashboard() {
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDeleteGallery(item._id)}
+                          onClick={() => setPendingDelete({ type: "gallery", id: item._id })}
                           className="rounded-lg bg-red-600 px-3 py-2 text-sm"
                         >
                           Delete
                         </button>
                       </div>
+                      {pendingDelete?.type === "gallery" && pendingDelete.id === item._id ? (
+                        <div className="mt-3 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-200">
+                          <p>Are you sure you want to delete this photo?</p>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            <button type="button" onClick={() => handleDeleteGallery(item._id)} className="rounded-md bg-red-600 px-3 py-2 font-semibold text-white">Confirm Delete</button>
+                            <button type="button" onClick={() => setPendingDelete(null)} className="rounded-md border border-slate-600 px-3 py-2 text-slate-200">Cancel</button>
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
                   ))}
                 </div>
@@ -760,15 +774,22 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                {selectedVideoPreviewUrl && (
+                {(selectedVideoPreviewUrl || orientation) && (
                   <div className="mt-4 rounded-2xl border border-slate-700 bg-slate-950/80 p-4">
                     <p className="text-sm text-slate-400">Video Preview</p>
-                    <div className="mt-3 overflow-hidden rounded-xl bg-slate-900">
-                      <video
-                        src={selectedVideoPreviewUrl}
-                        controls
-                        className="h-72 max-h-72 w-full object-contain"
-                      />
+                    <div
+                      className="mx-auto mt-3 max-h-[min(60vh,32rem)] w-full max-w-md overflow-hidden rounded-xl bg-slate-900"
+                      style={{
+                        aspectRatio: getAspectRatio(orientation),
+                      }}
+                    >
+                      {selectedVideoPreviewUrl ? (
+                        <video
+                          src={selectedVideoPreviewUrl}
+                          controls
+                          className="h-full w-full object-cover"
+                        />
+                      ) : null}
                     </div>
                   </div>
                 )}
@@ -789,8 +810,9 @@ export default function AdminDashboard() {
                 <h2 className="text-xl font-semibold">Progress Videos</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                   {videos.map((item) => (
-                    <div key={item._id} className="rounded-xl border border-slate-800 p-3">
-                      <p className="font-semibold">{item.title}</p>
+                    <div key={item._id} className="min-w-0 rounded-xl border border-slate-800 p-3">
+                      <p className="break-words font-semibold">{item.title}</p>
+                      <div className="mt-2 w-full max-w-md overflow-hidden rounded-lg bg-slate-950" style={{ aspectRatio: getAspectRatio(item.orientation) }}><video src={item.videoUrl} controls className="h-full w-full object-contain" /></div>
                       <p className="mt-2 text-sm text-slate-400 break-words">{item.videoUrl}</p>
                       <div className="mt-3 flex gap-2">
                         <button
@@ -800,12 +822,21 @@ export default function AdminDashboard() {
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDeleteVideo(item._id)}
+                          onClick={() => setPendingDelete({ type: "video", id: item._id })}
                           className="rounded-lg bg-red-600 px-3 py-2 text-sm"
                         >
                           Delete
                         </button>
                       </div>
+                      {pendingDelete?.type === "video" && pendingDelete.id === item._id ? (
+                        <div className="mt-3 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-200">
+                          <p>Are you sure you want to delete this video?</p>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            <button type="button" onClick={() => handleDeleteVideo(item._id)} className="rounded-md bg-red-600 px-3 py-2 font-semibold text-white">Confirm Delete</button>
+                            <button type="button" onClick={() => setPendingDelete(null)} className="rounded-md border border-slate-600 px-3 py-2 text-slate-200">Cancel</button>
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
                   ))}
                 </div>
@@ -841,8 +872,8 @@ export default function AdminDashboard() {
                   {eventPreviewUrl && (
                     <div className="md:col-span-2 rounded-2xl border border-slate-700 bg-slate-950/80 p-4">
                       <p className="text-sm text-slate-400">Photo Preview</p>
-                      <div className="mt-3 overflow-hidden rounded-xl bg-slate-900">
-                        <img src={eventPreviewUrl} alt="Event preview" className="h-72 max-h-72 w-full rounded-xl object-contain" onLoad={handleEventPreviewImageLoad} />
+                      <div className="mx-auto mt-3 max-h-[min(45vh,24rem)] w-full max-w-md overflow-hidden rounded-xl bg-slate-900" style={{ aspectRatio: getAspectRatio(eventPreviewOrientation || getOrientationFromDimensions(eventPreviewDimensions)) }}>
+                        <img src={eventPreviewUrl} alt="Event preview" className="h-full w-full rounded-xl object-contain" onLoad={handleEventPreviewImageLoad} />
                       </div>
                     </div>
                   )}
@@ -869,6 +900,19 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
+                {(form.title || form.description || eventPreviewUrl) && (
+                  <div className="mt-5 min-w-0 overflow-hidden rounded-2xl border border-slate-700 bg-slate-950/80 p-4">
+                    <p className="text-sm text-slate-400">Event Preview</p>
+                    <div className="mt-3 overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
+                      {eventPreviewUrl ? <div className="h-40 w-full overflow-hidden bg-slate-950"><img src={eventPreviewUrl} alt="" className="h-full w-full object-contain" /></div> : null}
+                      <div className="min-w-0 p-4">
+                        <p className="break-words text-lg font-semibold text-white">{form.title || "Event title"}</p>
+                        <p className="mt-2 break-words text-sm leading-6 text-slate-300">{form.description || "Event description"}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {eventError ? <p className="mt-4 text-sm text-red-400">{eventError}</p> : null}
                 {eventSuccess ? <p className="mt-4 text-sm text-emerald-400">{eventSuccess}</p> : null}
                 {eventPreviewError ? <p className="mt-4 text-sm text-red-400">{eventPreviewError}</p> : null}
@@ -881,12 +925,14 @@ export default function AdminDashboard() {
                 <h2 className="text-xl font-semibold">Events</h2>
                 <div className="mt-4 space-y-3">
                   {events.map((item) => (
-                    <div key={item._id} className="flex items-center justify-between rounded-xl border border-slate-800 p-3">
-                      <div>
-                        <p className="font-semibold">{item.title}</p>
-                        <p className="text-sm text-slate-400">{item.date} • {item.location}</p>
+                    <div key={item._id} className="flex min-w-0 flex-wrap items-start justify-between gap-3 rounded-xl border border-slate-800 p-3">
+                      <div className="min-w-0">
+                        {item.imageUrl ? <div className="mb-3 h-32 w-full max-w-xs overflow-hidden rounded-lg bg-slate-950"><img src={item.imageUrl} alt={item.title} className="h-full w-full object-contain" /></div> : null}
+                        <p className="break-words font-semibold">{item.title}</p>
+                        <p className="break-words text-sm text-slate-400">{item.date} • {item.location}</p>
+                        <p className="mt-2 break-words text-sm text-slate-300">{item.description}</p>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex shrink-0 flex-wrap gap-2">
                         <button
                           onClick={() => startEventEdit(item)}
                           className="rounded-lg bg-[#D4AF37] px-3 py-2 text-sm font-semibold text-slate-900"
@@ -894,12 +940,21 @@ export default function AdminDashboard() {
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDeleteEvent(item._id)}
+                          onClick={() => setPendingDelete({ type: "event", id: item._id })}
                           className="rounded-lg bg-red-600 px-3 py-2 text-sm"
                         >
                           Delete
                         </button>
                       </div>
+                      {pendingDelete?.type === "event" && pendingDelete.id === item._id ? (
+                        <div className="w-full rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-200">
+                          <p>Are you sure you want to delete this event?</p>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            <button type="button" onClick={() => handleDeleteEvent(item._id)} className="rounded-md bg-red-600 px-3 py-2 font-semibold text-white">Confirm Delete</button>
+                            <button type="button" onClick={() => setPendingDelete(null)} className="rounded-md border border-slate-600 px-3 py-2 text-slate-200">Cancel</button>
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
                   ))}
                 </div>
@@ -1021,11 +1076,11 @@ export default function AdminDashboard() {
                 {editingType === "gallery" && editingGallery && (
                   <div className="mt-6 space-y-4">
                     {editingGallery.imageUrl ? (
-                      <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+                      <div className="mx-auto max-h-[min(45vh,24rem)] w-full max-w-md overflow-hidden rounded-2xl border border-slate-800 bg-slate-950" style={{ aspectRatio: getAspectRatio(editingGallery.orientation) }}>
                         <img
                           src={editingGallery.imageUrl}
                           alt={editingGallery.title}
-                          className="h-56 w-full object-contain"
+                          className="h-full w-full object-contain"
                         />
                       </div>
                     ) : null}
@@ -1078,8 +1133,8 @@ export default function AdminDashboard() {
 
                 {editingType === "video" && editingVideo && (
                   <div className="mt-6 space-y-4">
-                    <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
-                      <video src={editingVideo.videoUrl} controls className="h-56 w-full object-contain" />
+                    <div className="mx-auto max-h-[min(45vh,24rem)] w-full max-w-md overflow-hidden rounded-2xl border border-slate-800 bg-slate-950" style={{ aspectRatio: getAspectRatio(editingVideo.orientation) }}>
+                      <video src={editingVideo.videoUrl} controls className="h-full w-full object-contain" />
                     </div>
 
                     <div>
@@ -1132,14 +1187,18 @@ export default function AdminDashboard() {
                 {editingType === "event" && editingEvent && (
                   <div className="mt-6 space-y-4">
                     {editingEvent.imageUrl ? (
-                      <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
+                      <div className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border border-slate-800 bg-slate-950">
                         <img
                           src={editingEvent.imageUrl}
                           alt={editingEvent.title}
-                          className="h-56 w-full object-contain"
+                          className="h-56 max-h-56 w-full object-contain"
                         />
                       </div>
                     ) : null}
+                    <div className="min-w-0 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 p-4">
+                      <p className="break-words text-lg font-semibold text-white">{editingEvent.title || "Event title"}</p>
+                      <p className="mt-2 break-words text-sm leading-6 text-slate-300">{editingEvent.description || "Event description"}</p>
+                    </div>
 
                     <div className="grid gap-4 md:grid-cols-2">
                       <div>

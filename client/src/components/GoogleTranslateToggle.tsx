@@ -40,7 +40,7 @@ function triggerTranslate(language: Language) {
   }
 }
 
-export default function GoogleTranslateToggle() {
+export default function GoogleTranslateToggle({ embedded = false }: { embedded?: boolean }) {
   const [language, setLanguage] = useState<Language>(() => {
     const savedLanguage = localStorage.getItem("site-language");
     return savedLanguage === "kn" ? "kn" : "en";
@@ -78,24 +78,26 @@ export default function GoogleTranslateToggle() {
   return (
     <>
       <div id="google_translate_element" className="sr-only" />
-      <div className="fixed right-2 top-24 z-[50] flex max-w-[calc(100vw-1rem)] flex-wrap items-center justify-end rounded-full border border-[#D4AF37]/40 bg-white/95 p-1 shadow-lg backdrop-blur sm:right-6 sm:top-36">
+      <div translate="no" className={`notranslate z-[50] flex max-w-[calc(100vw-1rem)] flex-wrap items-center justify-end rounded-full border border-[#D4AF37]/40 bg-white/95 p-0.5 shadow-lg backdrop-blur ${embedded ? "absolute right-2 top-full mt-2 sm:right-5" : "fixed right-2 top-24 sm:right-6 sm:top-36"}`}>
         <button
           type="button"
+          translate="no"
           onClick={() => setLanguage("en")}
-          className={`rounded-full px-3 py-2 text-[10px] font-bold uppercase tracking-widest transition sm:px-4 sm:py-2 sm:text-xs ${
+          className={`rounded-full px-2 py-1 text-[9px] font-bold uppercase tracking-widest transition sm:px-3 sm:py-1.5 sm:text-[10px] ${
             language === "en" ? "bg-[#0A4D9B] text-white" : "text-[#0A4D9B] hover:bg-[#EAF4FF]"
           }`}
         >
-          English
+          ENG
         </button>
         <button
           type="button"
+          translate="no"
           onClick={() => setLanguage("kn")}
-          className={`rounded-full px-3 py-2 text-[10px] font-bold uppercase tracking-widest transition sm:px-4 sm:py-2 sm:text-xs ${
+          className={`rounded-full px-2 py-1 text-[9px] font-bold uppercase tracking-widest transition sm:px-3 sm:py-1.5 sm:text-[10px] ${
             language === "kn" ? "bg-[#0A4D9B] text-white" : "text-[#0A4D9B] hover:bg-[#EAF4FF]"
           }`}
         >
-          ಕನ್ನಡ
+          KAN
         </button>
       </div>
     </>

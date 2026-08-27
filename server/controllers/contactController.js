@@ -10,19 +10,19 @@ const {
 const submitContact = asyncHandler(async (req, res) => {
   const { name, phone, email, subject, message } = req.body;
 
-  if (!name || !phone || !email || !subject || !message) {
+  if (!name || !phone || !subject) {
     return res.status(400).json({
       success: false,
-      message: "All contact fields are required",
+      message: "Name, phone, and subject are required",
     });
   }
 
   const payload = {
     name: name.trim(),
     phone: phone.trim(),
-    email: email.trim().toLowerCase(),
+    email: typeof email === "string" ? email.trim().toLowerCase() : "",
     subject: subject.trim(),
-    message: message.trim(),
+    message: typeof message === "string" ? message.trim() : "",
   };
 
   if (mongoose.connection.readyState === 1) {

@@ -6,6 +6,19 @@ const TITLE_LINES: Record<string, string[]> = {
   kn: ["ಮಹಾಶಕ್ತಿ", "ಪೀಠ", "ದೇವಸ್ಥಾನ"],
 };
 
+const HERO_CONTENT = {
+  en: {
+    tagline: "Sacred Abode of the Divine Grace and Spiritual Enlightenment",
+    visit: "Visit Temple",
+    donate: "Donate Now",
+  },
+  kn: {
+    tagline: "ದೈವಿಕ ಕೃಪೆ ಮತ್ತು ಆಧ್ಯಾತ್ಮಿಕ ಜ್ಞಾನೋದಯದ ಪವಿತ್ರ ನೆಲೆ",
+    visit: "ದೇವಾಲಯಕ್ಕೆ ಭೇಟಿ ನೀಡಿ",
+    donate: "ಈಗಲೇ ದಾನ ಮಾಡಿ",
+  },
+} as const;
+
 export default function HeroSlider() {
   const [language, setLanguage] = useState<"en" | "kn">(() => {
     const saved = localStorage.getItem("site-language");
@@ -23,6 +36,7 @@ export default function HeroSlider() {
   }, []);
 
   const titleLines = TITLE_LINES[language] || TITLE_LINES.en;
+  const content = HERO_CONTENT[language] || HERO_CONTENT.en;
   const wordDelay = 0.25;
 
   return (
@@ -38,7 +52,7 @@ export default function HeroSlider() {
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-8 text-center sm:px-6 lg:px-8">
         <p className="mx-auto mb-3 max-w-[90vw] text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-white sm:text-xs md:text-sm">
-          Sacred Abode of the Divine Grace and Spiritual Enlightenment
+          {content.tagline}
         </p>
 
         <h1
@@ -60,7 +74,7 @@ export default function HeroSlider() {
         </h1>
 
         <p className="mx-auto mt-4 max-w-[90vw] text-base font-semibold leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)] sm:text-lg md:text-xl">
-          Sacred Abode of the Divine Grace and Spiritual Enlightenment
+          {content.tagline}
         </p>
 
         <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
@@ -68,13 +82,13 @@ export default function HeroSlider() {
             href="/about"
             className="inline-flex min-h-[44px] items-center justify-center bg-[#D4AF37] px-6 py-3 text-base font-bold text-[#083C78] shadow-[0_18px_35px_rgba(212,175,55,0.28)] transition-transform duration-300 hover:scale-105 sm:px-8"
           >
-            Visit Temple
+            {content.visit}
           </Link>
           <Link
             href="/donate"
             className="inline-flex min-h-[44px] items-center justify-center border-2 border-white px-6 py-3 text-base font-bold text-white transition-colors duration-300 hover:bg-white hover:text-[#083C78] sm:px-8"
           >
-            Donate Now
+            {content.donate}
           </Link>
         </div>
       </div>

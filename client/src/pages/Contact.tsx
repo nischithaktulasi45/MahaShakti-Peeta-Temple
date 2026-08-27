@@ -58,7 +58,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="w-full bg-transparent py-12 min-h-[100dvh]">
+    <div className="w-full min-w-0 overflow-x-hidden bg-transparent py-12 min-h-[100dvh]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
           <h1 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">Contact Us</h1>
@@ -68,8 +68,8 @@ export default function Contact() {
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="flex flex-col justify-between rounded-2xl border border-[#EAF4FF] bg-[#F8F9FA] p-5 text-[#083C78] shadow-xl sm:p-6 md:p-8 lg:p-10">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-2">
+          <div className="flex min-w-0 flex-col justify-between rounded-2xl border border-[#EAF4FF] bg-[#F8F9FA] p-5 text-[#083C78] shadow-xl sm:p-6 md:p-8 lg:p-10">
             <div>
               <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl">Get in Touch</h2>
               <div className="w-20 h-1 bg-[#D4AF37] mb-8" />
@@ -77,7 +77,7 @@ export default function Contact() {
               <div className="space-y-6 font-sans">
                 <div className="flex flex-wrap items-start gap-4">
                   <FaMapMarkerAlt className="mt-1 flex-shrink-0 text-2xl text-[#D4AF37]" />
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <h4 className="font-bold text-lg mb-1">Address</h4>
                     <p className="text-gray-600">
                       Mahashakti Peeta Temple,<br />
@@ -89,7 +89,7 @@ export default function Contact() {
 
                 <div className="flex flex-wrap items-start gap-4">
                   <FaPhoneAlt className="mt-1 flex-shrink-0 text-2xl text-[#D4AF37]" />
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <h4 className="font-bold text-lg mb-1">Phone</h4>
                     <p className="text-gray-600">
                      +91 9008294112 <br />+91 9686903945
@@ -99,9 +99,9 @@ export default function Contact() {
 
                 <div className="flex flex-wrap items-start gap-4">
                   <FaEnvelope className="mt-1 flex-shrink-0 text-2xl text-[#D4AF37]" />
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <h4 className="font-bold text-lg mb-1">Email</h4>
-                    <p className="text-gray-600">mahashakthipeetacharitabletres@gmail.com</p>
+                    <p className="break-words text-gray-600">mahashakthipeetacharitabletrus@gmail.com</p>
                   </div>
                 </div>
               </div>
@@ -128,11 +128,11 @@ export default function Contact() {
             </a>
           </div>
 
-          <div className="rounded-2xl border border-[#EAF4FF] bg-[#F8F9FA] p-5 shadow-xl sm:p-8 md:p-10">
+          <div className="min-w-0 rounded-2xl border border-[#EAF4FF] bg-[#F8F9FA] p-5 shadow-xl sm:p-8 md:p-10">
             <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl">Send a Message</h2>
             <div className="w-20 h-1 bg-[#D4AF37] mb-8" />
 
-            <form className="space-y-6 font-sans" onSubmit={handleSubmit}>
+            <form className="min-w-0 space-y-6 font-sans" onSubmit={handleSubmit}>
               <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-gray-700" htmlFor="name">
@@ -178,7 +178,6 @@ export default function Contact() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-[#0A4D9B] transition-colors"
                   placeholder="Enter your email"
-                  required
                 />
               </div>
 
@@ -213,7 +212,6 @@ export default function Contact() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-[#0A4D9B] transition-colors resize-none"
                   placeholder="Type your message here..."
-                  required
                 />
               </div>
 

@@ -12,8 +12,9 @@ import {
   FaHandHoldingHeart,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import GoogleTranslateToggle from "./GoogleTranslateToggle";
 
-const NAV_LINKS = [
+export const NAV_LINKS = [
   { name: "Home", path: "/" },
   { name: "About Us", path: "/about" },
   { name: "Gods", path: "/gods" },
@@ -25,6 +26,19 @@ const NAV_LINKS = [
   { name: "Donate", path: "/donate" },
   { name: "Contact Us", path: "/contact" },
 ];
+
+const KANNADA_NAV_LABELS: Record<string, string> = {
+  Home: "ಮುಖಪುಟ",
+  "About Us": "ನಮ್ಮ ಬಗ್ಗೆ",
+  Gods: "ದೇವರುಗಳು",
+  Trust: "ಟ್ರಸ್ಟ್",
+  "Trust Documents": "ಟ್ರಸ್ಟ್ ದಾಖಲೆಗಳು",
+  Events: "ದೇವಾಲಯದ ಕಾರ್ಯಕ್ರಮಗಳು",
+  "Progress Gallery": "ಪ್ರಗತಿ ಗ್ಯಾಲರಿ",
+  Gallery: "ಗ್ಯಾಲರಿ",
+  Donate: "ದಾನ ಮಾಡಿ",
+  "Contact Us": "ಸಂಪರ್ಕಿಸಿ",
+};
 
 export default function Navbar() {
   const [location] = useLocation();
@@ -103,7 +117,7 @@ export default function Navbar() {
           <span className="flex min-w-0 items-center gap-2 whitespace-nowrap">
             <FaEnvelope className="shrink-0 text-[#D4AF37]" />
             <span className="truncate">
-              mahashakthipeetacharitabletres@gmail.com
+             mahashakthipeetacharitabletrus@gmail.com
             </span>
           </span>
 
@@ -161,7 +175,7 @@ export default function Navbar() {
       {/* =========================================================
           MAIN NAVBAR
       ========================================================= */}
-      <nav className="bg-[#0A4D9B] px-3 py-2 text-white sm:px-4 lg:px-5">
+      <nav className="relative bg-[#0A4D9B] px-3 py-2 text-white sm:px-4 lg:px-5">
         <div className="mx-auto flex w-full max-w-[1600px] items-center gap-3">
           {/* =====================================================
               LOGO + TITLE
@@ -169,9 +183,9 @@ export default function Navbar() {
           <Link
             href="/"
             onClick={scrollToTop}
-            className="flex shrink-0 items-center gap-2 sm:gap-3"
+            className={`flex shrink-0 items-center gap-2 sm:gap-3 ${language === "kn" ? "lg:gap-1" : ""}`}
           >
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10 p-1 shadow-lg shadow-black/25 ring-2 ring-[#D4AF37]/70 backdrop-blur-sm sm:h-14 sm:w-14 lg:h-16 lg:w-16">
+            <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10 p-1 shadow-lg shadow-black/25 ring-2 ring-[#D4AF37]/70 backdrop-blur-sm sm:h-14 sm:w-14 lg:h-16 lg:w-16 ${language === "kn" ? "lg:h-14 lg:w-14" : ""}`}>
               <img
                 src="/image/logo.png"
                 alt="Mahashakti Peeta Logo"
@@ -180,7 +194,7 @@ export default function Navbar() {
             </div>
 
             {language === "kn" ? (
-              <h1 className="max-w-[175px] whitespace-normal font-serif text-base font-bold leading-[0.95] tracking-normal text-[#D4AF37] sm:max-w-[210px] sm:text-lg md:text-xl lg:max-w-[220px]">
+              <h1 className="max-w-[175px] whitespace-normal font-serif text-base font-bold leading-[0.95] tracking-normal text-[#D4AF37] sm:max-w-[210px] sm:text-lg md:text-xl lg:max-w-[175px] lg:text-base">
                 ಮಹಾಶಕ್ತಿ ಪೀಠ
                 <br />
                 ದೇವಾಲಯ
@@ -240,6 +254,7 @@ export default function Navbar() {
                         hover:scale-105
                         lg:px-3
                         xl:px-3.5
+                        ${language === "kn" ? "px-1 text-[0.54rem] leading-none lg:px-1 lg:text-[0.56rem] xl:px-1.5 xl:text-[0.68rem]" : ""}
                       `
                       : `
                         inline-flex
@@ -258,6 +273,7 @@ export default function Navbar() {
                         duration-300
                         lg:text-[0.76rem]
                         xl:text-[0.82rem]
+                        ${language === "kn" ? "px-0 text-[0.54rem] leading-none lg:text-[0.56rem] xl:text-[0.68rem]" : ""}
                         ${
                           isActive
                             ? "border-[#D4AF37] text-[#D4AF37]"
@@ -270,12 +286,6 @@ export default function Navbar() {
                   {isDonate && (
                     <>
                       <FaHandHoldingHeart className="text-[0.75rem]" />
-
-                      {/* Notification dot */}
-                      <span className="absolute -right-1 -top-1 flex h-3 w-3">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500" />
-                        <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600" />
-                      </span>
 
                       {/* Shine */}
                       <span className="absolute inset-0 overflow-hidden rounded-full">
@@ -292,12 +302,10 @@ export default function Navbar() {
                         : ""
                     }
                   >
-                    {link.name === "Events"
-                      ? language === "kn"
-                        ? "ದೇವಾಲಯದ ಕಾರ್ಯಕ್ರಮಗಳು"
-                        : "Temple Events"
-                      : language === "kn" && link.name === "Trust"
-                        ? "ಸಂಸ್ಥೆ"
+                    {language === "kn"
+                      ? KANNADA_NAV_LABELS[link.name]
+                      : link.name === "Events"
+                        ? "Temple Events"
                         : link.name}
                   </span>
                 </Link>
@@ -318,6 +326,7 @@ export default function Navbar() {
             {mobileMenuOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
+        <GoogleTranslateToggle embedded />
       </nav>
 
       {/* =========================================================
@@ -356,12 +365,10 @@ export default function Navbar() {
                     {isDonate && <FaHandHoldingHeart />}
 
                     <span>
-                      {link.name === "Events"
-                        ? language === "kn"
-                          ? "ಕಾರ್ಯಕ್ರಮಗಳು"
-                          : "Temple Events"
-                        : language === "kn" && link.name === "Trust"
-                          ? "ಸಂಸ್ಥೆ"
+                      {language === "kn"
+                        ? KANNADA_NAV_LABELS[link.name]
+                        : link.name === "Events"
+                          ? "Temple Events"
                           : link.name}
                     </span>
                   </Link>
@@ -378,7 +385,7 @@ export default function Navbar() {
                   }}
                   className="block min-h-[44px] rounded-lg bg-[#D4AF37] px-6 py-3 text-center font-bold text-[#083C78] transition-colors hover:bg-white"
                 >
-                  Donate Now
+                  {language === "kn" ? "ಈಗಲೇ ದಾನ ಮಾಡಿ" : "Donate Now"}
                 </Link>
               </div>
             </div>

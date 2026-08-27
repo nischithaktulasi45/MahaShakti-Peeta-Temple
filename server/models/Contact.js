@@ -14,7 +14,7 @@ const contactSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
       lowercase: true,
     },
@@ -25,7 +25,7 @@ const contactSchema = new mongoose.Schema(
     },
     message: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     }
   },

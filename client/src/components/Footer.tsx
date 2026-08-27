@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { NAV_LINKS } from "./Navbar";
 import { FaYoutube, FaInstagram, FaWhatsapp, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 
@@ -54,12 +55,13 @@ export default function Footer() {
         <div className="flex flex-col items-center text-center">
           <h3 className="mb-4 font-serif text-xl text-[#D4AF37]">Quick Links</h3>
           <ul className="flex flex-col gap-2 font-sans text-sm text-gray-300">
-            <li><Link href="/" className="transition-colors hover:text-white">Home</Link></li>
-            <li><Link href="/about" className="transition-colors hover:text-white">About Us</Link></li>
-            <li><Link href="/gods" className="transition-colors hover:text-white">Gods</Link></li>
-            <li><Link href="/trust" className="transition-colors hover:text-white">Trust</Link></li>
-            <li><Link href="/gallery" className="transition-colors hover:text-white">Gallery</Link></li>
-            <li><Link href="/contact" className="transition-colors hover:text-white">Contact</Link></li>
+            {NAV_LINKS.map((link) => (
+              <li key={link.path}>
+                <Link href={link.path} className="transition-colors hover:text-white">
+                  {link.name === "Events" ? "Temple Events" : link.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -86,12 +88,12 @@ export default function Footer() {
             </li>
             <li className="flex items-center justify-center gap-3 text-center">
               <FaPhoneAlt className="text-[#D4AF37]" />
-              <span>+91 9008294112 ,+91 9686903945</span>
+              <span>+91 9008294112 , +91 9686903945</span>
             </li>
             <li className="flex items-center justify-center gap-2 text-center">
               <SiGmail className="flex-shrink-0 text-sm text-[#D4AF37] md:text-base" />
               <span className="max-w-[220px] break-all text-[10px] leading-tight md:text-[11px]">
-                mahashakthipeetacharitabletres@gmail.com
+                mahashakthipeetacharitabletrus@gmail.com
               </span>
             </li>
           </ul>
