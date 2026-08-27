@@ -1,6 +1,15 @@
 const errorHandler = (err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal server error";
+  let statusCode = err.statusCode || res.statusCode || 500;
+  if (statusCode === 200) statusCode = 500;
+
+  let message = err.message || "Internal server error";
+
+  if (err.name === "MulterError") {
+    statusCode = 400;
+    if (err.code === "LIMIT_FILE_SIZE") {
+      message = "File size is too large. Maximum allowed size is 500MB.";
+    }
+  }
 
   res.status(statusCode).json({
     success: false,

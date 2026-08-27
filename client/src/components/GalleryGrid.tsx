@@ -50,9 +50,8 @@ export default function GalleryGrid() {
   }, []);
 
   const filteredImages = useMemo(() => {
-    const visibleImages = images.filter((img) => activeCategory === "All" || img.category === activeCategory);
-    return sortMediaByOrientation(visibleImages, (img) => img.orientation || imageOrientations[img._id]);
-  }, [activeCategory, imageOrientations, images]);
+    return images.filter((img) => activeCategory === "All" || img.category === activeCategory);
+  }, [activeCategory, images]);
 
   const openLightbox = (index: number) => {
     setCurrentImageIdx(index);

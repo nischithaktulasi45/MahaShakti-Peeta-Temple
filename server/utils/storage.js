@@ -283,58 +283,8 @@ const seedDefaultContentIfNeeded = async () => {
   }
 
   // =====================================================
-  // PROGRESS VIDEOS
+  // PROGRESS VIDEOS (Only added by Admin via Dashboard)
   // =====================================================
-
-  const videoItems = [
-    { title: "Progress Video 1", videoUrl: "/progress/video1.mp4" },
-    { title: "Progress Video 2", videoUrl: "/progress/video2.mp4" },
-    { title: "Progress Video 3", videoUrl: "/progress/video3.mp4" },
-    { title: "Progress Video 4", videoUrl: "/progress/video4.mp4" },
-    { title: "Progress Video 5", videoUrl: "/progress/video5.mp4" },
-    { title: "Progress Video 6", videoUrl: "/progress/video6.mp4" },
-    { title: "Progress Video 7", videoUrl: "/progress/video7.mp4" },
-    { title: "Progress Video 8", videoUrl: "/progress/video8.mp4" },
-    { title: "Progress Video 9", videoUrl: "/progress/video9.mp4" },
-    { title: "Progress Video 10", videoUrl: "/progress/video10.mp4" },
-    { title: "Progress Video 11", videoUrl: "/progress/video11.mp4" },
-    { title: "Progress Video 12", videoUrl: "/progress/video12.mp4" },
-    { title: "Progress Video 13", videoUrl: "/progress/video13.mp4" },
-    { title: "Progress Video 14", videoUrl: "/progress/video14.mp4" },
-    { title: "Progress Video 15", videoUrl: "/progress/video15.mp4" },
-    { title: "Progress Video 16", videoUrl: "/progress/video16.mp4" },
-    { title: "Progress Video 17", videoUrl: "/progress/video17.mp4" },
-    { title: "Progress Video 18", videoUrl: "/progress/video18.mp4" },
-    { title: "Progress Video 19", videoUrl: "/progress/video19.mp4" },
-    { title: "Progress Video 20", videoUrl: "/progress/video20.mp4" },
-  ];
-
-  if (isDatabaseReady()) {
-    for (const item of videoItems) {
-      await ProgressVideo.updateOne(
-        {
-          videoUrl: item.videoUrl,
-        },
-        {
-          $setOnInsert: {
-            title: item.title,
-            description: "",
-            videoUrl: item.videoUrl,
-            thumbnailUrl: "",
-            publicId: "",
-            orientation: "landscape",
-          },
-        },
-        {
-          upsert: true,
-        }
-      );
-    }
-  } else if (memoryState.videos.length === 0) {
-    videoItems.forEach((item) => {
-      createProgressVideoRecord(item);
-    });
-  }
 
   // =====================================================
   // EVENTS

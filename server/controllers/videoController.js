@@ -15,7 +15,7 @@ const ProgressVideo = require("../models/ProgressVideo");
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 100 * 1024 * 1024,
+    fileSize: 500 * 1024 * 1024,
   },
 });
 

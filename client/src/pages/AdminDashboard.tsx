@@ -216,10 +216,11 @@ export default function AdminDashboard() {
       }
       setSelectedVideoPreviewUrl("");
       await refreshData();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       setVideoUploadStatus("error");
-      setVideoUploadError("Failed to save video");
+      const errorMessage = error?.response?.data?.message || error?.message || "Failed to save video";
+      setVideoUploadError(errorMessage);
     } finally {
       setVideoUploading(false);
     }
@@ -796,7 +797,6 @@ export default function AdminDashboard() {
 
                 {videoUploadError ? <p className="mt-4 text-sm text-red-400">{videoUploadError}</p> : null}
                 {videoUploadStatus === "success" ? <p className="mt-4 text-sm text-emerald-400">Video saved successfully</p> : null}
-                {videoUploadStatus === "error" ? <p className="mt-4 text-sm text-red-400">Failed to save video</p> : null}
 
                 <button
                   type="submit"

@@ -7,8 +7,8 @@ const {
   createProgressVideo,
   updateProgressVideo,
   deleteProgressVideo,
+  upload,
 } = require("../controllers/videoController");
-const { upload } = require("../controllers/galleryController");
 
 router.get("/", getProgressVideos);
 router.post("/upload", protectAdmin, upload.single("file"), uploadProgressVideo);
