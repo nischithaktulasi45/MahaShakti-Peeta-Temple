@@ -79,7 +79,7 @@ function Layout() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <Navbar />
-      <main className="flex-1" style={{ paddingTop: headerHeight }}>
+      <main className="flex-1" style={{ paddingTop: headerHeight, '--header-height': `${headerHeight}px` } as React.CSSProperties}>
         <Router />
       </main>
       <Footer />

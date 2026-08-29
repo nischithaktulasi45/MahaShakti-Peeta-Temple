@@ -58,7 +58,7 @@ const trustItems = [
 
 export default function Trust() {
   return (
-    <div className="w-full bg-transparent overflow-hidden">
+    <div className="w-full h-screen overflow-hidden bg-[#f9f6ef]">
       <Swiper
         modules={[Autoplay, EffectFade, Navigation, Pagination]}
         effect="fade"
@@ -68,47 +68,49 @@ export default function Trust() {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        className="min-h-[78dvh] w-full sm:min-h-[80dvh] md:h-[calc(100dvh-160px)]"
+        slidesPerView={1}
+        autoHeight={false}
+        className="w-full h-full"
       >
         {trustItems.map((item, idx) => (
-          <SwiperSlide key={idx}>
-            <div className="flex h-full flex-col md:flex-row">
-              <div className="flex w-full items-center justify-center border-b-4 border-[#D4AF37] bg-[#FFF8E7] p-3 md:w-1/2 md:border-b-0 md:border-r-4 md:p-5">
+          <SwiperSlide key={idx} className="!h-screen">
+            <div className="flex h-full w-full flex-col md:flex-row overflow-hidden">
+              <div className="flex w-full items-center justify-center border-b-4 border-[#D4AF37] bg-[#FFF8E7] p-2 sm:p-3 md:w-1/2 md:h-full md:border-b-0 md:border-r-4 md:p-6 lg:p-8">
                 {item.image ? (
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="max-h-[50vh] w-full max-w-full rounded-lg object-contain shadow-xl sm:max-h-[60vh] md:max-h-[68vh]"
+                    className="h-[240px] w-full rounded-lg object-cover shadow-xl sm:h-[320px] md:h-full md:w-full md:rounded-lg md:object-contain"
                   />
                 ) : (
-                  <div className="h-[60vh] w-full rounded-lg border border-dashed border-[#E8D8A3] bg-white/40" />
+                  <div className="h-[240px] w-full rounded-lg border border-dashed border-[#E8D8A3] bg-white/40 sm:h-[320px] md:h-full md:w-full" />
                 )}
               </div>
 
-              <div className="flex w-full items-center bg-white p-4 md:w-1/2 md:p-6 lg:p-8">
+              <div className="flex w-full items-center justify-center bg-white p-4 sm:p-5 md:w-1/2 md:h-full md:p-8 lg:p-10 overflow-y-auto">
                 <motion.div
                   initial={{ opacity: 0, x: 30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
-                  className="max-w-xl"
+                  className="w-full"
                 >
-                  <h2 className="mb-3 font-serif text-2xl leading-tight text-[#0A4D9B] sm:text-3xl md:text-3xl lg:text-[2.65rem]">
+                  <h2 className="mb-3 font-serif text-[1.8rem] leading-tight text-[#0A4D9B] sm:text-[2.2rem] md:text-4xl lg:text-5xl">
                     {item.name}
                   </h2>
 
-                  <div className="w-24 h-1 bg-[#D4AF37] mb-4" />
+                  <div className="mb-4 h-1.5 w-24 bg-[#D4AF37] sm:w-28" />
 
-                  <p className="mb-3 text-sm leading-6 text-gray-700 sm:text-base md:text-base md:leading-7">
+                  <p className="mb-4 text-sm leading-7 text-gray-700 sm:text-base md:text-lg md:leading-8">
                     {item.description}
                   </p>
 
-                  <div className="bg-[#EEF6FF] border-l-4 border-[#0A4D9B] p-4 md:p-5 rounded-md mb-3 shadow">
-                    <h3 className="font-serif text-lg md:text-xl text-[#0A4D9B] mb-1">
+                  <div className="mb-6 rounded-md border-l-4 border-[#0A4D9B] bg-[#EEF6FF] p-4 shadow sm:p-5 md:p-6">
+                    <h3 className="mb-2 font-serif text-lg text-[#0A4D9B] sm:text-xl md:text-2xl">
                       Trust Significance
                     </h3>
 
-                    <p className="text-sm leading-6 text-gray-700 sm:text-base md:text-base md:leading-7">
+                    <p className="text-sm leading-7 text-gray-700 sm:text-base md:text-lg md:leading-8">
                       {item.significance}
                     </p>
                   </div>
