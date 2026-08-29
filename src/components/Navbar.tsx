@@ -44,15 +44,9 @@ export default function Navbar() {
   const [location] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  const [language, setLanguage] = useState<"en" | "kn">(() => {
-    const saved =
-      typeof window !== "undefined"
-        ? localStorage.getItem("site-language")
-        : null;
-
-    return saved === "kn" ? "kn" : "en";
-  });
+  const [language, setLanguage] = useState<"en" | "kn">("en");
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -61,6 +55,14 @@ export default function Navbar() {
       behavior: "auto",
     });
   };
+
+  useEffect(() => {
+    setIsClient(true);
+    const saved = localStorage.getItem("site-language");
+    if (saved === "kn") {
+      setLanguage("kn");
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -117,10 +119,7 @@ export default function Navbar() {
           <span className="flex min-w-0 items-center gap-2 whitespace-nowrap">
             <FaEnvelope className="shrink-0 text-[#D4AF37]" />
             <span className="truncate">
-              mahashakthipeetacharitabletrus@gmail.com
-            </span>
-          </span>
-
+             mahashakthipeetacharitabletrust@gmail.com
           <span className="hidden items-center gap-2 whitespace-nowrap xl:flex">
             <FaMapMarkerAlt className="shrink-0 text-[#D4AF37]" />
             Magadi Main Road, Bantarakuppe Colony, Magadi Taluk
