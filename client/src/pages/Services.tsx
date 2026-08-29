@@ -56,39 +56,39 @@ export default function Services() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <ServiceCard 
-              icon="🌅" title="Morning Suprabhata Seva" 
+              image="/image/services/dailypooja.jpg" title="Morning Suprabhata Seva" 
               description="Awakening the deity with sacred morning hymns and offering the first harathi." delay={0} 
             />
             <ServiceCard 
-              icon="🐘" title="Ganapathi Pooja" 
+              image="/image/services/archana.jpg" title="Ganapathi Pooja" 
               description="Special pooja to Lord Ganesha to remove obstacles before starting any auspicious work." delay={0.1} 
             />
             <ServiceCard 
-              icon="🌺" title="Archana" 
+              image="/image/services/archana.jpg" title="Archana" 
               description="Chanting the 108 or 1000 names of the deity with offerings of flowers and kumkum." delay={0.2} 
             />
             <ServiceCard 
-              icon="🥛" title="Abhisheka" 
+              image="/image/services/abhisheka.jpg" title="Abhisheka" 
               description="Sacred bathing of the deity with milk, curd, honey, ghee, and holy water." delay={0.3} 
             />
             <ServiceCard 
-              icon="✨" title="Alankara Seva" 
+              image="/image/services/festivalcelebrations.jpg" title="Alankara Seva" 
               description="Decorating the deity with special vastras (clothes) and exquisite floral garlands." delay={0.4} 
             />
             <ServiceCard 
-              icon="🔥" title="Maha Mangala Harathi" 
+              image="/image/services/spiritualprograms.jpg" title="Maha Mangala Harathi" 
               description="The grand concluding light offering accompanied by bells, drums, and chanting." delay={0.5} 
             />
             <ServiceCard 
-              icon="🍚" title="Annadanam" 
+              image="/image/services/annadanam.jpg" title="Annadanam" 
               description="Offering sacred food as prasadam to devotees and the needy." delay={0.6} 
             />
             <ServiceCard 
-              icon="🕊️" title="Special Homa" 
+              image="/image/services/spiritualprograms.jpg" title="Special Homa" 
               description="Sacred fire rituals for specific planetary alignments, peace, and prosperity." delay={0.7} 
             />
             <ServiceCard 
-              icon="👑" title="VIP Darshan" 
+              image="/image/services/dailypooja.jpg" title="VIP Darshan" 
               description="Special direct access for darshan without waiting in regular queues." delay={0.8} 
             />
           </div>

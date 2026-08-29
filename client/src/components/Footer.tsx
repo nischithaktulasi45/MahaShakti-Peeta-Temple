@@ -79,22 +79,27 @@ export default function Footer() {
         {/* Contact */}
         <div className="flex flex-col items-center text-center">
           <h3 className="mb-4 font-serif text-xl text-[#D4AF37]">Contact Us</h3>
-          <ul className="flex flex-col gap-3 font-sans text-sm text-gray-300">
-            <li className="flex items-start justify-center gap-3 text-center">
-              <FaMapMarkerAlt className="mt-1 flex-shrink-0 text-[#D4AF37]" />
-              <span className="max-w-[220px] text-xs leading-snug md:text-sm">
+          <ul className="flex w-full flex-col items-center gap-3 font-sans text-sm text-gray-300">
+            <li className="flex items-start justify-center gap-2.5 text-center">
+              <FaMapMarkerAlt className="mt-1 shrink-0 text-base text-[#D4AF37]" />
+              <span className="max-w-[260px] text-xs leading-relaxed sm:text-sm">
                 Magadi Main Road, Bantarakuppe Colony, Magadi Taluk
               </span>
             </li>
-            <li className="flex items-center justify-center gap-3 text-center">
-              <FaPhoneAlt className="text-[#D4AF37]" />
-              <span>+91 9008294112 , +91 9686903945</span>
+            <li className="flex items-center justify-center gap-2.5 text-center">
+              <FaPhoneAlt className="shrink-0 text-base text-[#D4AF37]" />
+              <a href="tel:+919008294112" className="text-xs transition-colors hover:text-white sm:text-sm">
+                +91 9008294112 , +91 9686903945
+              </a>
             </li>
-            <li className="flex items-center justify-center gap-2 text-center">
-              <SiGmail className="flex-shrink-0 text-sm text-[#D4AF37] md:text-base" />
-              <span className="max-w-[220px] break-all text-[10px] leading-tight md:text-[11px]">
+            <li className="flex w-full max-w-full items-center justify-center gap-2 text-center">
+              <SiGmail className="shrink-0 text-base text-[#D4AF37]" />
+              <a
+                href="mailto:mahashakthipeetacharitabletrus@gmail.com"
+                className="break-all font-sans text-xs leading-normal text-gray-300 transition-colors hover:text-white sm:text-sm"
+              >
                 mahashakthipeetacharitabletrus@gmail.com
-              </span>
+              </a>
             </li>
           </ul>
         </div>

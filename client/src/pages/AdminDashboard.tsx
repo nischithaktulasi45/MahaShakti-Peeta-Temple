@@ -303,6 +303,38 @@ export default function AdminDashboard() {
   const getAspectRatio = (value?: GalleryItem["orientation"] | ProgressVideo["orientation"] | "") =>
     getMediaAspectRatio(value as MediaOrientation | undefined);
 
+  const discardGalleryForm = () => {
+    setGallerySelectedFile(null);
+    setGalleryPreviewUrl("");
+    setGalleryPreviewName("");
+    setGalleryPreviewDimensions(null);
+    setGalleryPreviewOrientation("");
+    setGalleryPreviewError(null);
+    setGalleryImageBase64("");
+  };
+
+  const discardVideoForm = () => {
+    if (selectedVideoPreviewUrl) URL.revokeObjectURL(selectedVideoPreviewUrl);
+    setSelectedVideoFile(null);
+    setSelectedVideoPreviewUrl("");
+    setOrientation("");
+    setVideoUploadError(null);
+    setVideoUploadStatus("idle");
+  };
+
+  const discardEventForm = () => {
+    setForm({ tag: "", title: "", description: "", imageUrl: "", category: "General", videoUrl: "", thumbnailUrl: "", date: "", time: "", location: "", contactInfo: "" });
+    setEventSelectedFile(null);
+    setEventPreviewUrl("");
+    setEventPreviewName("");
+    setEventPreviewDimensions(null);
+    setEventPreviewOrientation("");
+    setEventPreviewError(null);
+    setEventImageBase64("");
+    setEventError(null);
+    setEventSuccess(null);
+  };
+
   const handleEventFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
     if (!file) {
@@ -696,13 +728,18 @@ export default function AdminDashboard() {
                     <p className="mt-3 text-sm text-slate-400">Detected orientation: {galleryPreviewOrientation || getOrientationFromDimensions(galleryPreviewDimensions)}</p>
                   </div>
                 )}
-                <button
-                  type="submit"
-                  disabled={uploading || !gallerySelectedFile}
-                  className="mt-4 rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {uploading ? "Saving…" : "Save Photo"}
-                </button>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <button
+                    type="submit"
+                    disabled={uploading || !gallerySelectedFile}
+                    className="rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {uploading ? "Saving…" : "Save Photo"}
+                  </button>
+                  <button type="button" onClick={discardGalleryForm} className="rounded-xl border border-red-400/60 px-4 py-2 font-semibold text-red-300 transition-colors hover:bg-red-500/10">
+                    Discard
+                  </button>
+                </div>
               </form>
               <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
                 <h2 className="text-xl font-semibold">Gallery Photos</h2>
@@ -798,13 +835,18 @@ export default function AdminDashboard() {
                 {videoUploadError ? <p className="mt-4 text-sm text-red-400">{videoUploadError}</p> : null}
                 {videoUploadStatus === "success" ? <p className="mt-4 text-sm text-emerald-400">Video saved successfully</p> : null}
 
-                <button
-                  type="submit"
-                  disabled={videoUploading || !selectedVideoFile || !orientation}
-                  className="mt-4 rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {videoUploading ? "Uploading..." : "Save Video"}
-                </button>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <button
+                    type="submit"
+                    disabled={videoUploading || !selectedVideoFile || !orientation}
+                    className="rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {videoUploading ? "Uploading..." : "Save Video"}
+                  </button>
+                  <button type="button" onClick={discardVideoForm} className="rounded-xl border border-red-400/60 px-4 py-2 font-semibold text-red-300 transition-colors hover:bg-red-500/10">
+                    Discard
+                  </button>
+                </div>
               </form>
               <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
                 <h2 className="text-xl font-semibold">Progress Videos</h2>
@@ -917,9 +959,14 @@ export default function AdminDashboard() {
                 {eventSuccess ? <p className="mt-4 text-sm text-emerald-400">{eventSuccess}</p> : null}
                 {eventPreviewError ? <p className="mt-4 text-sm text-red-400">{eventPreviewError}</p> : null}
 
-                <button type="submit" disabled={uploading} className="mt-4 rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900 disabled:cursor-not-allowed disabled:opacity-60">
-                  {uploading ? "Saving..." : "Save Event"}
-                </button>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <button type="submit" disabled={uploading} className="rounded-xl bg-[#D4AF37] px-4 py-2 font-semibold text-slate-900 disabled:cursor-not-allowed disabled:opacity-60">
+                    {uploading ? "Saving..." : "Save Event"}
+                  </button>
+                  <button type="button" onClick={discardEventForm} className="rounded-xl border border-red-400/60 px-4 py-2 font-semibold text-red-300 transition-colors hover:bg-red-500/10">
+                    Discard
+                  </button>
+                </div>
               </form>
               <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
                 <h2 className="text-xl font-semibold">Events</h2>

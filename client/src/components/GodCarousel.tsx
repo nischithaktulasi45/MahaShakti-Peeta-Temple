@@ -1,9 +1,8 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-fade";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
+import { Autoplay, EffectFade, Pagination } from "swiper/modules";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 
@@ -47,9 +46,8 @@ export default function GodCarousel() {
   return (
     <div className="w-full bg-transparent overflow-hidden">
       <Swiper
-        modules={[Autoplay, EffectFade, Navigation, Pagination]}
+        modules={[Autoplay, EffectFade, Pagination]}
         effect="fade"
-        navigation
         pagination={{ clickable: true }}
         autoplay={{
           delay: 5000,

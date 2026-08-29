@@ -68,12 +68,6 @@ export default function ProgressGallery() {
           </p>
         </div>
 
-        <div className="mb-10 flex justify-center">
-          <span className="rounded-full bg-[#0A4D9B] px-4 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-lg shadow-[#0A4D9B]/30 sm:px-8">
-            All
-          </span>
-        </div>
-
         {loading ? (
           <div className="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center text-sm text-slate-600 shadow-sm">
             Loading videos...

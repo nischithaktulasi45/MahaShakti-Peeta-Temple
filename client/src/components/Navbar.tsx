@@ -296,10 +296,13 @@ export default function Navbar() {
 
                   {/* Navigation text */}
                   <span
+                    translate="no"
                     className={
-                      link.name === "Events" && language === "kn"
-                        ? "text-[0.7rem]"
-                        : ""
+                      `notranslate ${
+                        link.name === "Events" && language === "kn"
+                          ? "text-[0.7rem]"
+                          : ""
+                      }`
                     }
                   >
                     {language === "kn"
@@ -364,7 +367,7 @@ export default function Navbar() {
                   >
                     {isDonate && <FaHandHoldingHeart />}
 
-                    <span>
+                    <span translate="no" className="notranslate">
                       {language === "kn"
                         ? KANNADA_NAV_LABELS[link.name]
                         : link.name === "Events"

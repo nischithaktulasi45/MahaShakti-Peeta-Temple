@@ -81,37 +81,37 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           <ServiceCard
             image="/image/services/dailypooja.jpg"
-            title="🪔 Daily Pooja"
+            title="Daily Pooja"
             description="Participate in our daily worship rituals that bring peace and prosperity to you and your family."
             delay={0}
           />
           <ServiceCard
             image="/image/services/archana.jpg"
-            title="🙏 Archana"
+            title=" Archana"
             description="Offer your prayers directly to the deity through personalized chanting of sacred names."
             delay={0.1}
           />
           <ServiceCard
             image="/image/services/abhisheka.jpg"
-            title="🥛 Abhisheka"
+            title=" Abhisheka"
             description="A sacred bathing ritual of the deity performed with holy water, milk, and honey."
             delay={0.2}
           />
           <ServiceCard
             image="/image/services/annadanam.jpg"
-            title="🍲 Annadanam"
+            title=" Annadanam"
             description="Sponsor or participate in the holy tradition of offering free meals to devotees."
             delay={0.3}
           />
           <ServiceCard
             image="/image/services/spiritualprograms.jpg"
-            title="🧘 Spiritual Programs"
+            title=" Spiritual Programs"
             description="Join our weekly spiritual discourses, bhajan sessions, and meditation workshops."
             delay={0.4}
           />
           <ServiceCard
             image="/image/services/festivalcelebrations.jpg"
-            title="🎉 Festival Celebrations"
+            title=" Festival Celebrations"
             description="Experience the grandeur and divine energy during major Hindu festivals."
             delay={0.5}
           />
