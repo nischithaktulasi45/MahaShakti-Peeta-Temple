@@ -168,7 +168,7 @@ export default function Contact() {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-700" htmlFor="email">
-                  Email Address
+                  Email Address(Optinoal)
                 </label>
                 <input
                   id="email"
@@ -203,7 +203,7 @@ export default function Contact() {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-700" htmlFor="message">
-                  Message
+                  Message(Optinoal)
                 </label>
                 <textarea
                   id="message"
