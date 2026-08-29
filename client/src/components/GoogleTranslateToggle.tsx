@@ -40,7 +40,13 @@ function triggerTranslate(language: Language) {
   }
 }
 
-export default function GoogleTranslateToggle({ embedded = false }: { embedded?: boolean }) {
+export default function GoogleTranslateToggle({
+  embedded = false,
+  className = "",
+}: {
+  embedded?: boolean;
+  className?: string;
+}) {
   const [language, setLanguage] = useState<Language>(() => {
     const savedLanguage = localStorage.getItem("site-language");
     return savedLanguage === "kn" ? "kn" : "en";
@@ -58,16 +64,12 @@ export default function GoogleTranslateToggle({ embedded = false }: { embedded?:
         "google_translate_element"
       );
     };
-    loadGoogleTranslateScript();
-  }, []);
 
-  useEffect(() => {
-    localStorage.setItem("site-language", language);
-    document.documentElement.lang = language;
+    loadGoogleTranslateScript();
     setTranslateCookie(language);
     triggerTranslate(language);
+    localStorage.setItem("site-language", language);
 
-    // 🔔 Notify other components (e.g., HeroSlider) about the language change
     window.dispatchEvent(
       new CustomEvent("languageChanged", {
         detail: { language },
@@ -75,16 +77,29 @@ export default function GoogleTranslateToggle({ embedded = false }: { embedded?:
     );
   }, [language]);
 
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   return (
     <>
       <div id="google_translate_element" className="sr-only" />
-      <div translate="no" className={`notranslate z-[50] flex max-w-[calc(100vw-1rem)] flex-wrap items-center justify-end rounded-full border border-[#D4AF37]/40 bg-white/95 p-0.5 shadow-lg backdrop-blur ${embedded ? "absolute right-2 top-full mt-2 sm:right-5" : "fixed right-2 top-24 sm:right-6 sm:top-36"}`}>
+      <div
+        translate="no"
+        className={`notranslate z-40 flex shrink-0 items-center rounded-full border border-[#D4AF37]/60 bg-white/95 p-0.5 shadow-sm backdrop-blur ${
+          embedded
+            ? "relative"
+            : "fixed right-3 top-20 sm:right-6 sm:top-24 shadow-lg"
+        } ${className}`}
+      >
         <button
           type="button"
           translate="no"
           onClick={() => setLanguage("en")}
-          className={`rounded-full px-2 py-1 text-[9px] font-bold uppercase tracking-widest transition sm:px-3 sm:py-1.5 sm:text-[10px] ${
-            language === "en" ? "bg-[#0A4D9B] text-white" : "text-[#0A4D9B] hover:bg-[#EAF4FF]"
+          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider transition ${
+            language === "en"
+              ? "bg-[#0A4D9B] text-white"
+              : "text-[#0A4D9B] hover:bg-[#EAF4FF]"
           }`}
         >
           ENG
@@ -93,8 +108,10 @@ export default function GoogleTranslateToggle({ embedded = false }: { embedded?:
           type="button"
           translate="no"
           onClick={() => setLanguage("kn")}
-          className={`rounded-full px-2 py-1 text-[9px] font-bold uppercase tracking-widest transition sm:px-3 sm:py-1.5 sm:text-[10px] ${
-            language === "kn" ? "bg-[#0A4D9B] text-white" : "text-[#0A4D9B] hover:bg-[#EAF4FF]"
+          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider transition ${
+            language === "kn"
+              ? "bg-[#0A4D9B] text-white"
+              : "text-[#0A4D9B] hover:bg-[#EAF4FF]"
           }`}
         >
           KAN

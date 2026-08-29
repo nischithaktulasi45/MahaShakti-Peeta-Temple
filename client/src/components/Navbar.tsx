@@ -314,22 +314,25 @@ export default function Navbar() {
                 </Link>
               );
             })}
+            <GoogleTranslateToggle embedded className="ml-2" />
           </div>
 
           {/* =====================================================
-              MOBILE MENU BUTTON
+              MOBILE MENU BUTTON + LANGUAGE TOGGLE
           ===================================================== */}
-          <button
-            type="button"
-            className="ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-white/15 text-2xl text-[#D4AF37] transition-colors hover:bg-white/10 lg:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle navigation menu"
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? <FaTimes /> : <FaBars />}
-          </button>
+          <div className="ml-auto flex items-center gap-2 lg:hidden">
+            <GoogleTranslateToggle embedded />
+            <button
+              type="button"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-white/15 text-xl text-[#D4AF37] transition-colors hover:bg-white/10"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+            </button>
+          </div>
         </div>
-        <GoogleTranslateToggle embedded />
       </nav>
 
       {/* =========================================================
