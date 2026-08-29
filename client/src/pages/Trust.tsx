@@ -77,15 +77,15 @@ export default function Trust() {
             {/* Desktop: side-by-side row | Mobile: stacked column */}
             <div className="flex h-full w-full flex-col md:flex-row">
               {/* Image section */}
-              <div className="shrink-0 flex w-full items-center justify-center border-b-4 border-[#D4AF37] bg-[#FFF8E7] p-2 md:w-1/2 md:h-full md:border-b-0 md:border-r-4 md:p-6 lg:p-8">
+              <div className="shrink-0 flex w-full items-center justify-center border-b-4 border-[#D4AF37] bg-[#FFF8E7] p-3 sm:p-4 md:w-1/2 md:h-full md:border-b-0 md:border-r-4 md:p-8 lg:p-10">
                 {item.image ? (
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="h-[180px] w-full rounded-lg object-cover shadow-xl sm:h-[220px] md:h-[80%] md:max-h-[500px] md:w-full md:rounded-lg md:object-contain"
+                    className="h-[180px] w-full rounded-lg object-contain drop-shadow-xl sm:h-[220px] md:h-auto md:max-h-[420px] md:max-w-[92%] md:rounded-xl"
                   />
                 ) : (
-                  <div className="h-[180px] w-full rounded-lg border border-dashed border-[#E8D8A3] bg-white/40 sm:h-[220px] md:h-[80%] md:max-h-[500px] md:w-full" />
+                  <div className="h-[180px] w-full rounded-lg border border-dashed border-[#E8D8A3] bg-white/40 sm:h-[220px] md:h-[80%] md:max-h-[420px] md:w-full" />
                 )}
               </div>
 
