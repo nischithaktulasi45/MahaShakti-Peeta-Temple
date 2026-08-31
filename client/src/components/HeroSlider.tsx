@@ -40,12 +40,19 @@ export default function HeroSlider() {
   const wordDelay = 0.25;
 
   return (
-    <section className="relative flex min-h-[calc(100dvh-120px)] items-center overflow-hidden sm:min-h-[calc(100dvh-140px)]">
+    <section
+      className="relative flex w-full items-center overflow-hidden"
+      style={{ minHeight: "calc(100dvh / 0.9 - var(--header-height, 120px))" }}
+    >
       <div
-        className="absolute inset-0 bg-cover bg-center"
+        className="absolute inset-0"
         style={{
           backgroundImage:
             "linear-gradient(rgba(6, 22, 48, 0.38), rgba(6, 22, 48, 0.58)), url('/image/Mahashakti_Temple.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "scroll",
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/45" />

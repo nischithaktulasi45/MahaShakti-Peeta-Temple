@@ -91,8 +91,22 @@ function App() {
   return (
     <TooltipProvider>
       <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-        <Layout />
-        <ScrollToTop />
+        {/* 
+          Global 90% Visual Scale Container
+          This applies a consistent 0.9 zoom to all content (Navbar, main, Footer, ScrollToTop)
+          to match the visual appearance at 90% browser zoom.
+          
+          NOTE: zoom property:
+          - Scales all visual elements uniformly (not transform: scale which affects layout)
+          - Preserves fixed positioning (Navbar, ScrollToTop remain correctly positioned)
+          - Preserves responsive breakpoints
+          - Preserves animations and hover effects
+          - Works across all browsers
+        */}
+        <div style={{ zoom: 0.9 }}>
+          <Layout />
+          <ScrollToTop />
+        </div>
       </WouterRouter>
       <Toaster />
     </TooltipProvider>

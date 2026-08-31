@@ -46,7 +46,7 @@ export default function GodCarousel() {
   return (
     <div
       className="w-full overflow-hidden bg-[#f9f6ef]"
-      style={{ height: 'calc(100dvh - var(--header-height, 100px))' }}
+      style={{ height: 'calc(100dvh / 0.9 - var(--header-height, 100px))' }}
     >
       <Swiper
         modules={[Autoplay, EffectFade, Pagination]}
