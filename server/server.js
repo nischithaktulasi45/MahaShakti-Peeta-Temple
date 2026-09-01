@@ -137,37 +137,15 @@ const initializeDatabase = async () => {
 
       console.log("MongoDB connected successfully.");
 
-      // =================================================
-      // CREATE / CHECK DEFAULT ADMIN
-      // =================================================
+      // Run admin creation & content seeding asynchronously in background
+      // so API requests (like Admin Login) resolve instantly (< 1 second) on cold starts
+      createAdminIfNeeded()
+        .then(() => console.log("Admin initialization completed."))
+        .catch((error) => console.error("Admin initialization failed:", error?.message || error));
 
-      try {
-        await createAdminIfNeeded();
-
-        console.log("Admin initialization completed.");
-      } catch (error) {
-        console.error(
-          "Admin initialization failed:",
-          error?.message || error
-        );
-      }
-
-      // =================================================
-      // SEED DEFAULT CONTENT
-      // =================================================
-
-      try {
-        await seedDefaultContentIfNeeded();
-
-        console.log(
-          "Default content initialization completed."
-        );
-      } catch (error) {
-        console.error(
-          "Default content initialization failed:",
-          error?.message || error
-        );
-      }
+      seedDefaultContentIfNeeded()
+        .then(() => console.log("Default content initialization completed."))
+        .catch((error) => console.error("Default content initialization failed:", error?.message || error));
 
       return true;
     } catch (error) {

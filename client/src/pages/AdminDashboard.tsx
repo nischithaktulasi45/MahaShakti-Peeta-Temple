@@ -1026,11 +1026,11 @@ export default function AdminDashboard() {
                         <div className="flex flex-wrap items-center justify-between gap-4">
                           <div>
                             <p className="font-semibold">{message.name}</p>
-                            <p className="text-sm text-slate-400">{new Date(message.createdAt).toLocaleString()}</p>
+                            <p translate="no" className="notranslate text-sm text-slate-400">{new Date(message.createdAt).toLocaleString()}</p>
                           </div>
                           <div className="space-y-1 text-right text-sm text-slate-400">
-                            <p>{message.email}</p>
-                            <p>{message.phone}</p>
+                            <p translate="no" className="notranslate">{message.email}</p>
+                            <p translate="no" className="notranslate">{message.phone}</p>
                           </div>
                         </div>
                         <div className="mt-3 space-y-2 text-sm text-slate-300">
@@ -1067,18 +1067,18 @@ export default function AdminDashboard() {
                         <div className="flex flex-wrap items-center justify-between gap-4">
                           <div>
                             <p className="font-semibold">{record.name}</p>
-                            <p className="text-sm text-slate-400">{new Date(record.createdAt).toLocaleString()}</p>
+                            <p translate="no" className="notranslate text-sm text-slate-400">{new Date(record.createdAt).toLocaleString()}</p>
                           </div>
                           <div className="space-y-1 text-right text-sm text-slate-400">
-                            <p>{record.email}</p>
-                            <p>{record.phone}</p>
+                            <p translate="no" className="notranslate">{record.email}</p>
+                            <p translate="no" className="notranslate">{record.phone}</p>
                           </div>
                         </div>
                         <div className="mt-3 grid gap-3 text-sm text-slate-300 md:grid-cols-2">
-                          <p><span className="font-semibold">Amount:</span> ₹{record.amount}</p>
+                          <p><span className="font-semibold">Amount:</span> <span translate="no" className="notranslate">₹{record.amount}</span></p>
                           <p><span className="font-semibold">Status:</span> {record.paymentStatus}</p>
                           <p><span className="font-semibold">Purpose:</span> {record.purpose}</p>
-                          <p><span className="font-semibold">UTR Number:</span> {record.utrNumber}</p>
+                          <p><span className="font-semibold">UTR Number:</span> <span translate="no" className="notranslate">{record.utrNumber}</span></p>
                         </div>
                       </div>
                     ))

@@ -113,12 +113,12 @@ export default function Navbar() {
         <div className="flex min-w-0 items-center gap-4 lg:gap-6">
           <span className="flex shrink-0 items-center gap-2 whitespace-nowrap">
             <FaPhoneAlt className="text-[#D4AF37]" />
-            +91 9008294112 , +91 9686903945
+            <span translate="no" className="notranslate">+91 9008294112 , +91 9686903945</span>
           </span>
 
           <span className="flex min-w-0 items-center gap-2 whitespace-nowrap">
             <FaEnvelope className="shrink-0 text-[#D4AF37]" />
-            <span className="truncate">
+            <span translate="no" className="notranslate truncate">
              mahashakthipeetacharitabletrust@gmail.com
             </span>
           </span>

@@ -88,7 +88,7 @@ export default function Footer() {
             </li>
             <li className="flex items-center justify-center gap-2.5 text-center">
               <FaPhoneAlt className="shrink-0 text-base text-[#D4AF37]" />
-              <a href="tel:+919008294112" className="text-xs transition-colors hover:text-white sm:text-sm">
+              <a href="tel:+919008294112" translate="no" className="notranslate text-xs transition-colors hover:text-white sm:text-sm">
                 +91 9008294112 , +91 9686903945
               </a>
             </li>
@@ -96,7 +96,8 @@ export default function Footer() {
               <SiGmail className="shrink-0 text-base text-[#D4AF37]" />
               <a
                 href="mailto:mahashakthipeetacharitabletrus@gmail.com"
-                className="break-all font-sans text-xs leading-normal text-gray-300 transition-colors hover:text-white sm:text-sm"
+                translate="no"
+                className="notranslate break-all font-sans text-xs leading-normal text-gray-300 transition-colors hover:text-white sm:text-sm"
               >
                 mahashakthipeetacharitabletrus@gmail.com
               </a>
