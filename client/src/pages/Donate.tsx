@@ -112,7 +112,7 @@ export default function Donate() {
 
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700" htmlFor="email">
-                Email Address
+                Email Address(Optional)
               </label>
               <input
                 id="email"
@@ -120,7 +120,6 @@ export default function Donate() {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                required
                 className="w-full rounded border border-gray-300 px-3 py-2 text-sm transition focus:border-[#0A4D9B] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
                 placeholder="Enter your email"
               />
