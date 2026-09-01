@@ -1,8 +1,45 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent, type SyntheticEvent } from "react";
+import { useEffect, useState, useRef, type ChangeEvent, type FormEvent, type SyntheticEvent } from "react";
 import { Link, useLocation } from "wouter";
 import { contentService } from "@/services/contentService";
 import { adminService } from "@/services/adminService";
 import { getMediaAspectRatio, type MediaOrientation } from "@/lib/mediaOrientation";
+
+function TranslatableFileInput({
+  accept,
+  onChange,
+  selectedFileName,
+  required = false,
+}: {
+  accept: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  selectedFileName?: string | null;
+  required?: boolean;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <div className="flex w-full items-center gap-3 rounded-xl border border-slate-700 bg-slate-800 p-2.5 text-slate-100">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={accept}
+        onChange={onChange}
+        required={required}
+        className="hidden"
+      />
+      <button
+        type="button"
+        onClick={() => fileInputRef.current?.click()}
+        className="shrink-0 rounded-lg bg-[#0A4D9B] px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-[#083C78]"
+      >
+        Choose File
+      </button>
+      <span className="truncate text-sm text-slate-300">
+        {selectedFileName || "No file chosen"}
+      </span>
+    </div>
+  );
+}
 
 interface GalleryItem {
   _id: string;
@@ -690,11 +727,10 @@ export default function AdminDashboard() {
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
                   <div className="md:col-span-2">
                     <label className="mb-2 block text-sm text-slate-300">Select Image</label>
-                    <input
-                      type="file"
+                    <TranslatableFileInput
                       accept="image/*"
                       onChange={handleGalleryFileChange}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100"
+                      selectedFileName={galleryPreviewName}
                       required
                     />
                   </div>
@@ -787,11 +823,10 @@ export default function AdminDashboard() {
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
                   <div className="md:col-span-2">
                     <label className="mb-2 block text-sm text-slate-300">Select Video</label>
-                    <input
-                      type="file"
+                    <TranslatableFileInput
                       accept="video/*"
                       onChange={handleVideoFileChange}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100"
+                      selectedFileName={selectedVideoFile?.name}
                       required
                     />
                   </div>
@@ -903,11 +938,10 @@ export default function AdminDashboard() {
 
                   <div className="md:col-span-2">
                     <label className="mb-2 block text-sm text-slate-300">Photo</label>
-                    <input
-                      type="file"
+                    <TranslatableFileInput
                       accept="image/*"
                       onChange={handleEventFileChange}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-slate-100"
+                      selectedFileName={eventPreviewName}
                     />
                   </div>
 

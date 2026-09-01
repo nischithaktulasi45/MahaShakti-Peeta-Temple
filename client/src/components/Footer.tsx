@@ -1,9 +1,26 @@
-import { Link } from "wouter";
+import { type MouseEvent } from "react";
+import { Link, useLocation } from "wouter";
 import { NAV_LINKS } from "./Navbar";
 import { FaYoutube, FaInstagram, FaWhatsapp, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 
 export default function Footer() {
+  const [location, navigate] = useLocation();
+
+  const handleQuickLinkClick = (path: string) => (event: MouseEvent<HTMLAnchorElement>) => {
+    if (path === "/") {
+      event.preventDefault();
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      if (location !== "/") {
+        navigate("/");
+        window.setTimeout(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }), 0);
+      }
+      return;
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  };
+
   return (
     <footer className="border-t-4 border-[#D4AF37] bg-[#083C78] pb-8 pt-10 text-white sm:pt-14">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-2 md:gap-10 lg:grid-cols-4 lg:px-8">
@@ -57,7 +74,7 @@ export default function Footer() {
           <ul className="flex flex-col gap-2 font-sans text-sm text-gray-300">
             {NAV_LINKS.map((link) => (
               <li key={link.path}>
-                <Link href={link.path} className="transition-colors hover:text-white">
+                <Link href={link.path} onClick={handleQuickLinkClick(link.path)} className="transition-colors hover:text-white">
                   {link.name === "Events" ? "Temple Events" : link.name}
                 </Link>
               </li>

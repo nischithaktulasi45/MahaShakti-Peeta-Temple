@@ -18,13 +18,26 @@ const initialFormState: DonationFormState = {
 };
 
 const DONATION_STORAGE_KEY = "temple_donation_form";
+const PHONE_REGEX = /^\d{10}$/;
 
 export default function Donate() {
   const [, navigate] = useLocation();
   const [formData, setFormData] = useState<DonationFormState>(initialFormState);
+  const [phoneError, setPhoneError] = useState("");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
+
+    if (name === "phone") {
+      const sanitizedValue = value.replace(/\D/g, "").slice(0, 10);
+      setPhoneError("");
+      setFormData((currentValue) => ({
+        ...currentValue,
+        phone: sanitizedValue,
+      }));
+      return;
+    }
+
     setFormData((currentValue) => ({
       ...currentValue,
       [name]: value,
@@ -33,7 +46,16 @@ export default function Donate() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    localStorage.setItem(DONATION_STORAGE_KEY, JSON.stringify(formData));
+
+    const sanitizedPhone = formData.phone.replace(/\D/g, "").slice(0, 10);
+    if (!PHONE_REGEX.test(sanitizedPhone)) {
+      setPhoneError("Phone number must contain exactly 10 digits.");
+      return;
+    }
+
+    setPhoneError("");
+    const payload = { ...formData, phone: sanitizedPhone };
+    localStorage.setItem(DONATION_STORAGE_KEY, JSON.stringify(payload));
     navigate("/donate/qr");
   };
 
@@ -75,12 +97,16 @@ export default function Donate() {
                   id="phone"
                   name="phone"
                   type="tel"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={10}
                   value={formData.phone}
                   onChange={handleChange}
                   required
                   className="w-full rounded border border-gray-300 px-3 py-2 text-sm transition focus:border-[#0A4D9B] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
                   placeholder="Enter your phone number"
                 />
+                {phoneError ? <p className="text-xs text-red-600">{phoneError}</p> : null}
               </div>
             </div>
 

@@ -22,15 +22,28 @@ const MAPS_LAT = "12.9822625";
 const MAPS_LNG = "77.296171875";
 const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${MAPS_LAT},${MAPS_LNG}&t=k&z=19&output=embed`;
 const MAPS_DIRECTIONS_URL = `https://www.google.com/maps/search/?api=1&query=${MAPS_LAT},${MAPS_LNG}`;
+const PHONE_REGEX = /^\d{10}$/;
 
 export default function Contact() {
   const [formData, setFormData] = useState<ContactFormState>(initialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [statusType, setStatusType] = useState<"success" | "error" | null>(null);
+  const [phoneError, setPhoneError] = useState("");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
+
+    if (name === "phone") {
+      const sanitizedValue = value.replace(/\D/g, "").slice(0, 10);
+      setPhoneError("");
+      setFormData((currentValue) => ({
+        ...currentValue,
+        phone: sanitizedValue,
+      }));
+      return;
+    }
+
     setFormData((currentValue) => ({
       ...currentValue,
       [name]: value,
@@ -39,12 +52,25 @@ export default function Contact() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const sanitizedPhone = formData.phone.replace(/\D/g, "").slice(0, 10);
+    if (!PHONE_REGEX.test(sanitizedPhone)) {
+      setPhoneError("Phone number must contain exactly 10 digits.");
+      setStatusType("error");
+      setStatusMessage("Phone number must contain exactly 10 digits.");
+      return;
+    }
+
+    setPhoneError("");
     setIsSubmitting(true);
     setStatusMessage(null);
     setStatusType(null);
 
     try {
-      const response = await submitContactMessage(formData);
+      const response = await submitContactMessage({
+        ...formData,
+        phone: sanitizedPhone,
+      });
 
       setStatusType("success");
       setStatusMessage(response.data?.message || "Your message was saved successfully.");
@@ -157,12 +183,16 @@ export default function Contact() {
                     id="phone"
                     name="phone"
                     type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={10}
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-[#0A4D9B] transition-colors"
                     placeholder="Enter your phone"
                     required
                   />
+                  {phoneError ? <p className="text-xs text-red-600">{phoneError}</p> : null}
                 </div>
               </div>
 
