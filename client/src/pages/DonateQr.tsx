@@ -55,7 +55,7 @@ export default function DonateQr() {
     }
 
     setIsSaving(true);
-    setStatusMessage(null);
+    setStatusMessage("Processing your donation, please wait...");
     setStatusType(null);
 
     try {
@@ -72,7 +72,7 @@ export default function DonateQr() {
       setUtrNumber("");
     } catch (error) {
       setStatusType("error");
-      setStatusMessage(error instanceof Error ? error.message : "Something went wrong.");
+      setStatusMessage(error instanceof Error ? error.message : "Something went wrong. Please try again.");
     } finally {
       setIsSaving(false);
     }

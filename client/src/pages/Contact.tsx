@@ -83,6 +83,7 @@ export default function Contact() {
     setStatusType(null);
 
     try {
+      setStatusMessage("Submitting your message, please wait...");
       const response = await submitContactMessage({
         ...formData,
         phone: sanitizedPhone,
@@ -93,7 +94,7 @@ export default function Contact() {
       setFormData(initialFormState);
     } catch (error) {
       setStatusType("error");
-      setStatusMessage(error instanceof Error ? error.message : "Something went wrong.");
+      setStatusMessage(error instanceof Error ? error.message : "Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
