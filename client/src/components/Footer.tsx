@@ -112,11 +112,11 @@ export default function Footer() {
             <li className="flex w-full max-w-full items-center justify-center gap-2 text-center">
               <SiGmail className="shrink-0 text-base text-[#D4AF37]" />
               <a
-                href="mailto:mahashakthipeetacharitabletrus@gmail.com"
+                href="mailto:mahashakthipeetacharitabletrust@gmail.com"
                 translate="no"
                 className="notranslate break-all font-sans text-xs leading-normal text-gray-300 transition-colors hover:text-white sm:text-sm"
               >
-                mahashakthipeetacharitabletrus@gmail.com
+                mahashakthipeetacharitabletrust@gmail.com
               </a>
             </li>
           </ul>

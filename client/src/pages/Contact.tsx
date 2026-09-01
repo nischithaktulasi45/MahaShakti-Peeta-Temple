@@ -117,7 +117,7 @@ export default function Contact() {
                   <FaPhoneAlt className="mt-1 flex-shrink-0 text-2xl text-[#D4AF37]" />
                   <div className="min-w-0 flex-1">
                     <h4 className="font-bold text-lg mb-1">Phone</h4>
-                    <p className="text-gray-600">
+                    <p translate="no" className="notranslate text-gray-600">
                      +91 9008294112 <br />+91 9686903945
                     </p>
                   </div>
@@ -127,7 +127,7 @@ export default function Contact() {
                   <FaEnvelope className="mt-1 flex-shrink-0 text-2xl text-[#D4AF37]" />
                   <div className="min-w-0 flex-1">
                     <h4 className="font-bold text-lg mb-1">Email</h4>
-                    <p className="break-words text-gray-600">mahashakthipeetacharitabletrus@gmail.com</p>
+                    <p translate="no" className="notranslate break-words text-gray-600">mahashakthipeetacharitabletrust@gmail.com</p>
                   </div>
                 </div>
               </div>
@@ -198,7 +198,7 @@ export default function Contact() {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-700" htmlFor="email">
-                  Email Address(Optional)
+                  Email Address (Optional)
                 </label>
                 <input
                   id="email"
@@ -232,7 +232,7 @@ export default function Contact() {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-700" htmlFor="message">
-                  Message(Optional)
+                  Message (Optional)
                 </label>
                 <textarea
                   id="message"
