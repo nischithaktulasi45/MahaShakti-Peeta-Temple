@@ -888,7 +888,11 @@ export default function AdminDashboard() {
                     <div key={item._id} className="flex items-center justify-between rounded-xl border border-slate-800 p-3">
                       <div>
                         <p className="font-semibold">{item.title}</p>
-                        <p className="text-sm text-slate-400">{item.date} • {item.location}</p>
+                        {item.date || item.location ? (
+                          <p className="text-sm text-slate-400">
+                            {[item.date, item.location].filter(Boolean).join(" • ")}
+                          </p>
+                        ) : null}
                       </div>
                       <div className="flex gap-2">
                         <button

@@ -1010,7 +1010,11 @@ export default function AdminDashboard() {
                       <div className="min-w-0">
                         {item.imageUrl ? <div className="mb-3 h-32 w-full max-w-xs overflow-hidden rounded-lg bg-slate-950"><img src={item.imageUrl} alt={item.title} className="h-full w-full object-contain" /></div> : null}
                         <p className="break-words font-semibold">{item.title}</p>
-                        <p className="break-words text-sm text-slate-400">{item.date} • {item.location}</p>
+                        {item.date || item.location ? (
+                          <p className="break-words text-sm text-slate-400">
+                            {[item.date, item.location].filter(Boolean).join(" • ")}
+                          </p>
+                        ) : null}
                         <p className="mt-2 break-words text-sm text-slate-300">{item.description}</p>
                       </div>
                       <div className="flex shrink-0 flex-wrap gap-2">

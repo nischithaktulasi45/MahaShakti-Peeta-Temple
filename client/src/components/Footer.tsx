@@ -87,8 +87,7 @@ export default function Footer() {
           <h3 className="mb-4 font-serif text-xl text-[#D4AF37]">Services & Events</h3>
           <ul className="mb-6 flex flex-col gap-2 font-sans text-sm text-gray-300">
             <li><Link href="/services" className="transition-colors hover:text-white">Daily Pooja</Link></li>
-            <li><Link href="/services" className="transition-colors hover:text-white">Annadanam</Link></li>
-            <li><Link href="/events" className="transition-colors hover:text-white">Upcoming Festivals</Link></li>
+            <li><Link href="/events" className="transition-colors hover:text-white">Events</Link></li>
             <li><Link href="/donate" className="transition-colors hover:text-white">Donate Now</Link></li>
           </ul>
         </div>
@@ -112,11 +111,11 @@ export default function Footer() {
             <li className="flex w-full max-w-full items-center justify-center gap-2 text-center">
               <SiGmail className="shrink-0 text-base text-[#D4AF37]" />
               <a
-                href="mailto:mahashakthipeetacharitabletrust@gmail.com"
+                href="mailto:mahashakthipeetacharitabletrus@gmail.com"
                 translate="no"
                 className="notranslate break-all font-sans text-xs leading-normal text-gray-300 transition-colors hover:text-white sm:text-sm"
               >
-                mahashakthipeetacharitabletrust@gmail.com
+                mahashakthipeetacharitabletrus@gmail.com
               </a>
             </li>
           </ul>

@@ -127,7 +127,7 @@ export default function Contact() {
                   <FaEnvelope className="mt-1 flex-shrink-0 text-2xl text-[#D4AF37]" />
                   <div className="min-w-0 flex-1">
                     <h4 className="font-bold text-lg mb-1">Email</h4>
-                    <p translate="no" className="notranslate break-words text-gray-600">mahashakthipeetacharitabletrust@gmail.com</p>
+                    <p translate="no" className="notranslate break-words text-gray-600">mahashakthipeetacharitabletrus@gmail.com</p>
                   </div>
                 </div>
               </div>

@@ -119,7 +119,7 @@ export default function Navbar() {
           <span className="flex min-w-0 items-center gap-2 whitespace-nowrap">
             <FaEnvelope className="shrink-0 text-[#D4AF37]" />
             <span className="truncate">
-             mahashakthipeetacharitabletrust@gmail.com
+             mahashakthipeetacharitabletrus@gmail.com
           <span className="hidden items-center gap-2 whitespace-nowrap xl:flex">
             <FaMapMarkerAlt className="shrink-0 text-[#D4AF37]" />
             Magadi Main Road, Bantarakuppe Colony, Magadi Taluk
