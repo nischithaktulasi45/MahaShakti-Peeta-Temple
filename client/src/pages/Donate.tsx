@@ -51,7 +51,7 @@ export default function Donate() {
 
   const handleEmailInvalid = (event: React.InvalidEvent<HTMLInputElement>) => {
     event.preventDefault();
-    const email = event.target.value;
+    const email = event.currentTarget.value;
     
     if (email && !email.endsWith("@gmail.com")) {
       setEmailError("Please enter a valid Gmail address (example@gmail.com).");
