@@ -24,6 +24,7 @@ export default function Donate() {
   const [, navigate] = useLocation();
   const [formData, setFormData] = useState<DonationFormState>(initialFormState);
   const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -38,10 +39,25 @@ export default function Donate() {
       return;
     }
 
+    if (name === "email") {
+      setEmailError("");
+    }
+
     setFormData((currentValue) => ({
       ...currentValue,
       [name]: value,
     }));
+  };
+
+  const handleEmailInvalid = (event: React.InvalidEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const email = event.target.value;
+    
+    if (email && !email.endsWith("@gmail.com")) {
+      setEmailError("Please enter a valid Gmail address (example@gmail.com).");
+    } else {
+      setEmailError("");
+    }
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -112,7 +128,7 @@ export default function Donate() {
 
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700" htmlFor="email">
-                Email Address(Optional)
+                Email Address (Optional)
               </label>
               <input
                 id="email"
@@ -120,9 +136,12 @@ export default function Donate() {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
+                onInvalid={handleEmailInvalid}
+                pattern="^$|[a-zA-Z0-9._%+-]+@gmail\.com"
                 className="w-full rounded border border-gray-300 px-3 py-2 text-sm transition focus:border-[#0A4D9B] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
                 placeholder="Enter your email"
               />
+              {emailError ? <p className="text-xs text-red-600">{emailError}</p> : null}
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">

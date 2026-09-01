@@ -30,6 +30,7 @@ export default function Contact() {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [statusType, setStatusType] = useState<"success" | "error" | null>(null);
   const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -44,10 +45,25 @@ export default function Contact() {
       return;
     }
 
+    if (name === "email") {
+      setEmailError("");
+    }
+
     setFormData((currentValue) => ({
       ...currentValue,
       [name]: value,
     }));
+  };
+
+  const handleEmailInvalid = (event: React.InvalidEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const email = event.target.value;
+    
+    if (email && !email.endsWith("@gmail.com")) {
+      setEmailError("Please enter a valid Gmail address (example@gmail.com).");
+    } else {
+      setEmailError("");
+    }
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -206,9 +222,12 @@ export default function Contact() {
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
+                  onInvalid={handleEmailInvalid}
+                  pattern="^$|[a-zA-Z0-9._%+-]+@gmail\.com"
                   className="w-full px-4 py-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-[#0A4D9B] transition-colors"
                   placeholder="Enter your email"
                 />
+                {emailError ? <p className="text-xs text-red-600">{emailError}</p> : null}
               </div>
 
               <div className="space-y-2">
