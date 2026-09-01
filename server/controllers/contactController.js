@@ -25,25 +25,27 @@ const submitContact = asyncHandler(async (req, res) => {
     message: typeof message === "string" ? message.trim() : "",
   };
 
-  if (mongoose.connection.readyState === 1) {
-    const contact = await Contact.create(payload);
-    console.log(`MongoDB contact record created: ${contact._id}`);
-
-    return res.status(201).json({
-      success: true,
-      message: "Contact message saved successfully",
-      data: contact,
-    });
-  }
-
+  // Save to memory storage immediately for instant response (critical for Vercel)
   const contact = createContactMessageRecord(payload);
   console.log(`Memory storage contact record created: ${contact._id}`);
 
+  // Return instant response to user
   res.status(201).json({
     success: true,
     message: "Contact message saved successfully",
     data: contact,
   });
+
+  // Save to MongoDB in background (non-blocking) for persistence
+  if (mongoose.connection.readyState === 1) {
+    Contact.create(payload)
+      .then((dbContact) => {
+        console.log(`MongoDB contact record created in background: ${dbContact._id}`);
+      })
+      .catch((error) => {
+        console.error("Background MongoDB save failed:", error.message);
+      });
+  }
 });
 
 const getContactMessages = asyncHandler(async (req, res) => {

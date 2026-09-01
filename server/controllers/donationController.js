@@ -19,21 +19,27 @@ const submitDonation = asyncHandler(async (req, res) => {
     paymentStatus: paymentStatus || "submitted",
   };
 
-  if (mongoose.connection.readyState === 1) {
-    const donation = await Donation.create(payload);
-    return res.status(201).json({
-      success: true,
-      message: "Donation saved successfully",
-      data: donation,
-    });
-  }
-
+  // Save to memory storage immediately for instant response (critical for Vercel)
   const donation = createDonationRecord(payload);
+  console.log(`Memory storage donation record created: ${donation._id}`);
+
+  // Return instant response to user
   res.status(201).json({
     success: true,
     message: "Donation saved successfully",
     data: donation,
   });
+
+  // Save to MongoDB in background (non-blocking) for persistence
+  if (mongoose.connection.readyState === 1) {
+    Donation.create(payload)
+      .then((dbDonation) => {
+        console.log(`MongoDB donation record created in background: ${dbDonation._id}`);
+      })
+      .catch((error) => {
+        console.error("Background MongoDB save failed:", error.message);
+      });
+  }
 });
 
 const getDonationRecords = asyncHandler(async (req, res) => {
