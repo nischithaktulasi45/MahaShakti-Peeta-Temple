@@ -252,11 +252,6 @@ body {
   object-position: center;
 }
 
-@media (min-width: 1024px) {
-  .mission-cards-grid {
-    padding-right: 4rem;
-  }
-}
 
 .goog-te-banner-frame.skiptranslate,
 .goog-te-banner-frame,

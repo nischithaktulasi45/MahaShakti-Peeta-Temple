@@ -19,56 +19,58 @@ export default function Home() {
 
       {/* Mission Cards */}
       <section className="bg-[#EAF4FF] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        <div className="mission-cards-grid mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-          {[
-            {
-              image: "/image/icons/Spirituality.png",
-              title: "Spirituality",
-              desc: "Discover inner peace through devotion",
-            },
-            {
-              image: "/image/icons/Tradition.jpg",
-              title: "Tradition",
-              desc: "Preserving ancient Vedic rituals",
-            },
-            {
-              image: "/image/icons/Seva.jpg",
-              title: "Seva",
-              desc: "Serving mankind is serving God",
-            },
-            {
-              image: "/image/icons/Togetherness.jpg",
-              title: "Togetherness",
-              desc: "Fostering community harmony",
-            },
-          ].map((item, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              className="flex h-full flex-col items-center rounded-lg border-b-4 border-[#0A4D9B] bg-white p-5 text-center shadow-md transition-transform duration-300 hover:scale-[1.01] hover:shadow-xl sm:p-6"
-            >
-              <div className="mission-card-image-frame mb-4 flex shrink-0 items-center justify-center">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="mission-card-image rounded-full border-2 border-[#D4AF37] object-cover shadow-md"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      "https://placehold.co/80x80/e2e8f0/1e293b?text=No+Image";
-                  }}
-                />
-              </div>
-              <h3 className="mb-2 flex min-h-[2.5rem] items-center justify-center font-serif text-lg font-bold text-[#083C78] sm:text-xl">
-                {item.title}
-              </h3>
-              <p className="flex min-h-[2.5rem] flex-1 items-start justify-center font-sans text-sm text-gray-500">
-                {item.desc}
-              </p>
-            </motion.div>
-          ))}
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 items-stretch justify-center gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                image: "/image/icons/Spirituality.png",
+                title: "Spirituality",
+                desc: "Discover inner peace through devotion",
+              },
+              {
+                image: "/image/icons/Tradition.jpg",
+                title: "Tradition",
+                desc: "Preserving ancient Vedic rituals",
+              },
+              {
+                image: "/image/icons/Seva.jpg",
+                title: "Seva",
+                desc: "Serving mankind is serving God",
+              },
+              {
+                image: "/image/icons/Togetherness.jpg",
+                title: "Togetherness",
+                desc: "Fostering community harmony",
+              },
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="flex h-full flex-col items-center rounded-xl border-b-4 border-[#0A4D9B] bg-white p-6 text-center shadow-md transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+              >
+                <div className="mission-card-image-frame mb-4 flex shrink-0 items-center justify-center">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="mission-card-image rounded-full border-2 border-[#D4AF37] object-cover shadow-md"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        "https://placehold.co/80x80/e2e8f0/1e293b?text=No+Image";
+                    }}
+                  />
+                </div>
+                <h3 className="mb-2 flex min-h-[2.5rem] items-center justify-center font-serif text-xl font-bold uppercase tracking-wider text-[#083C78]">
+                  {item.title}
+                </h3>
+                <p className="flex min-h-[2.5rem] flex-1 items-start justify-center font-sans text-sm leading-relaxed text-gray-600">
+                  {item.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 

@@ -19,7 +19,7 @@ export default function Home() {
 
       {/* Mission Cards */}
       <section className="bg-[#EAF4FF] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        <div className="mission-cards-grid mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+        <div className="mission-cards-grid mx-auto grid max-w-7xl grid-cols-1 items-stretch justify-center gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {[
             {
               image: "/image/icons/Spirituality.png",
