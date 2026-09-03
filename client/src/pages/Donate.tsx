@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent, type InvalidEvent } from "react";
 import { useLocation } from "wouter";
 
 type DonationFormState = {
@@ -49,10 +49,10 @@ export default function Donate() {
     }));
   };
 
-  const handleEmailInvalid = (event: React.InvalidEvent<HTMLInputElement>) => {
+  const handleEmailInvalid = (event: InvalidEvent<HTMLInputElement>) => {
     event.preventDefault();
     const email = event.currentTarget.value;
-    
+
     if (email && !email.endsWith("@gmail.com")) {
       setEmailError("Please enter a valid Gmail address (example@gmail.com).");
     } else {
