@@ -23,7 +23,7 @@ const trustItems = [
       "Supporting annadanam, nourishment, and devotional service for visitors.",
   },
   {
-    name: "Basavannavara Anubhava Mantapa",
+    name: "18th Century Basavannavara Anubhava Mantapa",
      image: "/image/trust/mantapa.png",
     description:
       "Basavannavara Anubhava Mantapa is a place for spiritual reflection, community learning, and sharing the values of devotion and wisdom.",

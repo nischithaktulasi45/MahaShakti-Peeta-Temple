@@ -18,7 +18,7 @@ const gods = [
   },
   {
     name: "Sapta Matrikeyaru",
-    image: "/image/gods/sapta-matrikeyaru.jpg",
+    image: "/image/gods/sapta-matrikeyaru.png",
     description:
       "The Sapta Matrikeyaru are the seven divine mother goddesses who symbolize the feminine powers of the principal deities. They protect devotees from negative energies and bless families with health and prosperity. The seven goddesses are: Brahmi, Maheshwari, Kaumari, Vaishnavi, Varahi, Indrani, and Chamundi.",
     significance:
