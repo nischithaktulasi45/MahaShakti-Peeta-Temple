@@ -70,13 +70,12 @@ export default function Events() {
     const saved = typeof window !== "undefined" ? localStorage.getItem("site-language") : null;
     return saved === "kn" ? "kn" : "en";
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadEvents = async () => {
       try {
-        setLoading(true);
         setError(null);
         const response = await contentService.getEvents();
         const responseData = Array.isArray(response?.data) && response.data.length > 0 ? response.data : DEFAULT_EVENTS;
@@ -85,8 +84,6 @@ export default function Events() {
       } catch (error) {
         console.error("Failed to load temple events from server, using defaults:", error);
         setEvents(DEFAULT_EVENTS);
-      } finally {
-        setLoading(false);
       }
     };
 

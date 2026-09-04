@@ -4,6 +4,15 @@ import { sortMediaByOrientation, type MediaOrientation } from "@/lib/mediaOrient
 
 interface ProgressVideo { _id: string; title: string; videoUrl: string; orientation?: MediaOrientation; }
 
+const getVideoPoster = (videoUrl: string, thumbnailUrl?: string) => {
+  if (thumbnailUrl) return thumbnailUrl;
+  if (!videoUrl) return "";
+  if (videoUrl.includes("cloudinary.com")) {
+    return videoUrl.replace(/\.(mp4|mov|webm|mkv|avi)$/i, ".jpg");
+  }
+  return "";
+};
+
 export default function ProgressGallery() {
   const [videos, setVideos] = useState<ProgressVideo[]>([]);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
@@ -84,6 +93,7 @@ export default function ProgressGallery() {
           <div className="grid max-w-full gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {sortedVideos.map((video) => {
               const orientation = video.orientation || orientations[video._id] || "landscape";
+              const poster = getVideoPoster(video.videoUrl);
               const aspectStyle =
                 orientation === "portrait"
                   ? { aspectRatio: "9 / 16" }
@@ -96,16 +106,22 @@ export default function ProgressGallery() {
               return (
                 <article
                   key={video._id}
-                  className="max-w-full overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(8,60,120,0.12)] ring-1 ring-slate-200/70 transition-transform duration-300 hover:-translate-y-1"
+                  className="group relative max-w-full overflow-hidden rounded-2xl bg-slate-900 shadow-[0_8px_30px_rgba(8,60,120,0.12)] ring-1 ring-slate-200/70 transition-transform duration-300 hover:-translate-y-1"
                 >
-                  <div className="relative w-full overflow-hidden bg-slate-50" style={aspectStyle}>
+                  <div className="relative w-full overflow-hidden bg-slate-950" style={aspectStyle}>
                     <video
                       className="absolute inset-0 h-full w-full max-w-full cursor-pointer object-contain"
-                      autoPlay
-                      loop
+                      poster={poster}
+                      preload="metadata"
                       muted
                       playsInline
-                      preload="metadata"
+                      onMouseEnter={(e) => {
+                        e.currentTarget.play().catch(() => {});
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.pause();
+                        e.currentTarget.currentTime = 0;
+                      }}
                       onLoadedMetadata={(event) => {
                         const media = event.currentTarget;
                         const detectedOrientation: MediaOrientation =
@@ -121,6 +137,16 @@ export default function ProgressGallery() {
                     >
                       <source src={video.videoUrl} type="video/mp4" />
                     </video>
+
+                    <div
+                      className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/20 transition-opacity duration-300 group-hover:bg-black/10"
+                    >
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#0A4D9B]/80 text-white shadow-lg backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+                        <svg className="ml-1 h-6 w-6 fill-current" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                 </article>
               );

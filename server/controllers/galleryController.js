@@ -43,7 +43,15 @@ const removeUploadedMediaFile = (mediaUrl) => {
 };
 
 const getGalleryPhotos = asyncHandler(async (req, res) => {
-  if (mongoose.connection.readyState === 1) {
+  res.setHeader(
+    "Cache-Control",
+    "public, max-age=60, s-maxage=300, stale-while-revalidate=600"
+  );
+
+  if (
+    mongoose.connection.readyState === 1 ||
+    mongoose.connection.readyState === 2
+  ) {
     const photos = await GalleryPhoto.find()
       .sort({ createdAt: -1 })
       .lean();

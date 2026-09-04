@@ -43,7 +43,15 @@ const removeUploadedMediaFile = (mediaUrl) => {
 };
 
 const getTempleEvents = asyncHandler(async (req, res) => {
-  if (mongoose.connection.readyState === 1) {
+  res.setHeader(
+    "Cache-Control",
+    "public, max-age=60, s-maxage=300, stale-while-revalidate=600"
+  );
+
+  if (
+    mongoose.connection.readyState === 1 ||
+    mongoose.connection.readyState === 2
+  ) {
     const events = await TempleEvent.find().sort({ createdAt: -1 }).lean();
     console.log(`Returning ${events.length} temple events from MongoDB`);
     return res.status(200).json({ success: true, data: events });
