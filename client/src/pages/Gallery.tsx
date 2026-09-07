@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import GalleryGrid from "@/components/GalleryGrid";
+import ShaktiPeethaCard from "@/components/ShaktiPeethaCard";
+import { mahaShaktiPeeta } from "@/data/mahaShaktiPeeta";
 
 export default function Gallery() {
   const [language, setLanguage] = useState<"en" | "kn">(() => {
@@ -18,7 +20,20 @@ export default function Gallery() {
   }, []);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const scrollToHash = () => {
+      if (window.location.hash !== "#shakti-peetha") {
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        document.getElementById("shakti-peetha")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    };
+
+    scrollToHash();
+    window.addEventListener("hashchange", scrollToHash);
+    return () => window.removeEventListener("hashchange", scrollToHash);
   }, []);
 
   return (
@@ -38,6 +53,23 @@ export default function Gallery() {
           </p>
         </div>
         <GalleryGrid />
+        <section
+          id="shakti-peetha"
+          className="mt-16 scroll-mt-[calc(var(--header-height)+1rem)] border-t border-[#D4AF37]/40 pt-12"
+        >
+          <div className="mb-10 text-center">
+            <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">18 Shakti Peetha</h2>
+            <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
+            <p className="mx-auto mt-5 max-w-3xl font-sans text-sm text-gray-600 sm:text-base md:text-lg">
+              Explore the sacred temples and stories of all 18 Maha Shakti Peethas.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+            {mahaShaktiPeeta.map((peetha, index) => (
+              <ShaktiPeethaCard key={peetha.id} peetha={peetha} index={index} />
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

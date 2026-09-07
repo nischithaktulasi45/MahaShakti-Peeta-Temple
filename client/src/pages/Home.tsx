@@ -4,6 +4,7 @@
 
 import HeroSlider from "@/components/HeroSlider";
 import ServiceCard from "@/components/ServiceCard";
+import { mahaShaktiPeeta } from "@/data/mahaShaktiPeeta";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 
@@ -74,6 +75,77 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Temple Gallery Preview */}
+      <section className="bg-gray-50 px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-10 text-center">
+            <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">Temple Gallery</h2>
+            <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+            {GALLERY_IMAGES.map((image) => (
+              <img
+                key={image.id}
+                src={image.src}
+                alt={`Gallery ${image.id}`}
+                className="w-full rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
+                loading="lazy"
+              />
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <Link
+              href="/gallery"
+              className="inline-flex min-h-[44px] items-center justify-center rounded border-2 border-[#0A4D9B] px-6 py-3 font-bold uppercase tracking-wider text-[#0A4D9B] transition-colors hover:bg-[#0A4D9B] hover:text-white sm:px-8"
+              onClick={() => window.scrollTo(0, 0)}
+            >
+              View Complete Gallery
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Shakti Peetha Preview */}
+      <section className="px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-10 text-center">
+            <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">18 Shakti Peetha</h2>
+            <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {mahaShaktiPeeta.slice(0, 3).map((peetha, index) => (
+              <motion.article
+                key={peetha.id}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="overflow-hidden rounded-xl bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl"
+              >
+                <div className="aspect-square w-full overflow-hidden bg-gray-100">
+                  <img
+                    src={peetha.image}
+                    alt={peetha.name}
+                    className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                <h3 className="p-5 text-center font-serif text-lg font-bold text-[#0A4D9B] sm:text-xl">{peetha.name}</h3>
+              </motion.article>
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <Link
+              href="/gallery#shakti-peetha"
+              className="inline-flex min-h-[44px] items-center justify-center rounded border-2 border-[#0A4D9B] px-8 py-3 font-bold uppercase tracking-wider text-[#0A4D9B] transition-colors hover:bg-[#0A4D9B] hover:text-white"
+              onClick={() => window.scrollTo(0, 0)}
+            >
+              More
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Services Preview */}
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mb-10 text-center">
@@ -133,36 +205,6 @@ export default function Home() {
               onClick={() => window.scrollTo(0, 0)}   // 👈 scrolls to top when clicked
             >
               Donate Now
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery Preview */}
-      <section className="bg-gray-50 px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-10 text-center">
-            <h2 className="mb-4 font-serif text-2xl text-[#083C78] sm:text-3xl md:text-4xl">Temple Gallery</h2>
-            <div className="w-24 h-1 bg-[#D4AF37] mx-auto" />
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            {GALLERY_IMAGES.map((image) => (
-              <img
-                key={image.id}
-                src={image.src}
-                alt={`Gallery ${image.id}`}
-                className="w-full rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
-                loading="lazy"
-              />
-            ))}
-          </div>
-          <div className="mt-10 text-center">
-            <Link
-              href="/gallery"
-              className="inline-flex min-h-[44px] items-center justify-center rounded border-2 border-[#0A4D9B] px-6 py-3 font-bold uppercase tracking-wider text-[#0A4D9B] transition-colors hover:bg-[#0A4D9B] hover:text-white sm:px-8"
-              onClick={() => window.scrollTo(0, 0)}
-            >
-              View Complete Gallery
             </Link>
           </div>
         </div>

@@ -25,7 +25,7 @@ const gods = [
       "Worshipped for protection, courage, health, and family well-being.",
   },
   {
-    name: "Bangi (Sacred Statues)",
+    name: "Bangi",
     image: "/image/gods/bangi-statues.jpg",
     description:
       "The beautifully carved Bangi statues reflect the rich artistic heritage of the temple. These sacred sculptures inspire devotion and preserve the timeless traditions of Hindu culture.",
@@ -33,12 +33,28 @@ const gods = [
       "Represents divine protection, temple heritage, and traditional craftsmanship.",
   },
   {
-    name: "Second Highest Raja Gopura",
+    name: "Highest Raja Gopura",
     image: "/image/gods/raja-gopura.jpg",
     description:
       "The magnificent Raja Gopura is one of the tallest temple towers and stands as a symbol of architectural excellence and spiritual grandeur. It welcomes devotees into the divine abode of Goddess Mahashakti.",
     significance:
       "Symbolizes the gateway to the divine and the glory of ancient temple architecture.",
+  },
+  {
+    name: "Dootharaya",
+    image: "/image/18ma/dootha.jpeg",
+    description:
+      "Dootharaya is one of the revered deities worshipped at the Mahashakti Peeta Temple.",
+    significance:
+      "Devotees seek the blessings of Dootharaya for protection, strength, and well-being.",
+  },
+  {
+    name: "Kallalli Ammanavaru, Rakashi Ammanavaru, and Masanike Ammanavaru",
+    image: "/image/18ma/ma.jpeg",
+    description:
+      "This single sacred photo represents Kallalli Ammanavaru, Rakashi Ammanavaru, and Masanike Ammanavaru together.",
+    significance:
+      "Devotees offer prayers to these deities for peace, protection, and prosperity.",
   },
 ];
 
