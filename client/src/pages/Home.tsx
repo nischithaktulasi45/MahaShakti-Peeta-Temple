@@ -96,7 +96,7 @@ export default function Home() {
           <div className="mt-10 text-center">
             <Link
               href="/gallery"
-              className="inline-flex min-h-[44px] items-center justify-center rounded border-2 border-[#0A4D9B] px-6 py-3 font-bold uppercase tracking-wider text-[#0A4D9B] transition-colors hover:bg-[#0A4D9B] hover:text-white sm:px-8"
+              className="inline-flex min-h-[44px] items-center justify-center rounded border-2 border-[#0A4D9B] px-6 py-3 font-bold uppercase tracking-wider text-[#0A4D9B] sm:px-8"
               onClick={() => window.scrollTo(0, 0)}
             >
               View Complete Gallery
@@ -137,7 +137,7 @@ export default function Home() {
           <div className="mt-10 text-center">
             <Link
               href="/gallery#shakti-peetha"
-              className="inline-flex min-h-[44px] items-center justify-center rounded border-2 border-[#0A4D9B] px-8 py-3 font-bold uppercase tracking-wider text-[#0A4D9B] transition-colors hover:bg-[#0A4D9B] hover:text-white"
+              className="inline-flex min-h-[44px] items-center justify-center rounded border-2 border-[#0A4D9B] px-8 py-3 font-bold uppercase tracking-wider text-[#0A4D9B]"
               onClick={() => window.scrollTo(0, 0)}
             >
               More
