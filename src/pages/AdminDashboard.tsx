@@ -572,8 +572,14 @@ export default function AdminDashboard() {
 
   const handleDeleteGallery = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this photo?")) return;
-    await contentService.deleteGallery(id);
-    await refreshData();
+    try {
+      await contentService.deleteGallery(id);
+    } catch (error) {
+      const status = (error as { response?: { status?: number } }).response?.status;
+      if (status !== 404) throw error;
+    } finally {
+      await refreshData();
+    }
   };
 
   const handleDeleteVideo = async (id: string) => {
