@@ -229,7 +229,7 @@ const deleteGalleryPhoto = asyncHandler(async (req, res) => {
     return res.status(200).json({ success: true, message: "Gallery photo deleted successfully" });
   }
 
-  const photo = deleteGalleryPhotoRecord(req.params.id);
+  const photo = await deleteGalleryPhotoRecord(req.params.id);
   if (!photo) {
     return res.status(404).json({ success: false, message: "Gallery photo not found" });
   }

@@ -642,9 +642,17 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteGallery = async (id: string) => {
-    await contentService.deleteGallery(id);
-    await refreshData();
-    setPendingDelete(null);
+    try {
+      await contentService.deleteGallery(id);
+    } catch (error) {
+      const status = (error as { response?: { status?: number } }).response?.status;
+      if (status !== 404) {
+        throw error;
+      }
+    } finally {
+      await refreshData();
+      setPendingDelete(null);
+    }
   };
 
   const handleDeleteVideo = async (id: string) => {
