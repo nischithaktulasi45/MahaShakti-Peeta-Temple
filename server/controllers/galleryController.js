@@ -52,7 +52,7 @@ const getGalleryPhotos = asyncHandler(async (req, res) => {
     mongoose.connection.readyState === 1 ||
     mongoose.connection.readyState === 2
   ) {
-    const photos = await GalleryPhoto.find()
+    const photos = await GalleryPhoto.find({ source: { $ne: "default" } })
       .sort({ createdAt: -1 })
       .lean();
 
